@@ -1,0 +1,36 @@
+{
+  "name": "azoom-hr-management-app",
+  "description": "An application to receive and process image (crop, compress, resize)",
+  "author": "Azoom",
+  "license": "The Unlicense",
+  "private": true,
+  "scripts": {
+    "start": "env $(grep -v '^#' ./.env) node index.js",
+    "dev": "env $(grep -v '^#' ./.env) nodemon index.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-promise-router": "^3.0.3",
+    "jsonwebtoken": "^8.5.1",
+    "module-alias": "^2.2.2",
+    "nnn-router": "^1.0.5",
+    "statuses": "^1.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.4",
+    "prettier": "^1.18.2"
+  },
+  "_moduleAliases": {
+    "@root": "./",
+    "@app": "./",
+    "@routes": "./routes",
+    "@middleware": "./middleware",
+    "@helpers": "./helpers"
+  },
+  "engines": {
+    "node": "10"
+  }
+}
