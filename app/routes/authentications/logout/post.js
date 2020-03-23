@@ -15,7 +15,12 @@ export default async function(req, res){
   }
 }
 export const destroyToken = async(userId,tokenFromClient)=>{ 
-  const data=_.defaultsDeep({isActive:false},userToken)
-  const tokenUser = await getTable('userToken').where('userId', '==', userId).where('tokenCode','==',tokenFromClient).update(data)
+  const tokenUser = await getTable('userToken').where('userId', '==', userId).where('tokenCode','==',tokenFromClient)
+    .then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            const data = _.defaultsDeep({isActive:false},doc.data())
+            getTable('userToken').doc(doc.id).update(data)
+          })
+      })
   return tokenUser
 }
