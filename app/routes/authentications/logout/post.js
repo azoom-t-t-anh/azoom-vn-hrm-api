@@ -1,20 +1,9 @@
 
-/**
- * src/controllers/auth.js
- */
-import { destroyToken } from '@helpers/jwt-helper'
-
-const tokenList = {};
-/**
- * controller login
- * @param {*} req 
- * @param {*} res 
- */
-export default async function(req, res) {
+export default async function(req, res){
   try {
     if(req.body.email){
       const tokenFromClient = req.body.token || req.query.token || req.headers["x-access-token"]
-      const refreshToken = await destroyToken(tokenFromClient)
+     await destroyToken(req.user.id,tokenFromClient)
       return res.status(200).json('successfully')
     }
     else {
@@ -22,7 +11,11 @@ export default async function(req, res) {
     
     }
   } catch (error) {
-    console.log(error)
     return res.status(500).json(error)
   }
+}
+export const destroyToken = async(userId,tokenFromClient)=>{ 
+  const data=_.defaultsDeep({isActive:false},userToken)
+  const tokenUser = await getTable('userToken').where('userId', '==', userId).where('tokenCode','==',tokenFromClient).update(data)
+  return tokenUser
 }

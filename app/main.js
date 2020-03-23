@@ -6,7 +6,7 @@ import bodyParser from 'body-parser'
 
 import statuses from 'statuses'
 
-import { authMiddleware } from '@middleware/auth-middleware'
+import {authMiddleware} from '@middleware/auth'
 // import { errorHandlerMiddleware } from '@middleware/error-handler'
 express.response.sendStatus = function(statusCode) {
   const body = { message: statuses[statusCode] || String(statusCode) }
@@ -32,7 +32,7 @@ app.use(
     next()
   }
 )
-// app.use(authMiddleware)
+app.use(authMiddleware)
 app.use(nnnRouter({ routeDir: '/routes', baseRouter: promiseRouter() }))
 
 app.listen(process.env.PORT || 8080, err => {

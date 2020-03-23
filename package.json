@@ -12,6 +12,5 @@
     "setup:spec": "cd specs && yarn"
   },
   "dependencies": {
-    "esm": "^3.2.25"
   }
 }

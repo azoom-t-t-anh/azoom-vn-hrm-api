@@ -9,18 +9,17 @@
     "dev": "env $(grep -v '^#' ./.env) nodemon index.js"
   },
   "dependencies": {
+    "bcrypt": "^4.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "date-time": "^3.1.0",
     "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
     "express": "^4.17.1",
     "express-promise-router": "^3.0.3",
     "firebase": "^7.11.0",
-    "firebase-admin": "^8.10.0",
-    "firebase-functions": "^3.3.0",
-    "i": "^0.3.6",
     "jsonwebtoken": "^8.5.1",
-    "jwt-redis": "^5.0.11",
     "lodash": "^4.17.15",
     "module-alias": "^2.2.2",
     "morgan": "^1.9.1",
@@ -39,7 +38,10 @@
     "@routes": "./routes",
     "@middleware": "./middleware",
     "@helpers": "./helpers",
-    "@utils": "./utils"
+    "@utils": "./utils",
+    "@configs": "./configs",
+    "@storeDatabaseFirebase": "./store-database-firebase",
+    "@models": "models"
   },
   "engines": {
     "node": "10"
