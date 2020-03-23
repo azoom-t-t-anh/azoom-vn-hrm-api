@@ -1,0 +1,26 @@
+{
+  "functions": {
+    "predeploy": [
+      "npm --prefix \"$RESOURCE_DIR\" run lint"
+    ],
+    "source": "functions",
+    "ignore": [
+      ".env.json",
+      ".env.json.template"
+    ]
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "emulators": {
+    "functions": {
+      "port": "5005",
+      "host": "0.0.0.0"
+    },
+    "firestore": {
+      "port": "8080",
+      "host": "0.0.0.0"
+    }
+  }
+}

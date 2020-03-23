@@ -1,0 +1,20 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:5.7
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: bengal
+    volumes:
+      - ${DB_DATA_DIR-./.data/mysql}:/var/lib/mysql
+      - ./mysql/initdb:/docker-entrypoint-initdb.d
+    ports:
+      - 3307:3306
+  mailhog:
+    build:
+      context: .
+      dockerfile: ./mailhog/Dockerfile
+    ports:
+      - 1025:1025
+      - 8025:8025

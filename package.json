@@ -1,0 +1,16 @@
+{
+  "name": "azoom-hr-management",
+  "version": "1.0.6",
+  "description": "An application to receive and process image (crop, compress, resize)",
+  "author": "Azoom",
+  "license": "The Unlicense",
+  "private": true,
+  "scripts": {
+    "build:doc": "yarn docker:build:specs:image && yarn build:doc:docker",
+    "dev": "cd app && yarn dev",
+    "setup:app": "cd app && yarn",
+    "setup:spec": "cd specs && yarn"
+  },
+  "dependencies": {
+  }
+}

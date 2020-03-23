@@ -1,0 +1,3 @@
+/authentication/login:
+  post:
+    $ref: paths/authentications/login/post.yaml
