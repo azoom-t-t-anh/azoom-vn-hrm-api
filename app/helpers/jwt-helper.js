@@ -24,7 +24,7 @@ export const verifyToken = (token, secretKey) => {
       if (error) {
         return reject(error);
       }
-      resolve(decoded);
+      resolve(decoded.data);
     });
   });
 }

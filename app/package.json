@@ -1,9 +1,8 @@
 {
-  "name": "azoom-hr-management-app",
-  "description": "An application to receive and process image (crop, compress, resize)",
-  "author": "Azoom",
-  "license": "The Unlicense",
-  "private": true,
+  "name": "app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
   "scripts": {
     "start": "env $(grep -v '^#' ./.env) node index.js",
     "dev": "env $(grep -v '^#' ./.env) nodemon index.js"
@@ -13,11 +12,13 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "date-and-time": "^0.13.1",
     "date-time": "^3.1.0",
     "dotenv": "^8.2.0",
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "express-promise-router": "^3.0.3",
+    "openapi-express-middleware": "^0.0.2",
     "firebase": "^7.11.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
@@ -30,7 +31,7 @@
   },
   "devDependencies": {
     "nodemon": "^1.19.4",
-    "prettier": "^1.18.2"
+    "prettier": "^2.0.2"
   },
   "_moduleAliases": {
     "@root": "./",
@@ -41,7 +42,7 @@
     "@utils": "./utils",
     "@configs": "./configs",
     "@storeDatabaseFirebase": "./store-database-firebase",
-    "@models": "models"
+    "@cloudStoreDatabase": "fb-cloud-store-database"
   },
   "engines": {
     "node": "10"
