@@ -4,7 +4,6 @@ const date = require('date-and-time')
 const _ = require('lodash')
 const bcrypt = require('bcrypt')
 
-
 export const user = {
   id: '',
   userName: '',
@@ -18,7 +17,7 @@ export const user = {
   zipCode: '',
   dateJoined: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
   profileImage: '',
-  possitionPermissionId: '',
+  possitionPermissionId: 4,
   isActive: true,
   created: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
   updated: ''
@@ -53,8 +52,17 @@ export const saveUser = async data => {
   return users
 }
 
-export const updateUser = () => {
-  return
+export const updateUser = async (userId, dataReq) => {
+  const queryData = await getTable(process.env.DB_TABLE_USER)
+    .where('id', '==', userId)
+    .get()
+  queryData.docs.map(item =>
+    getTable(process.env.DB_TABLE_USER)
+      .doc(item.id)
+      .update(dataReq)
+  )
+
+  return queryData.empty ? '' : queryData.docs[0].data()
 }
 
 export const deleteUser = () => {
@@ -83,7 +91,7 @@ export const getUserId = async userId => {
   const queryData = await getTable(process.env.DB_TABLE_USER)
     .where('id', '==', userId)
     .get()
-  return  queryData.empty ? '': queryData.docs[0].data()
+  return queryData.empty ? '' : queryData.docs[0].data()
 }
 
 export const getUser = async (email, password) => {
