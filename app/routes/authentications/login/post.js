@@ -1,56 +1,35 @@
-
 import { generateToken } from '@helpers/jwt-helper'
+import { responseJson } from '@helpers/res-result.js'
 import { getTable } from '@configs/database'
-import {userToken} from '@models/token-user'
+import { userToken,saveToken } from '@cloudStoreDatabase/token-user'
+import { getUser } from '@cloudStoreDatabase/user'
 
-const _ = require("lodash")
-const bcrypt = require("bcrypt")
+const _ = require('lodash')
+const bcrypt = require('bcrypt')
 
-
-export default async function(req, res) {
+export default async function (req, res) {
   try {
-    const {email,password}= req.body
-    const result = await checkLogin(email,password)
+    const { email, password } = req.body
+    const user = await getUser(email, password)
 
-    if (result.isHas)
-    {
-      const user = result.data
-      const accessToken = await generateToken(user, process.env.ACCESS_TOKEN_SECRET, process.env.ACCESS_TOKEN_LIFE);
-      const refreshToken = await generateToken(user, process.env.REFRESH_TOKEN_SECRET, process.env.REFRESH_TOKEN_LIFE);
-      await createToken(user.id,user.email,accessToken)
-      return res.status(200).json({accessToken, refreshToken})
+    if (user) {
+      const accessToken = await generateToken(
+        user,
+        process.env.ACCESS_TOKEN_SECRET,
+        process.env.ACCESS_TOKEN_LIFE
+      )
+      const refreshToken = await generateToken(
+        user,
+        process.env.REFRESH_TOKEN_SECRET,
+        process.env.REFRESH_TOKEN_LIFE
+      )
+      await saveToken(user.id, user.email, accessToken)
+      responseJson.data = { accessToken, refreshToken }
+      // return res.send("success",responseJson.data)
+      return res.send(responseJson)
     }
-
-    return res.status(400).json({'status': false,'message':'error', 'data':''})
+    return res.sendStatus(400)
+  } catch (error) {
+    return res.sendStatus(500)
   }
-  catch (error) {
-    return res.status(500).json(error);
-  }
-}
-
-const createToken = async(userId,emailUser,tokenCode) => {
-  const id = userId+Date.now()
-  const data = _.defaultsDeep({id:id, userId:userId,emailUser:emailUser,tokenCode:tokenCode},userToken)
-  const tokenUser = await getTable('userToken').doc(id).set(data)
-
-  return tokenUser
-}
-
-const checkLogin = async(email,password) => {
-  const result={isHas:false, data:''}
-  const tokenUser = await getTable('users').where('email', '==', email).get()
-    .then(snapshot=>
-    {
-      if (snapshot.empty) {
-          return false
-        }
-      snapshot.forEach(doc => {
-        if(bcrypt.compare(password, doc.data().password)){
-          result.isHas = true
-          result.data = doc.data()
-        }
-      })
-    return result
-    })
-  return tokenUser
 }
