@@ -16,3 +16,4 @@ firebase-debug.log
 yarn.lock
 /specs/yarn.lock
 app/package-lock.json
+.vscode

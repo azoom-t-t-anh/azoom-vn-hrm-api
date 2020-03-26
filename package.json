@@ -11,6 +11,5 @@
     "setup:app": "cd app && yarn",
     "setup:spec": "cd specs && yarn"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

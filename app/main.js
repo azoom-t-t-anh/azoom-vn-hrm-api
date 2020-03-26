@@ -6,9 +6,9 @@ import bodyParser from 'body-parser'
 
 import statuses from 'statuses'
 
-import {authMiddleware} from '@middleware/auth'
+import { authMiddleware } from '@middleware/auth'
 // import { errorHandlerMiddleware } from '@middleware/error-handler'
-express.response.sendStatus = function(statusCode) {
+express.response.sendStatus = function (statusCode) {
   const body = { message: statuses[statusCode] || String(statusCode) }
   this.statusCode = statusCode
   this.type('json')
@@ -16,6 +16,15 @@ express.response.sendStatus = function(statusCode) {
 }
 
 const app = express()
+// app.use((req, res, next) => {
+//     let oldSend = res.send
+//     res.send = function(message='',data='') {
+//       res.send = oldSend
+//       return res.send({isSuccess: res.statusCode <=300, message:message, data:data})
+//     }
+//     next()
+// })
+
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }))
 app.use(
