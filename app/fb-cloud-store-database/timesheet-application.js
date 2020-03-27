@@ -1,7 +1,6 @@
 const date = require('date-and-time')
 import { getTable } from '@configs/database'
-
-import { checkIdUserExist } from '@cloudStoreDatabase/user'
+const _ = require('lodash')
 
 export const timesheetApplication = {
   id: '',
@@ -12,7 +11,7 @@ export const timesheetApplication = {
   requiredDate: '',
   timesheetId: '',
   requiredContent: '',
-  isRject:false,
+  isRject: false,
   isApproved: false,
   isActive: true,
   created: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
@@ -62,7 +61,7 @@ export const getAllTsA = async (page, number) => {
   return result
 }
 
-export const getAllTsAProjectlist = async (page, number, projectIdlist) => {
+export const getAllTsAppProjectlist = async (page, number, projectIdlist) => {
   const result = { count: 0, data: [] }
   const query = await getTable(process.env.DB_TABLE_TIME_SHEET_APPLICATION)
     .where('projectId', 'in', projectIdlist)
@@ -88,4 +87,19 @@ export const getAllTsAProjectlist = async (page, number, projectIdlist) => {
   }
 
   return result
+}
+
+export const updateTsApp = async dataReq => {
+  // const data = _.defaultsDeep(req.body, timeAppReq)
+
+  const queryData = await getTable(process.env.DB_TABLE_TIME_SHEET_APPLICATION)
+    .where('id', '==', userId)
+    .get()
+  queryData.docs.map(item =>
+    getTable(process.env.DB_TABLE_TIME_SHEET_APPLICATION)
+      .doc(item.id)
+      .update(_.defaultsDeep(dataReq, item.data()))
+  )
+
+  return queryData.empty ? '' : queryData.docs[0].data()
 }

@@ -1,7 +1,7 @@
 import {
   timesheetApplication as timeAppReq,
   isValidTsA,
-  saveTimesheetApplication
+  updateTsApp
 } from '@cloudStoreDatabase/timesheet-application'
 
 const _ = require('lodash')
@@ -9,9 +9,9 @@ const _ = require('lodash')
 module.exports = async (req, res) => {
   const data = _.defaultsDeep(req.body, timeAppReq)
   data.userId = req.user.id
-  if (await isValidTsA(data.id, data.email)) {
-    saveTimesheetApplication(data)
-    return res.send(data)
+  if (await isValidTsA()) {
+    const result = await updateTsApp(data)
+    if (await result) return res.send(result)
   }
   return res.sendStatus(400)
 }

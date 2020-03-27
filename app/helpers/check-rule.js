@@ -1,7 +1,7 @@
 export const isAdmin = roleId => {
   return roleId == 1
 }
-export const isEdictor = roleId => {
+export const isEditor = roleId => {
   return roleId == 2
 }
 export const isProjectManager = roleId => {

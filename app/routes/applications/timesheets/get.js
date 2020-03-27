@@ -1,9 +1,9 @@
 import {
   getAllTsA,
-  getAllTsAProjectlist
-} from '@cloudStoreDatabase/timesheet-aplication'
+  getAllTsAppProjectlist
+} from '@cloudStoreDatabase/timesheet-application'
 
-import { isProjectManager, isAdmin, isEdictor } from '@helpers/check-rule'
+import { isProjectManager, isAdmin, isEditor } from '@helpers/check-rule'
 import { getManagerProjectList } from '@cloudStoreDatabase/project'
 
 module.exports = async (req, res) => {
@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
 
   if (
     isAdmin(req.user.possitionPermissionId) ||
-    isEdictor(req.user.possitionPermissionId)
+    isEditor(req.user.possitionPermissionId)
   ) {
     return res.send(await getAllTsA(pageNumber, count))
   }
@@ -21,7 +21,7 @@ module.exports = async (req, res) => {
     const projectlist = await getManagerProjectList(req.user.id)
 
     return res.send(
-      await getAllTsAProjectlist(
+      await getAllTsAppProjectlist(
         pageNumber,
         count,
         projectlist.map(item => item.id)
