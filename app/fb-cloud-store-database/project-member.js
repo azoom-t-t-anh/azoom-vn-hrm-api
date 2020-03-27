@@ -1,5 +1,4 @@
 import { getTable } from '@configs/database'
-import { isProjectManager, isAdmin } from '@helpers/check-rule'
 import { checkIdUserExist } from '@cloudStoreDatabase/user'
 
 const date = require('date-and-time')
