@@ -60,7 +60,7 @@ export const updateUser = async (userId, dataReq) => {
       .doc(item.id)
       .update(dataReq)
   )
-  return queryData.empty ? '' : queryData.docs[0].data()
+  return queryData.empty ? false : true
 }
 
 export const getAllUser = async (page, number) => {
