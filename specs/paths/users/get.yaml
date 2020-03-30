@@ -1,0 +1,51 @@
+operationId: user.getlist
+tags:
+  - users
+summary: get user list
+parameters:
+  - name: page
+    in: query
+    description: page number
+    schema:
+      type: string
+  - name: limit number
+    in: query
+    description: limit number
+    schema:
+      type: string
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+              description: get list  successfully
+              example: true
+            message:
+              type: string
+              description: Notification about login.
+              example: The message has been sent successfully.
+            data:
+              type: object
+              item:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    description: email.
+                  name:
+                    type: string
+                    description: name
+                  accessToken:
+                    type: string
+              example:
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  500:
+    $ref: "#/components/responses/500"
