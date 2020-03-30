@@ -17,7 +17,6 @@ module.exports = async (req, res) => {
     return res.send(await getAllTsA(pageNumber, count))
   }
   if (isProjectManager(req.user.possitionPermissionId)) {
-    //get list project of manager
     const projectlist = await getManagerProjectList(req.user.id)
 
     return res.send(
@@ -28,5 +27,5 @@ module.exports = async (req, res) => {
       )
     )
   }
-  return res.sendStatus(403)
+  return  res.sendStatus(403)
 }

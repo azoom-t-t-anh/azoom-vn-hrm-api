@@ -9,6 +9,7 @@ export const project = {
   projectName: '',
   managerId: '',
   createdUserId: '',
+  status: -1,
   isActive: true,
   created: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
   updated: ''
@@ -20,19 +21,12 @@ export const isValidProject = async data => {
     if (
       (isAdmin(manager.possitionPermissionId) ||
         isProjectManager(manager.possitionPermissionId)) &&
-      !(await checkIdProjectExist(data.id))
+      !(await getProject(data.id))
     ) {
       return true
     }
   }
   return false
-}
-
-export const checkIdProjectExist = async projectId => {
-  const queryData = await getTable(process.env.DB_TABLE_PROJECT)
-    .where('id', '==', projectId)
-    .get()
-  return !queryData.empty
 }
 
 export const saveProject = async data => {
@@ -56,6 +50,7 @@ export const checkProjectManager = async (projectId, managerId) => {
     .get()
   return !queryData.empty
 }
+
 export const getManagerProjectList = async managerId => {
   const queryData = await getTable(process.env.DB_TABLE_PROJECT)
     .where('managerId', '==', managerId)

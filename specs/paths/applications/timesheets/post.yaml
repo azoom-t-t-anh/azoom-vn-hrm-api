@@ -1,7 +1,7 @@
-operationId: applications.timesheets
+operationId: applications/timesheets/
 tags:
-  - applications
-summary: POST /aplications/timesheets
+  - Applications
+summary: POST /aplications/timesheets/
 description: Create new application about want to update timesheet.
 requestBody:
   content:
@@ -11,12 +11,12 @@ requestBody:
           startTime:
             type: string
             format: hh:mm
-            description: input startTime
+            description: Input startTime
             example: "08:30"
           endTime:
             type: string
             format: hh:mm
-            description: input endTime.
+            description: Input endTime.
             example: "17:30"
           requireDate:
             type: string
@@ -24,7 +24,7 @@ requestBody:
             example: 2020/03/28
           requireContent:
             type: string
-            description: input content of required.
+            description: Input content of required.
             example: "I want to change time working for 2013/03/12"
         required:
           - startTime
@@ -38,28 +38,40 @@ responses:
         schema:
           type: object
           properties:
-            success:
-              type: boolean
-              description: login successfully
-              example: true
-            message:
+            startTime:
               type: string
-              description: Notification about login.
-              example: The message has been sent successfully.
-            data:
-              type: object
-              item:
-                type: object
-                properties:
-                  email:
-                    type: string
-                    description: email.
-                  name:
-                    type: string
-                    description: name
-                  accessToken:
-                    type: string
-              example: {}
+            endTime:
+              type: string
+            requireDate:
+              type: string
+              format: date
+            requireContent:
+              type: string
+            isActive:
+              type: boolean
+            created:
+              type: string
+              format: date-time
+            updated:
+              format: date-time
+          example:
+            {
+              "startTime": "08:30",
+              "endTime": "17:30",
+              "requireDate": "2020/03/28",
+              "requireContent": "I want to change time working for 2013/03/12",
+              "id": "azoom00920200330150334",
+              "userId": "azoom009",
+              "approvalUserId": "",
+              "requiredDate": "",
+              "timesheetId": "",
+              "requiredContent": "",
+              "isRject": false,
+              "isApproved": false,
+              "isActive": true,
+              "created": "2020/03/30 15:34:03",
+              "updated": "",
+            }
   400:
     $ref: "#/components/responses/400"
   401:

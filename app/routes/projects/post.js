@@ -3,13 +3,18 @@ import {
   saveProject,
   isValidProject
 } from '@cloudStoreDatabase/project'
-import { isAdmin } from '@helpers/check-rule'
+import { isAdmin, isProjectManager } from '@helpers/check-rule'
 
 const _ = require('lodash')
 
 module.exports = async (req, res) => {
-  if (!(isAdmin(req.user.possitionPermissionId) ||isProjectManager(req.user.possitionPermissionId))) {
-  return res.sendStatus(403)
+  if (
+    !(
+      isAdmin(req.user.possitionPermissionId) ||
+      isProjectManager(req.user.possitionPermissionId)
+    )
+  ) {
+    return res.sendStatus(403)
   }
   const data = _.defaultsDeep(req.body, projectReq)
   if (await isValidProject(data)) {

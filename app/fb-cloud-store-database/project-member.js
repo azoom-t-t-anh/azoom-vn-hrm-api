@@ -37,8 +37,8 @@ export const checkIdProjectMemberExist = async (projectId, memberId) => {
 
 export const saveProjectMember = async data => {
   data.id = setProjectMemberId(data.projectId, data.memberId)
-  const users = await getTable(process.env.DB_TABLE_PROJECT_MEMBER)
+  await getTable(process.env.DB_TABLE_PROJECT_MEMBER)
     .doc(data.id)
     .set(data)
-  return users
+  return data
 }
