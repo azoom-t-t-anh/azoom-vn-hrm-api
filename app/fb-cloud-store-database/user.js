@@ -23,13 +23,6 @@ export const user = {
   updated: ''
 }
 
-export const isValidUser = async (id, email) => {
-  if ((await checkEmailExist(email)) || (await checkIdUserExist(id))) {
-    return false
-  }
-  return true
-}
-
 export const checkEmailExist = async useremail => {
   const queryData = await getTable(process.env.DB_TABLE_USER)
     .where('email', '==', useremail)
@@ -42,6 +35,13 @@ export const checkIdUserExist = async userId => {
     .where('id', '==', userId)
     .get()
   return !queryData.empty
+}
+
+export const isValidUser = async (id, email) => {
+  if ((await checkEmailExist(email)) || (await checkIdUserExist(id))) {
+    return false
+  }
+  return true
 }
 
 export const saveUser = async data => {
@@ -76,14 +76,25 @@ export const getAllUser = async (page, number) => {
     'desc'
   )
   const datall = await query.get()
-  result.count = await datall.docs.length
-  const queryData = (await page)
-    ? query
-        .startAt(page)
-        .limit(number)
-        .get()
-    : await datall
-  result.data = await queryData.docs.map(doc => doc.data())
+  result.count = datall.empty ? 0 : await datall.docs.length
+  if (!page) {
+    result.data = datall.empty ? '' : await datall.docs.map(doc => doc.data())
+    return result
+  }
+  if (page && number && page * number - 1 <= result.count) {
+    const queryData = await query
+      .startAt(
+        await datall.docs[page - 1 ? (page - 1) * number : page - 1].data()
+          .created
+      )
+      .limit(number)
+      .get()
+    result.data = queryData.empty
+      ? ''
+      : await queryData.docs.map(doc => doc.data())
+    return result
+  }
+
   return result
 }
 

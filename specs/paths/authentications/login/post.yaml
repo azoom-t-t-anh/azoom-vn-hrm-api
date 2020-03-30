@@ -1,8 +1,8 @@
-operationId: login-post
+operationId: authentications/login
 tags:
-  - login
-summary: POST /authentiction-login
-description: Send a message to the account list and group list on Lineworks.
+  - Authentications
+summary: POST /authentications/login
+description: Log into the hr-azoom-vn system
 requestBody:
   content:
     application/json:
@@ -10,13 +10,16 @@ requestBody:
         properties:
           email:
             type: string
-            description: input email of company
+            description: input company email
             example: "v.t.dung@azoom.jp"
           password:
             type: string
             format: password
             description: input password.
             example: "jhhkkk"
+        required:
+          - email
+          - password
 responses:
   200:
     description: Success
@@ -25,33 +28,9 @@ responses:
         schema:
           type: object
           properties:
-            success:
-              type: boolean
-              description: login successfully
-              example: true
-            message:
+            accessToken:
               type: string
-              description: Notification about login.
-              example: The message has been sent successfully.
-            data:
-              type: object
-              item:
-                type: object
-                properties:
-                  email:
-                    type: string
-                    description: email.
-                  name:
-                    type: string
-                    description: name
-                  accessToken:
-                    type: string
-              example:
-                {
-                  "email": "v.t.dung@gmail.com",
-                  "name": "Dung",
-                  "accessToken": "account",
-                }
+          example: { "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cC" }
   400:
     $ref: "#/components/responses/400"
   401:

@@ -1,0 +1,30 @@
+operationId: authentications/logout
+tags:
+  - Authentications
+summary: Post /authentications/logout
+description: Log out of the hr-azoom-vn system
+parameters:
+  - isAll: flag
+    in: query
+    description: Log out of the system from all devices
+    schema:
+      type: boolean
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Notification about logout.
+              example: Logout successfully.
+            example: { "message": "Logout successfully" }
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  500:
+    $ref: "#/components/responses/500"

@@ -56,3 +56,9 @@ export const checkProjectManager = async (projectId, managerId) => {
     .get()
   return !queryData.empty
 }
+export const getManagerProjectList = async managerId => {
+  const queryData = await getTable(process.env.DB_TABLE_PROJECT)
+    .where('managerId', '==', managerId)
+    .get()
+  return queryData.empty ? [] : queryData.docs.map(doc => doc.data())
+}

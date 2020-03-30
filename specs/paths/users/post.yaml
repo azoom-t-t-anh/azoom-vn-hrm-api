@@ -1,0 +1,94 @@
+operationId: users/post
+tags:
+  - Users
+summary: POST /users/post
+description: Create new account to employee.
+requestBody:
+  content:
+    application/json:
+      schema:
+        properties:
+          userName:
+            type: string
+            description: input userName
+            example: "azoomvn"
+          firstName:
+            type: string
+            format: password
+            description: input firstName.
+            example: "azoom"
+          lastName:
+            type: string
+            description: input lastName.
+            example: "vu"
+          email:
+            type: string
+            description: input email of company.
+            example: "v.t@azoom.jp"
+          password:
+            type: string
+            format: password
+            description: input password.
+            example: "fgh23456@"
+          birthDate:
+            type: string
+            format: date
+            description: input birthDate.
+            example: "1996/05/4"
+          address:
+            type: string
+            description: input address.
+            example: "hn-vn"
+          tel:
+            type: string
+            description: input telephone.
+            example: "096985478"
+          zipcode:
+            type: string
+            description: input zipcode.
+            example: "10000"
+          dateJoined:
+            type: string
+            format: date-time
+            description: input joined date.
+            example: "2020/03/27"
+        required:
+          - email
+          - password
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+              id:
+                type: string
+              userName:
+                type: string
+              firstName:
+                type: string
+              lastName:
+                type: string
+              email:
+                type: string
+              password:
+                type: string
+              birthDate:
+                type: string
+              address:
+                type: string
+              tel:
+                type: string
+              zipcode:
+                type: string
+              dateJoined:
+                type: string
+              example:
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  500:
+    $ref: "#/components/responses/500"

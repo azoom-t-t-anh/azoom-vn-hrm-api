@@ -38,7 +38,7 @@ async function checkRequestApiKey (tokenFromClient) {
     const user = await verifyToken(tokenFromClient, accessTokenSecret)
     const token = await getToken(user.id, tokenFromClient)
     if (token) {
-      return { tokenFromClient: tokenFromClient, user: user, token: token }
+      return { user: user, token: token }
     }
     return false
   } catch (error) {
