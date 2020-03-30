@@ -1,7 +1,7 @@
 operationId: user.getlist
 tags:
   - users
-summary: get user list
+summary: GET /users/
 parameters:
   - name: page
     in: query
@@ -21,28 +21,36 @@ responses:
         schema:
           type: object
           properties:
-            success:
-              type: boolean
-              description: get list  successfully
-              example: true
-            message:
-              type: string
-              description: Notification about login.
-              example: The message has been sent successfully.
+            count:
+              type: integer
+              description: Total account
             data:
-              type: object
-              item:
-                type: object
-                properties:
-                  email:
-                    type: string
-                    description: email.
-                  name:
-                    type: string
-                    description: name
-                  accessToken:
-                    type: string
-              example:
+              type: array
+          example:
+            {
+              "count": 10,
+              "data":
+                [
+                  {
+                    "address": "hn-vn",
+                    "birthDate": "1996/05/4",
+                    "created": "2020/03/30 12:26:21",
+                    "dateJoined": "2020/03/27",
+                    "email": "abc@gmail.com",
+                    "firstName": "azoom",
+                    "id": "azoom00199898",
+                    "isActive": true,
+                    "lastName": "vu",
+                    "password": "$2b$10$AnPvQLT4fGBQjrF2Unw/j.xwUfht8TLgqaiMi1DH2E.ECtjc3KoQ.",
+                    "possitionPermissionId": 3,
+                    "tel": "096985478",
+                    "updated": "",
+                    "userName": "azoomvn",
+                    "zipCode": "",
+                    "zipcode": "10000",
+                  },
+                ],
+            }
   400:
     $ref: "#/components/responses/400"
   401:
