@@ -1,5 +1,8 @@
-import {getAllUser}from '@cloudStoreDatabase/user'
+import { getAllUser } from '@cloudStoreDatabase/user'
 
 module.exports = async (req, res) => {
-  return res.send(await getAllUser())
+  const pageNumber = parseInt(req.query.pageNumber) || 0
+  const count = parseInt(req.query.count) || ''
+
+  return res.send(await getAllUser(pageNumber, count))
 }

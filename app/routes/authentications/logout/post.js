@@ -1,20 +1,14 @@
-import { getTable } from '@configs/database'
-import { destroyToken } from '@cloudStoreDatabase/token-user'
-const _ = require('lodash')
+import {
+  destroyToken,
+  destroyALLTokenOfUser
+} from '@cloudStoreDatabase/token-user'
 
 export default async function (req, res) {
-  try {
-    if (req.body.email) {
-      const tokenFromClient =
-        req.body.token || req.query.token || req.headers['x-access-token']
-      await destroyToken(tokenFromClient)
-      return res.status(200).json('successfully')
-    } else {
-      return res.status(400).json({ status: false, message: 'error', data: '' })
-    }
-  } catch (error) {
-    return res.status(500).json(error)
+  const { isAll = false } = req.query
+  if (isAll) {
+    await destroyALLTokenOfUser(req.user.id, req.token.data)
+  } else {
+    await destroyToken(req.token.tokenCode)
   }
+  return res.status(200).json('Logout successfully')
 }
-
-
