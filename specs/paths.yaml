@@ -4,9 +4,14 @@
 /authentications/logout:
   post:
     $ref: paths/authentications/logout/post.yaml
-/applications/timesheets/:
+/applications/time-sheet/:
   post:
-    $ref: paths/applications/timesheets/post.yaml
+    $ref: paths/applications/time-sheet/post.yaml
+  get:
+    $ref: paths/applications/time-sheet/get.yaml
+/applications/time-sheet/{timesheetAppId}/approved/:
+  patch:
+    $ref: paths/applications/time-sheet/_timesheetAppId/approved/patch.yaml
 /users/:
   post:
     $ref: paths/users/post.yaml

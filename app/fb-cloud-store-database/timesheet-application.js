@@ -91,7 +91,7 @@ export const getAllTsAppProjectlist = async (page, number, projectIdlist) => {
 
 export const updateTsApp = async dataReq => {
   const queryData = await getTable(process.env.DB_TABLE_TIME_SHEET_APPLICATION)
-    .where('id', '==', userId)
+    .where('id', '==', dataReq.id)
     .get()
   queryData.docs.map(item =>
     getTable(process.env.DB_TABLE_TIME_SHEET_APPLICATION)
