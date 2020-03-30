@@ -8,6 +8,10 @@ requestBody:
     application/json:
       schema:
         properties:
+          id:
+            type: string
+            description: input id
+            example: "azoom0019"
           userName:
             type: string
             description: input userName
@@ -53,6 +57,7 @@ requestBody:
             description: input joined date.
             example: "2020/03/27"
         required:
+          - id
           - email
           - password
 responses:
@@ -63,29 +68,48 @@ responses:
         schema:
           type: object
           properties:
-              id:
-                type: string
-              userName:
-                type: string
-              firstName:
-                type: string
-              lastName:
-                type: string
-              email:
-                type: string
-              password:
-                type: string
-              birthDate:
-                type: string
-              address:
-                type: string
-              tel:
-                type: string
-              zipcode:
-                type: string
-              dateJoined:
-                type: string
-              example:
+            id:
+              type: string
+            userName:
+              type: string
+            firstName:
+              type: string
+            lastName:
+              type: string
+            email:
+              type: string
+            password:
+              type: string
+            birthDate:
+              type: string
+              format: date
+            address:
+              type: string
+            tel:
+              type: string
+            zipcode:
+              type: string
+            dateJoined:
+              type: string
+          example:
+            {
+              "id": "azoom0019",
+              "userName": "azoomvn",
+              "firstName": "azoom",
+              "lastName": "vu",
+              "email": "v.t@azoom.jp",
+              "password": "$2b$10$y2lyAS5sXc3w7dqDNSCiyOO3OtPbGUDiticgSkPjhqXb.2aQXoMES",
+              "birthDate": "1996/05/4",
+              "address": "hn-vn",
+              "tel": "096985478",
+              "zipcode": "10000",
+              "dateJoined": "2020/03/27",
+              "zipCode": "",
+              "possitionPermissionId": 4,
+              "isActive": true,
+              "created": "2020/03/30 11:39:42",
+              "updated": "",
+            }
   400:
     $ref: "#/components/responses/400"
   401:

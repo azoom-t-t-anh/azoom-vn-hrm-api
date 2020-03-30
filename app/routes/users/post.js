@@ -4,14 +4,22 @@ import {
   isValidUser
 } from '@cloudStoreDatabase/user'
 
-const bcrypt = require('bcrypt')
+import { isAdmin, isEditor } from '@helpers/check-rule'
+
 const _ = require('lodash')
 
 module.exports = async (req, res) => {
-  const data = _.defaultsDeep(req.body, userReq)
-  if (await isValidUser(data.id, data.email)) {
-    saveUser(data)
-    return res.send(data)
+  if (
+    isAdmin(req.user.possitionPermissionId) ||
+    isEditor(req.user.possitionPermissionId)
+  ) {
+    const data = _.defaultsDeep(req.body, userReq)
+    if (await isValidUser(data.id, data.email)) {
+      saveUser(data)
+      return res.send(data)
+    }
+    return res.sendStatus(400)
   }
-  return res.sendStatus(400)
+
+  return res.sendStatus(403)
 }

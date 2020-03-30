@@ -16,7 +16,6 @@ export const user = {
   tel: '',
   zipCode: '',
   dateJoined: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
-  profileImage: '',
   possitionPermissionId: 4,
   isActive: true,
   created: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
@@ -61,12 +60,7 @@ export const updateUser = async (userId, dataReq) => {
       .doc(item.id)
       .update(dataReq)
   )
-
   return queryData.empty ? '' : queryData.docs[0].data()
-}
-
-export const deleteUser = () => {
-  return
 }
 
 export const getAllUser = async (page, number) => {

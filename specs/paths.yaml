@@ -12,9 +12,9 @@
     $ref: paths/users/post.yaml
   get:
     $ref: paths/users/get.yaml
-/users/update-role/:
+/users/{userId}/update-role/:
   put:
-    $ref: paths/users/update-role/put.yaml
+    $ref: paths/users/_userId/update-role/put.yaml
 /time-sheet/checkin/:
   post:
     $ref: paths/time-sheet/checkin/post.yaml
