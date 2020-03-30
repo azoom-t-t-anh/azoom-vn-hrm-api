@@ -5,12 +5,12 @@ summary: GET /users/
 parameters:
   - name: page
     in: query
-    description: page number
+    description: Page number
     schema:
       type: integer
-  - name: limit number
+  - name: limit
     in: query
-    description: limit number
+    description: Limit number
     schema:
       type: string
 responses:

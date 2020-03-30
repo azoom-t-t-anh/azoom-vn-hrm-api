@@ -10,12 +10,12 @@ requestBody:
         properties:
           email:
             type: string
-            description: input company email
+            description: Input company email
             example: "v.t.dung@azoom.jp"
           password:
             type: string
             format: password
-            description: input password.
+            description: Input password.
             example: "jhhkkk"
         required:
           - email
