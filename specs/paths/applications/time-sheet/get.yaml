@@ -1,7 +1,7 @@
-operationId: users/
+operationId: aplications/timesheets/
 tags:
-  - Users
-summary: GET /users/
+  - Applications
+summary: GET /aplications/timesheets/
 parameters:
   - name: page
     in: query
@@ -28,26 +28,25 @@ responses:
               type: array
           example:
             {
-              "count": 10,
+              "count": 5,
               "data":
                 [
                   {
-                    "address": "hn-vn",
-                    "birthDate": "1996/05/4",
-                    "created": "2020/03/30 12:26:21",
-                    "dateJoined": "2020/03/27",
-                    "email": "abc@gmail.com",
-                    "firstName": "azoom",
-                    "id": "azoom00199898",
+                    "approvalUserId": "",
+                    "created": "2020/03/30 15:34:03",
+                    "endTime": "17:30",
+                    "id": "azoom00920200330150334",
                     "isActive": true,
-                    "lastName": "vu",
-                    "password": "$2b$10$AnPvQLT4fGBQjrF2Unw/j.xwUfht8TLgqaiMi1DH2E.ECtjc3KoQ.",
-                    "possitionPermissionId": 3,
-                    "tel": "096985478",
+                    "isApproved": false,
+                    "isRject": false,
+                    "requireContent": "I want to change time working for 2013/03/12",
+                    "requireDate": "2020/03/28",
+                    "requiredContent": "",
+                    "requiredDate": "",
+                    "startTime": "08:30",
+                    "timesheetId": "",
                     "updated": "",
-                    "userName": "azoomvn",
-                    "zipCode": "",
-                    "zipcode": "10000",
+                    "userId": "azoom009",
                   },
                 ],
             }

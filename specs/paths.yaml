@@ -1,20 +1,25 @@
-/authentications/login:
+/authentications/login/:
   post:
     $ref: paths/authentications/login/post.yaml
 /authentications/logout:
   post:
     $ref: paths/authentications/logout/post.yaml
-/applications/timesheets:
+/applications/time-sheet/:
   post:
-    $ref: paths/applications/timesheets/post.yaml
+    $ref: paths/applications/time-sheet/post.yaml
+  get:
+    $ref: paths/applications/time-sheet/get.yaml
+/applications/time-sheet/{timesheetAppId}/approved/:
+  patch:
+    $ref: paths/applications/time-sheet/_timesheetAppId/approved/patch.yaml
 /users/:
   post:
     $ref: paths/users/post.yaml
   get:
     $ref: paths/users/get.yaml
-/users/update-role/:
-  put:
-    $ref: paths/users/update-role/put.yaml
+/users/{userId}/update-role/:
+  patch:
+    $ref: paths/users/_userId/update-role/patch.yaml
 /time-sheet/checkin/:
   post:
     $ref: paths/time-sheet/checkin/post.yaml
@@ -24,6 +29,6 @@
 projects/:
   post:
     $ref: paths/projects/post.yaml
-projects/member:
+projects/member/:
   post:
     $ref: paths/projects/member/post.yaml

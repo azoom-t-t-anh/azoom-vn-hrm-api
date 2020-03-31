@@ -1,6 +1,6 @@
-operationId: projects.create
+operationId: /projects/
 tags:
-  - projects
+  - Projects
 summary: POST /projects/
 description: Create new project.
 requestBody:
@@ -10,26 +10,23 @@ requestBody:
         properties:
           id:
             type: string
-            format: hh:mm
-            description: input id of project
-            example: "hr001"
+            description: Input project ID
+            example: "azoom006979"
           projectName:
             type: string
-            format: hh:mm
-            description: input projectName.
+            description: Input projectName.
             example: "azoom-hr-vn"
           status:
             type: integer
-            description: input status of project.-1 pending,0-in progress, 1- done
+            description: Input status of project. -1- pending,0-in progress, 1- done
             example: 0
           managerId:
             type: string
-            description: input id of project manager.
-            example: "0069"
+            description: Input of project manager ID.
+            example: "azoom009"
         required:
           - id
           - projectName
-          - status
           - managerId
 responses:
   200:
@@ -39,27 +36,32 @@ responses:
         schema:
           type: object
           properties:
-            success:
-              type: boolean
-              description: create a new project successfully
-              example: true
-            message:
+            id:
               type: string
-              description: Notification about error.
-              example: The message has been sent successfully.
-            data:
-              type: object
-              item:
-                type: object
-                properties:
-                  email:
-                    type: string
-                    description: email.
-                  name:
-                    type: string
-                    description: name
-                  accessToken:
-                    type: string
+            projectName:
+              type: string
+            status:
+              type: integer
+            managerId:
+              type: string
+            isActive:
+              type: boolean
+            created:
+              type: string
+              format: date-time
+            updated:
+              format: date-time
+          example:
+            {
+              "id": "azoom006979",
+              "projectName": "azoom-hr-vn",
+              "managerId": "azoom0069",
+              "createdUserId": "azoom009",
+              "status": -1,
+              "isActive": true,
+              "created": "2020/03/30 14:24:50",
+              "updated": "",
+            }
   400:
     $ref: "#/components/responses/400"
   401:

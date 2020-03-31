@@ -16,14 +16,13 @@ export const user = {
   tel: '',
   zipCode: '',
   dateJoined: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
-  profileImage: '',
   possitionPermissionId: 4,
   isActive: true,
   created: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
   updated: ''
 }
 
-export const checkEmailExist = async useremail => {
+const checkEmailExist = async useremail => {
   const queryData = await getTable(process.env.DB_TABLE_USER)
     .where('email', '==', useremail)
     .get()
@@ -61,12 +60,7 @@ export const updateUser = async (userId, dataReq) => {
       .doc(item.id)
       .update(dataReq)
   )
-
-  return queryData.empty ? '' : queryData.docs[0].data()
-}
-
-export const deleteUser = () => {
-  return
+  return queryData.empty ? false : true
 }
 
 export const getAllUser = async (page, number) => {

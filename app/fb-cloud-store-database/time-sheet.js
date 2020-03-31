@@ -12,77 +12,34 @@ export const timeSheet = {
   isCorrect: false
 }
 
-export const invaildTimesheet = () => {}
-
-export const setTimesheetId = timesheetId => {
-  return timesheetId + date.format(new Date(), 'YYYYMMDD')
+export const invaildTimesheet = data => {
+  return true
 }
 
-export const savetimeSheet = async (user, timeSheetReq) => {
-  timeSheetReq.id = setTimesheetId(user.id)
-  timeSheetReq.userId = user.id
+export const setTimesheetId = () => {
+  return date.format(new Date(), 'YYYYMMDD')
+}
+
+export const savetimeSheet = async (userId, timeSheetReq) => {
+  timeSheetReq.id = setTimesheetId()
+  timeSheetReq.userId = userId
   const timeSheet = await getTable(process.env.DB_TABLE_TIME_SHEET)
-    .doc(user.id)
+    .doc(userId)
     .collection(timeSheetReq.id)
     .doc(timeSheetReq.id)
     .set(timeSheetReq)
   return timeSheet
 }
 
-export const checkoutTimesheet = async (user, timeSheetReq) => {
-  if (!(await checkTimesheetdoc(user.id))) {
-    timeSheetReq.startTime = ''
-    return savetimeSheet(user, timeSheetReq)
-  }
-  if (!(await updateEndTime(user, timeSheetReq.endTime))) {
-    savetimeSheet(user, timeSheetReq)
-  }
-  return !queryData.empty
-}
-
-export const updateEndTime = async (user, endtime) => {
-  const timeSheetId = setTimesheetId(user.id)
+export const updateTimesheet = async (userId, timesheetReq) => {
+  const timeSheetId = setTimesheetId()
   const queryData = await getTable(process.env.DB_TABLE_TIME_SHEET)
-    .doc(user.id)
-    .collection(timeSheetId)
-    .where('isCorrect', '==', false)
-    .get()
-  queryData.docs.map(item =>
-    getTable(process.env.DB_TABLE_TIME_SHEET)
-      .doc(user.id)
-      .collection(item.id)
-      .doc(item.id)
-      .update({ endTime: endtime })
-  )
-  return !queryData.empty
-}
-
-export const updateStartTime = async (user, startTime) => {
-  const timeSheetId = setTimesheetId(user.id)
-  const queryData = await getTable(process.env.DB_TABLE_TIME_SHEET)
-    .doc(user.id)
-    .collection(timeSheetId)
-    .where('isCorrect', '==', false)
-    .get()
-  queryData.docs.map(item =>
-    getTable(process.env.DB_TABLE_TIME_SHEET)
-      .doc(user.id)
-      .collection(item.id)
-      .doc(item.id)
-      .update({ startTime: startTime })
-  )
-  return !queryData.empty
-}
-
-export const updateTimesheet = async (user, timesheetReq) => {
-  const timeSheetId = setTimesheetId(user.id)
-  const queryData = await getTable(process.env.DB_TABLE_TIME_SHEET)
-    .doc(user.id)
+    .doc(userId)
     .collection(timeSheetId)
     .get()
   queryData.docs.map(item =>
     getTable(process.env.DB_TABLE_TIME_SHEET)
-      .doc(user.id)
+      .doc(userId)
       .collection(item.id)
       .doc(item.id)
       .update(timesheetReq)
@@ -90,16 +47,24 @@ export const updateTimesheet = async (user, timesheetReq) => {
   return !queryData.empty
 }
 
-export const checkTimesheetdoc = async userId => {
-  const timeSheetId = setTimesheetId(userId)
-  const query = await getTable(process.env.DB_TABLE_TIME_SHEET).get()
-  const result = query.docs.find(doc => (doc.id = timeSheetId))
-  return result ? true : false
+const checkTimesheetdoc = async userId => {
+  try {
+    const timeSheetId = setTimesheetId(userId)
+    const query = await getTable(process.env.DB_TABLE_TIME_SHEET).get()
+    const result = query.docs.find(doc => (doc.id = timeSheetId))
+    return result ? true : false
+  } catch {
+    return ''
+  }
 }
-export const getTimesheetUserday = async userId => {
+
+export const getTimesheetUserday = async (userId, day) => {
+  if (!checkTimesheetdoc(userId)) {
+    return ''
+  }
   const queryData = await getTable(process.env.DB_TABLE_TIME_SHEET)
-    .doc(user.id)
-    .collection(setTimesheetId(userId))
+    .doc(userId)
+    .collection(setTimesheetId(date.format(new Date(day), 'YYYYMMDD')))
     .get()
-  return !queryData.empty ? queryData.docs.map(item => item.data()) : ''
+  return !queryData.empty ? queryData.docs[0].data() : ''
 }

@@ -21,7 +21,7 @@ responses:
               type: string
               description: Notification about logout.
               example: Logout successfully.
-            example: { "message": "Logout successfully" }
+          example: { "message": "Logout successfully" }
   400:
     $ref: "#/components/responses/400"
   401:
