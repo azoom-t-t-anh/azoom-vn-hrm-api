@@ -1,5 +1,5 @@
 import {
-  getAllTsA,
+  getAllTsApp,
   getAllTsAppProjectlist
 } from '@cloudStoreDatabase/timesheet-application'
 
@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
     isAdmin(req.user.possitionPermissionId) ||
     isEditor(req.user.possitionPermissionId)
   ) {
-    return res.send(await getAllTsA(pageNumber, count))
+    return res.send(await getAllTsApp(pageNumber, count))
   }
   if (isProjectManager(req.user.possitionPermissionId)) {
     const projectlist = await getManagerProjectList(req.user.id)
@@ -27,5 +27,5 @@ module.exports = async (req, res) => {
       )
     )
   }
-  return  res.sendStatus(403)
+  return res.sendStatus(403)
 }

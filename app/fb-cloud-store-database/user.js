@@ -22,7 +22,7 @@ export const user = {
   updated: ''
 }
 
-export const checkEmailExist = async useremail => {
+const checkEmailExist = async useremail => {
   const queryData = await getTable(process.env.DB_TABLE_USER)
     .where('email', '==', useremail)
     .get()

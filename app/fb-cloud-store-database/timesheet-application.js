@@ -33,7 +33,7 @@ export const saveTimesheetApplication = async data => {
   return users
 }
 
-export const getAllTsA = async (page, number) => {
+export const getAllTsApp = async (page, number) => {
   const result = { count: 0, data: [] }
   const query = await getTable(
     process.env.DB_TABLE_TIME_SHEET_APPLICATION
