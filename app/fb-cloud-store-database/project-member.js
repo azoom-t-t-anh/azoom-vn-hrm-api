@@ -17,6 +17,7 @@ export const projectMember = {
 export const setProjectMemberId = (projectId, memberId) => {
   return projectId + '_' + memberId + date.format(new Date(), 'YYYYMMDD')
 }
+
 export const isValidProjectMember = async data => {
   if (
     (await checkIdUserExist(data.memberId)) &&
@@ -41,4 +42,11 @@ export const saveProjectMember = async data => {
     .doc(data.id)
     .set(data)
   return data
+}
+
+export const getProjectIdMemberList = async projectIdList => {
+  const queryData = await getTable(process.env.DB_TABLE_PROJECT)
+    .where('projectId', 'in', projectIdList)
+    .get()
+  return queryData.empty ? [] : queryData.docs.map(doc => doc.data())
 }

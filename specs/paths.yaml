@@ -9,12 +9,23 @@
     $ref: paths/applications/timesheets/post.yaml
   get:
     $ref: paths/applications/timesheets/get.yaml
-/applications/leave/:
+/applications/leaves/:
   post:
-    $ref: paths/applications/leave/post.yaml
+    $ref: paths/applications/leaves/post.yaml
+  get:
+    $ref: paths/applications/leaves/get.yaml
+/applications/leaves/{leaveAppId}/approved/:
+  patch:
+    $ref: paths/applications/leaves/_leaveAppId/approved/patch.yaml
+/applications/leaves/{leaveAppId}/reject/:
+  patch:
+    $ref: paths/applications/leaves/_leaveAppId/reject/patch.yaml
 /applications/timesheets/{timesheetAppId}/approved/:
   patch:
     $ref: paths/applications/timesheets/_timesheetAppId/approved/patch.yaml
+/applications/timesheets/{timesheetAppId}/reject/:
+  patch:
+    $ref: paths/applications/timesheets/_timesheetAppId/reject/patch.yaml
 /users/:
   post:
     $ref: paths/users/post.yaml

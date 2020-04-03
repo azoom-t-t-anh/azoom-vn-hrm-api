@@ -1,11 +1,11 @@
 import {
-  getAllTsApp,
-  getAllTsAppUserList
-} from '@cloudStoreDatabase/timesheet-application'
+  getAllLeaveApp,
+  getAllLeaveAppProjectlist,
+  getAllLeaveAppUserList
+} from '@cloudStoreDatabase/leave-application'
 
 import { isProjectManager, isAdmin, isEditor } from '@helpers/check-rule'
 import { getManagerProjectList } from '@cloudStoreDatabase/project'
-import { getProjectIdMemberList } from '@cloudStoreDatabase/project-member'
 
 module.exports = async (req, res) => {
   const pageNumber = parseInt(req.query.pageNumber) || 0
@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
     isAdmin(req.user.positionPermissionId) ||
     isEditor(req.user.positionPermissionId)
   ) {
-    return res.send(await getAllTsApp(pageNumber, count))
+    return res.send(await getAllLeaveApp(pageNumber, count))
   }
   if (isProjectManager(req.user.positionPermissionId)) {
     const projectlist = await getManagerProjectList(req.user.id)
@@ -24,12 +24,14 @@ module.exports = async (req, res) => {
     )
 
     return res.send(
-      await getAllTsAppUserList(
+      await getAllLeaveAppUserList(
         pageNumber,
         count,
         memberList.map(item => item.id)
       )
     )
   }
-  return res.send(await getAllTsAppUserList(pageNumber, count, [req.user.id]))
+  return res.send(
+    await getAllLeaveAppUserList(pageNumber, count, [req.user.id])
+  )
 }

@@ -60,10 +60,10 @@ export const getAllTsApp = async (page, number) => {
   return result
 }
 
-export const getAllTsAppProjectlist = async (page, number, projectIdlist) => {
+export const getAllTsAppUserList = async (page, number, userIdList) => {
   const result = { count: 0, data: [] }
   const query = await getTable(process.env.DB_TABLE_TIME_SHEET_APPLICATION)
-    .where('projectId', 'in', projectIdlist)
+    .where('userId', 'in', userIdList)
     .orderBy('created', 'desc')
   const datall = await query.get()
   result.count = datall.empty ? 0 : await datall.docs.length

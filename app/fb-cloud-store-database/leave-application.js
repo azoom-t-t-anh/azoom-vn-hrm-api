@@ -90,10 +90,10 @@ export const getAllLeaveAppProjectlist = async (
   return result
 }
 
-export const getAllLeaveAppUser = async (page, number, userId) => {
+export const getAllLeaveAppUserList = async (page, number, userIdList) => {
   const result = { count: 0, data: [] }
   const query = await getTable(process.env.DB_TABLE_LEAVE_APPLICATION)
-    .where('userId', '==', userId)
+    .where('userId', 'in', userIdList)
     .orderBy('created', 'desc')
   const datall = await query.get()
   result.count = datall.empty ? 0 : await datall.docs.length
