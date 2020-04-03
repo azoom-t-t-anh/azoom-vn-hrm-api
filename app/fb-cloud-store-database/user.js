@@ -1,5 +1,5 @@
 import { getTable } from '@configs/database'
-
+const firebase = require('firebase')
 const date = require('date-and-time')
 const _ = require('lodash')
 const bcrypt = require('bcrypt')
@@ -7,16 +7,17 @@ const bcrypt = require('bcrypt')
 export const user = {
   id: '',
   userName: '',
-  firstName: '',
-  lastName: '',
+  fullName: '',
   email: '',
   password: '',
   birthDate: '',
   address: '',
   tel: '',
   zipCode: '',
-  dateJoined: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
-  possitionPermissionId: 4,
+  totalPaidLeaveDate: 0,
+  contractType: 0,
+  position: 'Dev',
+  positionPermissionId: 4,
   isActive: true,
   created: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
   updated: ''

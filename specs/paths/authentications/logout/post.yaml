@@ -1,7 +1,7 @@
-operationId: authentications/logout
+operationId: /authentications/logout/{isAll}/
 tags:
   - Authentications
-summary: Post /authentications/logout
+summary: Post /authentications/logout/{isAll}/
 description: Log out of the hr-azoom-vn system
 parameters:
   - isAll: flag

@@ -42,7 +42,7 @@ responses:
                     "isActive": true,
                     "lastName": "vu",
                     "password": "$2b$10$AnPvQLT4fGBQjrF2Unw/j.xwUfht8TLgqaiMi1DH2E.ECtjc3KoQ.",
-                    "possitionPermissionId": 3,
+                    "positionPermissionId": 3,
                     "tel": "096985478",
                     "updated": "",
                     "userName": "azoomvn",

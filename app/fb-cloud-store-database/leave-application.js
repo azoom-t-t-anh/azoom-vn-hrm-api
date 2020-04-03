@@ -2,14 +2,11 @@ const date = require('date-and-time')
 import { getTable } from '@configs/database'
 const _ = require('lodash')
 
-export const timesheetApplication = {
+export const leaveApplication = {
   id: '',
   userId: '',
   approvalUserId: '',
-  startTime: '',
-  endTime: '',
-  requiredDate: '',
-  timesheetId: '',
+  requiredDates: [],
   requiredContent: '',
   status: -1,
   isActive: true,
@@ -24,19 +21,20 @@ const setId = id => {
   return id + date.format(new Date(), 'YYYYMMDDHHMMSS')
 }
 
-export const saveTimesheetApplication = async data => {
+export const saveLeaveApplication = async data => {
   data.id = setId(data.userId)
-  const users = await getTable(process.env.DB_TABLE_TIME_SHEET_APPLICATION)
+  const leaveApp = await getTable(process.env.DB_TABLE_LEAVE_APPLICATION)
     .doc(data.id)
     .set(data)
-  return users
+  return leaveApp
 }
 
-export const getAllTsApp = async (page, number) => {
+export const getAllLeaveApp = async (page, number) => {
   const result = { count: 0, data: [] }
-  const query = await getTable(
-    process.env.DB_TABLE_TIME_SHEET_APPLICATION
-  ).orderBy('created', 'desc')
+  const query = await getTable(process.env.DB_TABLE_LEAVE_APPLICATION).orderBy(
+    'created',
+    'desc'
+  )
   const datall = await query.get()
   result.count = datall.empty ? 0 : await datall.docs.length
   if (!page) {
@@ -60,9 +58,41 @@ export const getAllTsApp = async (page, number) => {
   return result
 }
 
-export const getAllTsAppUserList = async (page, number, userIdList) => {
+export const getAllLeaveAppProjectlist = async (
+  page,
+  number,
+  projectIdlist
+) => {
   const result = { count: 0, data: [] }
-  const query = await getTable(process.env.DB_TABLE_TIME_SHEET_APPLICATION)
+  const query = await getTable(process.env.DB_TABLE_LEAVE_APPLICATION)
+    .where('projectId', 'in', projectIdlist)
+    .orderBy('created', 'desc')
+  const datall = await query.get()
+  result.count = datall.empty ? 0 : await datall.docs.length
+  if (!page) {
+    result.data = datall.empty ? '' : await datall.docs.map(doc => doc.data())
+    return result
+  }
+  if (page && number && page * number - 1 <= result.count) {
+    const queryData = await query
+      .startAt(
+        await datall.docs[page - 1 ? (page - 1) * number : page - 1].data()
+          .created
+      )
+      .limit(number)
+      .get()
+    result.data = queryData.empty
+      ? []
+      : await queryData.docs.map(doc => doc.data())
+    return result
+  }
+
+  return result
+}
+
+export const getAllLeaveAppUserList = async (page, number, userIdList) => {
+  const result = { count: 0, data: [] }
+  const query = await getTable(process.env.DB_TABLE_LEAVE_APPLICATION)
     .where('userId', 'in', userIdList)
     .orderBy('created', 'desc')
   const datall = await query.get()
@@ -88,40 +118,12 @@ export const getAllTsAppUserList = async (page, number, userIdList) => {
   return result
 }
 
-export const getAllTsAppUser = async (page, number, userId) => {
-  const result = { count: 0, data: [] }
-  const query = await getTable(process.env.DB_TABLE_TIME_SHEET_APPLICATION)
-    .where('userId', '==', userId)
-    .orderBy('created', 'desc')
-  const datall = await query.get()
-  result.count = datall.empty ? 0 : await datall.docs.length
-  if (!page) {
-    result.data = datall.empty ? '' : await datall.docs.map(doc => doc.data())
-    return result
-  }
-  if (page && number && page * number - 1 <= result.count) {
-    const queryData = await query
-      .startAt(
-        await datall.docs[page - 1 ? (page - 1) * number : page - 1].data()
-          .created
-      )
-      .limit(number)
-      .get()
-    result.data = queryData.empty
-      ? []
-      : await queryData.docs.map(doc => doc.data())
-    return result
-  }
-
-  return result
-}
-
-export const updateTsApp = async dataReq => {
-  const queryData = await getTable(process.env.DB_TABLE_TIME_SHEET_APPLICATION)
+export const updateLeaveApp = async dataReq => {
+  const queryData = await getTable(process.env.DB_TABLE_LEAVE_APPLICATION)
     .where('id', '==', dataReq.id)
     .get()
   queryData.docs.map(item =>
-    getTable(process.env.DB_TABLE_TIME_SHEET_APPLICATION)
+    getTable(process.env.DB_TABLE_LEAVE_APPLICATION)
       .doc(item.id)
       .update(_.defaultsDeep(dataReq, item.data()))
   )
@@ -129,8 +131,8 @@ export const updateTsApp = async dataReq => {
   return queryData.empty ? '' : queryData.docs[0].data()
 }
 
-export const getTsApp = async timsheetAppId => {
-  const queryData = await getTable(process.env.DB_TABLE_TIME_SHEET_APPLICATION)
+export const getLeaveApp = async timsheetAppId => {
+  const queryData = await getTable(process.env.DB_TABLE_LEAVE_APPLICATION)
     .where('id', '==', timsheetAppId)
     .get()
   return queryData.empty ? '' : queryData.docs[0].data()

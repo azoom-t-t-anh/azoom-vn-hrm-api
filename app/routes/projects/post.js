@@ -10,8 +10,8 @@ const _ = require('lodash')
 module.exports = async (req, res) => {
   if (
     !(
-      isAdmin(req.user.possitionPermissionId) ||
-      isProjectManager(req.user.possitionPermissionId)
+      isAdmin(req.user.positionPermissionId) ||
+      isProjectManager(req.user.positionPermissionId)
     )
   ) {
     return res.sendStatus(403)

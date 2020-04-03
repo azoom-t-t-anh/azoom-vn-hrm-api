@@ -1,7 +1,7 @@
-operationId: aplications/timesheets/
+operationId: applications/timesheets/.getlist
 tags:
   - Applications
-summary: GET /aplications/timesheets/
+summary: GET /applications/timesheets/
 parameters:
   - name: page
     in: query
@@ -36,15 +36,11 @@ responses:
                     "created": "2020/03/30 15:34:03",
                     "endTime": "17:30",
                     "id": "azoom00920200330150334",
-                    "isActive": true,
-                    "isApproved": false,
-                    "isRject": false,
-                    "requireContent": "I want to change time working for 2013/03/12",
-                    "requireDate": "2020/03/28",
-                    "requiredContent": "",
-                    "requiredDate": "",
+                    "status": 1,
+                    "requiredContent": "I want to change time working for 2013/03/12",
+                    "requiredDate": "2020/03/28",
                     "startTime": "08:30",
-                    "timesheetId": "",
+                    "isActive": true,
                     "updated": "",
                     "userId": "azoom009",
                   },

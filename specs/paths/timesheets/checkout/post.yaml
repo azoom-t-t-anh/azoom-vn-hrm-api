@@ -1,7 +1,7 @@
-operationId: timesheet.checkout
+operationId: /timesheets/checkout/
 tags:
-  - time-sheet
-summary: POST checkout for time-sheet
+  - timesheets
+summary: POST /timesheets/checkout/
 description: checkout for time start working.
 responses:
   200:
