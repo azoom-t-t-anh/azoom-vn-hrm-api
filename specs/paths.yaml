@@ -31,9 +31,9 @@
     $ref: paths/users/post.yaml
   get:
     $ref: paths/users/get.yaml
-/users/{userId}/update-role/:
+/users/{userId}/update-permission/:
   patch:
-    $ref: paths/users/_userId/update-role/patch.yaml
+    $ref: paths/users/_userId/update-permission/patch.yaml
 /users/{userId}/:
   put:
     $ref: paths/users/_userId/put.yaml
