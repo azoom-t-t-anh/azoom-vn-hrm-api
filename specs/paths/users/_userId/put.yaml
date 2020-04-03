@@ -1,17 +1,20 @@
-operationId: users/post
+operationId: users/{userId}/getdetail
 tags:
   - Users
-summary: POST /users/post
-description: Create new account to employee.
+summary: PUT /users/{userId}/
+description: Updated role for user
+parameters:
+  - userId: page
+    in: path
+    description: User ID
+    example: azoom0019
+    schema:
+      type: string
 requestBody:
   content:
     application/json:
       schema:
         properties:
-          id:
-            type: string
-            description: Input ID
-            example: "azoom0019"
           userName:
             type: string
             description: Input userName
@@ -55,7 +58,6 @@ requestBody:
             description: Input contract type ID
             example: 0
         required:
-          - id
           - userName
           - fullName
           - birthDate
@@ -120,7 +122,7 @@ responses:
               "zipCode": "",
               "totalPaidLeaveDate": 0,
               "contractType": 0,
-              "positionPermissionId": 1,
+              "positionPermissionId": 3,
               "isActive": true,
               "created": "2020/04/01 15:45:52",
               "updated": "",

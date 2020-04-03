@@ -11,12 +11,12 @@ module.exports = async (req, res) => {
   const count = parseInt(req.query.count) || ''
 
   if (
-    isAdmin(req.user.possitionPermissionId) ||
-    isEditor(req.user.possitionPermissionId)
+    isAdmin(req.user.positionPermissionId) ||
+    isEditor(req.user.positionPermissionId)
   ) {
     return res.send(await getAllTsApp(pageNumber, count))
   }
-  if (isProjectManager(req.user.possitionPermissionId)) {
+  if (isProjectManager(req.user.positionPermissionId)) {
     const projectlist = await getManagerProjectList(req.user.id)
 
     return res.send(
@@ -27,5 +27,5 @@ module.exports = async (req, res) => {
       )
     )
   }
-  return res.sendStatus(403)
+  return res.send(await getAllTsAppProjectlist(pageNumber, count, req.user.id))
 }

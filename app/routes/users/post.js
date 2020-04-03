@@ -10,8 +10,8 @@ const _ = require('lodash')
 
 module.exports = async (req, res) => {
   if (
-    isAdmin(req.user.possitionPermissionId) ||
-    isEditor(req.user.possitionPermissionId)
+    isAdmin(req.user.positionPermissionId) ||
+    isEditor(req.user.positionPermissionId)
   ) {
     const data = _.defaultsDeep(req.body, userReq)
     if (await isValidUser(data.id, data.email)) {

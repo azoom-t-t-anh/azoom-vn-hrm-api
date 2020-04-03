@@ -1,69 +1,15 @@
-operationId: users/post
+operationId: users/{userId}/
 tags:
   - Users
-summary: POST /users/post
-description: Create new account to employee.
-requestBody:
-  content:
-    application/json:
-      schema:
-        properties:
-          id:
-            type: string
-            description: Input ID
-            example: "azoom0019"
-          userName:
-            type: string
-            description: Input userName
-            example: "azoomvn"
-          fullName:
-            type: string
-            description: Input fullName.
-            example: "nguyen van A"
-          email:
-            type: string
-            description: Input email of company.
-            example: "v.t@azoom.jp"
-          password:
-            type: string
-            format: password
-            description: Input password.
-            example: "fgh23456@"
-          birthDate:
-            type: string
-            format: date
-            description: Input birthDate.
-            example: "1996/05/4"
-          address:
-            type: string
-            description: Input address.
-            example: "hn-vn"
-          tel:
-            type: string
-            description: Input telephone.
-            example: "096985478"
-          zipcode:
-            type: string
-            description: Input zipcode.
-            example: "10000"
-          position:
-            type: string
-            description: Input position.
-            example: Dev
-          contractTypeId:
-            type: integer
-            description: Input contract type ID
-            example: 0
-        required:
-          - id
-          - userName
-          - fullName
-          - birthDate
-          - email
-          - password
-          - tel
-          - position
-          - contractTypeId
+summary: GET /users/{userId}/
+description: Updated role for user
+parameters:
+  - userId: page
+    in: path
+    description: User ID
+    example: azoom0019
+    schema:
+      type: string
 responses:
   200:
     description: Success
@@ -120,7 +66,7 @@ responses:
               "zipCode": "",
               "totalPaidLeaveDate": 0,
               "contractType": 0,
-              "positionPermissionId": 1,
+              "positionPermissionId": 3,
               "isActive": true,
               "created": "2020/04/01 15:45:52",
               "updated": "",

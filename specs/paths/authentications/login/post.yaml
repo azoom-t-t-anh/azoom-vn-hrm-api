@@ -1,7 +1,7 @@
-operationId: authentications/login
+operationId: authentications/login/
 tags:
   - Authentications
-summary: POST /authentications/login
+summary: POST /authentications/login/
 description: Log into the hr-azoom-vn system
 requestBody:
   content:

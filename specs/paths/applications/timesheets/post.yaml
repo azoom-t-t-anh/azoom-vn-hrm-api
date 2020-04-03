@@ -1,7 +1,7 @@
 operationId: applications/timesheets/
 tags:
   - Applications
-summary: POST /aplications/timesheets/
+summary: POST /applications/timesheets/
 description: Create new application about want to update timesheet.
 requestBody:
   content:
@@ -38,6 +38,12 @@ responses:
         schema:
           type: object
           properties:
+            id:
+              type: string
+            userId:
+              type: string
+            approvalUserId:
+              type: string
             startTime:
               type: string
             endTime:
@@ -45,7 +51,7 @@ responses:
             requireDate:
               type: string
               format: date
-            requireContent:
+            requiredContent:
               type: string
             isActive:
               type: boolean
@@ -58,16 +64,14 @@ responses:
             {
               "startTime": "08:30",
               "endTime": "17:30",
-              "requireDate": "2020/03/28",
-              "requireContent": "I want to change time working for 2013/03/12",
+              "requireDate": "2020/03/30",
+              "requiredContent": "I want to change time working for 2013/03/12",
               "id": "azoom00920200330150334",
               "userId": "azoom009",
               "approvalUserId": "",
               "requiredDate": "",
               "timesheetId": "",
-              "requiredContent": "",
-              "isRject": false,
-              "isApproved": false,
+              "status": -1,
               "isActive": true,
               "created": "2020/03/30 15:34:03",
               "updated": "",

@@ -19,8 +19,8 @@ export const isValidProject = async data => {
   const manager = await getUserId(data.managerId)
   if (manager) {
     if (
-      (isAdmin(manager.possitionPermissionId) ||
-        isProjectManager(manager.possitionPermissionId)) &&
+      (isAdmin(manager.positionPermissionId) ||
+        isProjectManager(manager.positionPermissionId)) &&
       !(await getProject(data.id))
     ) {
       return true

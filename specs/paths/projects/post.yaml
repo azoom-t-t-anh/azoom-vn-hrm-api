@@ -11,7 +11,7 @@ requestBody:
           id:
             type: string
             description: Input project ID
-            example: "azoom006979"
+            example: "azoom-vn-hr-001"
           projectName:
             type: string
             description: Input projectName.
@@ -23,7 +23,7 @@ requestBody:
           managerId:
             type: string
             description: Input of project manager ID.
-            example: "azoom009"
+            example: "azoom001"
         required:
           - id
           - projectName
@@ -53,13 +53,13 @@ responses:
               format: date-time
           example:
             {
-              "id": "azoom006979",
+              "id": "azoom-vn-hr-001",
               "projectName": "azoom-hr-vn",
-              "managerId": "azoom0069",
-              "createdUserId": "azoom009",
-              "status": -1,
+              "status": 0,
+              "managerId": "azoom001",
+              "createdUserId": "azoom0019",
               "isActive": true,
-              "created": "2020/03/30 14:24:50",
+              "created": "2020/04/01 15:49:59",
               "updated": "",
             }
   400:

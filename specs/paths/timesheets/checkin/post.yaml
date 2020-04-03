@@ -1,7 +1,7 @@
-operationId: timesheet.checkin
+operationId: /timesheets/checkin/
 tags:
-  - time-sheet
-summary: POST checkin time-sheet
+  - timesheets
+summary: POST  /timesheets/checkin/
 description: Checkin for time start working.
 responses:
   200:
