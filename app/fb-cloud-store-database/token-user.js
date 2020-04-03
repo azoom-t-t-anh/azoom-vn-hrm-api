@@ -1,10 +1,7 @@
 import { getTable } from '@configs/database'
-const admin = require('firebase')
 
 const date = require('date-and-time')
 const _ = require('lodash')
-
-// const tokeStore = admin.firestore().collection(process.env.DB_TABLE_USER)
 
 export const userToken = {
   id: '',
