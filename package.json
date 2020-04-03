@@ -9,7 +9,7 @@
     "build:doc": "yarn docker:build:specs:image && yarn build:doc:docker",
     "dev": "cd app && yarn dev",
     "setup:app": "cd app && yarn",
-    "setup:spec": "cd specs && yarn"
+    "setup:spec": "cd specs && yarn serve"
   },
   "dependencies": {}
 }
