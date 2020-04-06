@@ -13,13 +13,13 @@ export const projectMember = {
   joiningProcess: [
     {
       position: 1,
-      start: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
-      end: ''
+      startDate: date.format(new Date(), 'YYYY/MM/DD'),
+      endDate: ''
     }
   ],
   isActive: true,
   createdUserId: '',
-  created: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
+  created: date.format(new Date(), 'YYYY/MM/DD'),
   updated: ''
 }
 
@@ -30,19 +30,11 @@ export const setProjectMemberId = (projectId, memberId) => {
 export const isValidProjectMember = async data => {
   if (
     (await checkIdUserExist(data.memberId)) &&
-    !(await checkIdProjectMemberExist(data.projectId, data.memberId))
+    !(await getIdProjectMember(data.projectId, data.memberId))
   ) {
     return true
   }
   return false
-}
-
-export const checkIdProjectMemberExist = async (projectId, memberId) => {
-  const queryData = await projectMemberCollection()
-    .where('projectId', '==', projectId)
-    .where('memberId', '==', memberId)
-    .get()
-  return !queryData.empty
 }
 
 export const saveProjectMember = async data => {
@@ -66,4 +58,20 @@ export const getMemberOfProjectList = async projectList => {
     .where('projectId', 'in', projectList)
     .get()
   return queryData.empty ? [] : queryData.docs.map(doc => doc.data())
+}
+
+export const getIdProjectMember = async (projectId, memberId) => {
+  const queryData = await projectMemberCollection()
+    .where('projectId', '==', projectId)
+    .where('memberId', '==', memberId)
+    .get()
+  return queryData.empty ? '' : queryData.docs[0].data()
+}
+
+export const UpdateProjectMember = async data => {
+  data.id = setProjectMemberId(data.projectId, data.memberId)
+  await projectMemberCollection()
+    .doc(data.id)
+    .set(data)
+  return data
 }

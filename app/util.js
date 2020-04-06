@@ -5,3 +5,14 @@ export const positionPermission = {
   projectManager: 2,
   user: 1
 }
+export const leaveType = {
+  p: 1,
+  np: 1,
+  nk: 0,
+  k: -1,
+  q: 0,
+  l: 1,
+  c: 1,
+  t: 0,
+  b: 0
+}

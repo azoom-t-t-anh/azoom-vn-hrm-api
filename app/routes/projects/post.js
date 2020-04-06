@@ -17,7 +17,6 @@ module.exports = async (req, res) => {
     return res.sendStatus(403)
   }
   const data = _.defaultsDeep(req.body, projectReq)
-  console.log(req.user)
 
   if (await isValidProject(data)) {
     data.createdUserId = req.user.id
