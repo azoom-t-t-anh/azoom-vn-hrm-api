@@ -4,7 +4,6 @@ import {
 } from '@cloudStoreDatabase/timesheet-application'
 
 import { isProjectManager, isAdmin, isEditor } from '@helpers/check-rule'
-import { getManagerProjectList } from '@cloudStoreDatabase/project'
 import {
   getMemberOfProjectList,
   getProjectListOfManagerId
