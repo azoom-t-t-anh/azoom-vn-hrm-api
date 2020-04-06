@@ -12,7 +12,7 @@ export const userToken = {
   userId: '',
   tokenCode: '',
   isActive: true,
-  created: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
+  created: firebase.firestore.Timestamp.fromDate(new Date()),
   updated: ''
 }
 

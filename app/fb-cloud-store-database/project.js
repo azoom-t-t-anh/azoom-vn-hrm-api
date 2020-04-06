@@ -1,7 +1,3 @@
-import { isProjectManager, isAdmin } from '@helpers/check-rule'
-import { getUserId } from '@cloudStoreDatabase/user'
-
-const date = require('date-and-time')
 const firebase = require('firebase')
 
 const projectCollection = () => {
@@ -16,12 +12,12 @@ export const project = {
   endDate: '',
   status: -1,
   isActive: true,
-  created: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
+  created: firebase.firestore.Timestamp.fromDate(new Date()),
   updated: ''
 }
 
 export const isValidProject = async data => {
-  if (!(await getProject(data.id))) {
+  if (data.id && !(await getProject(data.id))) {
     return true
   }
   return false

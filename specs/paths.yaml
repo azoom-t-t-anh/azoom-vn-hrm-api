@@ -42,6 +42,9 @@
 /projects/:
   post:
     $ref: paths/projects/post.yaml
-/projects/members/:
+/projects/{projectId}/members/:
   post:
-    $ref: paths/projects/members/post.yaml
+    $ref: paths/projects/_projectId/members/post.yaml
+/projects/{projectId}/members/{memberId}/:
+  patch:
+    $ref: paths/projects/_projectId/members/_memberId/patch.yaml

@@ -1,35 +1,48 @@
-operationId: projects.createMember.
+operationId: projects.updateMember
 tags:
   - Projects
-summary: POST /projects/members/
-description: Add member to project
+summary: Patch /projects/{projectId}/members/{memberId}/
+description: Update infomation to member
+parameters:
+  - name: projectId
+    in: path
+    description: Project ID
+    schema:
+      type: string
+  - name: memberId
+    in: path
+    description: Member ID
+    schema:
+      type: string
 requestBody:
   content:
     application/json:
       schema:
         properties:
-          projectId:
-            type: string
-            description: Input project ID
-            example: "azoom-vn-hr-001"
-          memberId:
-            type: string
-            description: Input user ID of member, who is a project participant.
-            example: "azoom002"
           joiningProcess:
-            type: object
-            properties:
-              position:
-                type: integer
-                description: 1- mamager of project, 2- member of project
-              startDate:
-                type: string
-                format: date-time
-                description: Date of participation in the project
-              endDate:
-                type: string
-                format: date-time
-                description: Date leaving the project
+            type: array
+            Item:
+              type: object
+              properties:
+                position:
+                  type: integer
+                  description: 1- mamager of project, 2- member of project
+                startDate:
+                  type: string
+                  format: date-time
+                  description: Date of participation in the project
+                endDate:
+                  type: string
+                  format: date-time
+                  description: Date leaving the project
+            example:
+              [
+                {
+                  "position": 2,
+                  "startDate": "2020-04-06T09:37:35Z",
+                  "endDate": "2020-04-06T09:37:35Z",
+                },
+              ]
         required:
           - projectId
           - memberId
@@ -65,7 +78,7 @@ responses:
               "memberId": "azoom002",
               "id": "azoom-vn-hr-001_azoom00220200401",
               "joiningProcess":
-                [{ "position": 1, "start": "2020/04/01 15:49:59", "end": "" }],
+                [{ "position": 2, "start": "2020/04/01 15:49:59", "end": "" }],
               "isActive": true,
               "createdUserId": "azoom0019",
               "created": "2020/04/01 15:49:59",

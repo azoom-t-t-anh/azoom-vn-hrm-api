@@ -15,7 +15,7 @@ export const leaveApplication = {
   requiredContent: '',
   status: -1,
   isActive: true,
-  created: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
+  created: firebase.firestore.Timestamp.fromDate(new Date()),
   updated: ''
 }
 

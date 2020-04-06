@@ -12,7 +12,7 @@ export const timesheet = {
   startTime: '',
   endTime: '',
   leaveTypeId: '',
-  checkedDate: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
+  checkedDate: date.format(new Date(), 'YYYY/MM/DD'),
   isCorrect: false
 }
 
@@ -62,5 +62,5 @@ export const getTimesheetUserdate = async (userId, tmsDate) => {
     .doc(userId)
     .collection(setTimesheetId(tmsDate))
     .get()
-  return (await queryData.empty) ? '' : queryData.docs[0].data()
+  return queryData.empty ? '' : queryData.docs[0].data()
 }

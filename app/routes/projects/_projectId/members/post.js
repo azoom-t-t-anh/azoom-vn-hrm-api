@@ -3,24 +3,21 @@ import {
   saveProjectMember,
   isValidProjectMember
 } from '@cloudStoreDatabase/project-member'
-import { isProjectManager, isAdmin } from '@helpers/check-rule'
+import { isAdmin } from '@helpers/check-rule'
 import { getProject } from '@cloudStoreDatabase/project'
-import { getProjectListOfManagerId } from '@cloudStoreDatabase/project-member'
 
 const _ = require('lodash')
 
 module.exports = async (req, res) => {
+  const { projectId } = req.params
   const data = _.defaultsDeep(req.body, pmReq)
-  const project = await getProject(data.projectId)
+  data.projectId = projectId
+  const project = await getProject(projectId)
 
   if (!(await project)) {
     return res.sendStatus(400)
   }
-  if (
-    isAdmin(req.user.positionPermissionId) ||
-    (isProjectManager(req.user.positionPermissionId) &&
-      (await getProjectListOfManagerId(req.user.id)))
-  ) {
+  if (isAdmin(req.user.positionPermissionId)) {
     if (await isValidProjectMember(data)) {
       data.createdUserId = req.user.id
       return res.send(await saveProjectMember(data))
