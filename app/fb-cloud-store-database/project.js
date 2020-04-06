@@ -21,15 +21,8 @@ export const project = {
 }
 
 export const isValidProject = async data => {
-  const manager = await getUserId(data.managerId)
-  if (manager) {
-    if (
-      (isAdmin(manager.positionPermissionId) ||
-        isProjectManager(manager.positionPermissionId)) &&
-      !(await getProject(data.id))
-    ) {
-      return true
-    }
+  if (!(await getProject(data.id))) {
+    return true
   }
   return false
 }
@@ -46,19 +39,4 @@ export const getProject = async projectId => {
     .where('id', '==', projectId)
     .get()
   return queryData.empty ? '' : queryData.docs[0].data()
-}
-
-export const checkProjectManager = async (projectId, managerId) => {
-  const queryData = await projectCollection()
-    .where('id', '==', projectId)
-    .where('managerId', '==', managerId)
-    .get()
-  return !queryData.empty
-}
-
-export const getManagerProjectList = async managerId => {
-  const queryData = await projectCollection()
-    .where('managerId', '==', managerId)
-    .get()
-  return queryData.empty ? [] : queryData.docs.map(doc => doc.data())
 }
