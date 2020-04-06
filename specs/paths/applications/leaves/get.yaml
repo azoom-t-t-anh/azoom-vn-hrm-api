@@ -1,4 +1,4 @@
-operationId: applications/leaves/.getlist
+operationId: leavesApplications.getList
 tags:
   - Applications
 summary: GET /applications/leaves/

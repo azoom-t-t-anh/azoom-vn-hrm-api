@@ -3,15 +3,17 @@ import {
   saveTimesheet,
   getTimesheetUserdate,
   timesheet as timesheetReq
-} from '@cloudStoreDatabase/time-sheet'
+} from '@cloudStoreDatabase/timesheet'
 const date = require('date-and-time')
 
 module.exports = async (req, res) => {
   const data = await getTimesheetUserdate(req.user.id, new Date())
   if (await data) {
     data.startTime = date.format(new Date(), 'HH:mm')
-    await updateTimesheet(data)
+    updateTimesheet(data)
   } else {
+    timesheetReq.userId = req.user.id
+    timesheetReq.checkedDate = new Date()
     timesheetReq.startTime = date.format(new Date(), 'HH:mm')
     saveTimesheet(timesheetReq)
   }

@@ -1,11 +1,16 @@
 const date = require('date-and-time')
-import { getTable } from '@configs/database'
 const _ = require('lodash')
+const firebase = require('firebase')
+
+const leaveApplicationCollection = () => {
+  return firebase.firestore().collection(process.env.DB_TABLE_LEAVE_APPLICATION)
+}
 
 export const leaveApplication = {
   id: '',
   userId: '',
   approvalUserId: '',
+  approvalCosre: 0,
   requiredDates: [],
   requiredContent: '',
   status: -1,
@@ -23,7 +28,7 @@ const setId = id => {
 
 export const saveLeaveApplication = async data => {
   data.id = setId(data.userId)
-  const leaveApp = await getTable(process.env.DB_TABLE_LEAVE_APPLICATION)
+  const leaveApp = await leaveApplicationCollection()
     .doc(data.id)
     .set(data)
   return leaveApp
@@ -31,10 +36,7 @@ export const saveLeaveApplication = async data => {
 
 export const getAllLeaveApp = async (page, number) => {
   const result = { count: 0, data: [] }
-  const query = await getTable(process.env.DB_TABLE_LEAVE_APPLICATION).orderBy(
-    'created',
-    'desc'
-  )
+  const query = await leaveApplicationCollection().orderBy('created', 'desc')
   const datall = await query.get()
   result.count = datall.empty ? 0 : await datall.docs.length
   if (!page) {
@@ -58,42 +60,10 @@ export const getAllLeaveApp = async (page, number) => {
   return result
 }
 
-export const getAllLeaveAppProjectlist = async (
-  page,
-  number,
-  projectIdlist
-) => {
+export const getAllLeaveAppOfUserList = async (page, number, userList) => {
   const result = { count: 0, data: [] }
-  const query = await getTable(process.env.DB_TABLE_LEAVE_APPLICATION)
-    .where('projectId', 'in', projectIdlist)
-    .orderBy('created', 'desc')
-  const datall = await query.get()
-  result.count = datall.empty ? 0 : await datall.docs.length
-  if (!page) {
-    result.data = datall.empty ? '' : await datall.docs.map(doc => doc.data())
-    return result
-  }
-  if (page && number && page * number - 1 <= result.count) {
-    const queryData = await query
-      .startAt(
-        await datall.docs[page - 1 ? (page - 1) * number : page - 1].data()
-          .created
-      )
-      .limit(number)
-      .get()
-    result.data = queryData.empty
-      ? []
-      : await queryData.docs.map(doc => doc.data())
-    return result
-  }
-
-  return result
-}
-
-export const getAllLeaveAppUserList = async (page, number, userIdList) => {
-  const result = { count: 0, data: [] }
-  const query = await getTable(process.env.DB_TABLE_LEAVE_APPLICATION)
-    .where('userId', 'in', userIdList)
+  const query = await leaveApplicationCollection()
+    .where('userId', 'in', userList)
     .orderBy('created', 'desc')
   const datall = await query.get()
   result.count = datall.empty ? 0 : await datall.docs.length
@@ -119,11 +89,11 @@ export const getAllLeaveAppUserList = async (page, number, userIdList) => {
 }
 
 export const updateLeaveApp = async dataReq => {
-  const queryData = await getTable(process.env.DB_TABLE_LEAVE_APPLICATION)
+  const queryData = await leaveApplicationCollection()
     .where('id', '==', dataReq.id)
     .get()
   queryData.docs.map(item =>
-    getTable(process.env.DB_TABLE_LEAVE_APPLICATION)
+    leaveApplicationCollection()
       .doc(item.id)
       .update(_.defaultsDeep(dataReq, item.data()))
   )
@@ -132,7 +102,7 @@ export const updateLeaveApp = async dataReq => {
 }
 
 export const getLeaveApp = async timsheetAppId => {
-  const queryData = await getTable(process.env.DB_TABLE_LEAVE_APPLICATION)
+  const queryData = await leaveApplicationCollection()
     .where('id', '==', timsheetAppId)
     .get()
   return queryData.empty ? '' : queryData.docs[0].data()

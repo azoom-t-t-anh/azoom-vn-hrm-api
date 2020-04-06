@@ -1,13 +1,20 @@
-operationId: /applications/timesheets/{timesheetAppId}/reject/
+operationId: leavesApplications.approveOrReject
 tags:
   - Applications
-summary: PATCH /applications/timesheets/{timesheetAppId}/reject/
-description: Reject to application
+summary: PATCH /applications/leaves/{leaveAppId}/{isApproved}/
+description: Approved or reject to application
 parameters:
   - timesheetAppId: page
     in: path
-    description: Timesheet application ID
+    description: Leave application ID
     example: azoom0019
+    schema:
+      type: string
+  - isApproved: page
+    in: path
+    description: is approved. False- reject application. True- approved application
+    example: true
+    default: flase
     schema:
       type: string
 responses:
@@ -20,7 +27,7 @@ responses:
           properties:
             message:
               type: string
-          example: { "message": "Reject successfully." }
+          example: { "message": "Approved successfully." }
   400:
     $ref: "#/components/responses/400"
   401:

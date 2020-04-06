@@ -1,7 +1,11 @@
-import { getTable } from '@configs/database'
-
 const date = require('date-and-time')
 const _ = require('lodash')
+
+const firebase = require('firebase')
+
+const tokenUserCollection = () => {
+  return firebase.firestore().collection(process.env.DB_TABLE_USER_TOKEN)
+}
 
 export const userToken = {
   id: '',
@@ -18,14 +22,14 @@ export const saveToken = async (userId, tokenCode) => {
     { id: id, userId: userId, tokenCode: tokenCode },
     userToken
   )
-  const tokenUser = await getTable(process.env.DB_TABLE_USER_TOKEN)
+  const tokenUser = await tokenUserCollection()
     .doc(id)
     .set(data)
   return tokenUser
 }
 
 export const getToken = async (userId, tokenFromClient) => {
-  const queryData = await getTable(process.env.DB_TABLE_USER_TOKEN)
+  const queryData = await tokenUserCollection()
     .where('tokenCode', '==', tokenFromClient)
     .where('userId', '==', userId)
     .where('isActive', '==', true)
@@ -34,11 +38,11 @@ export const getToken = async (userId, tokenFromClient) => {
 }
 
 export const destroyALLTokenOfUser = async userId => {
-  const queryData = await getTable(process.env.DB_TABLE_USER_TOKEN)
+  const queryData = await tokenUserCollection()
     .where('userId', '==', userId)
     .get()
   queryData.docs.map(item =>
-    getTable(process.env.DB_TABLE_USER_TOKEN)
+    tokenUserCollection()
       .doc(item.id)
       .update({
         isActive: false,
@@ -48,7 +52,7 @@ export const destroyALLTokenOfUser = async userId => {
   return queryData.empty
     ? ''
     : queryData.docs.map(item =>
-        getTable(process.env.DB_TABLE_USER_TOKEN)
+        tokenUserCollection()
           .doc(item.id)
           .update({
             isActive: false,
@@ -58,13 +62,13 @@ export const destroyALLTokenOfUser = async userId => {
 }
 
 export const destroyToken = async tokenFromClient => {
-  const queryData = await getTable(process.env.DB_TABLE_USER_TOKEN)
+  const queryData = await tokenUserCollection()
     .where('tokenCode', '==', tokenFromClient)
     .get()
   return queryData.empty
     ? ''
     : queryData.docs.map(item =>
-        getTable(process.env.DB_TABLE_USER_TOKEN)
+        tokenUserCollection()
           .doc(item.id)
           .update({
             isActive: false

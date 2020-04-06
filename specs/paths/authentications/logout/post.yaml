@@ -1,4 +1,4 @@
-operationId: /authentications/logout/{isAll}/
+operationId: authentications.logout
 tags:
   - Authentications
 summary: Post /authentications/logout/{isAll}/

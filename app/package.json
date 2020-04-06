@@ -40,8 +40,6 @@
     "@middleware": "./middleware",
     "@helpers": "./helpers",
     "@utils": "./utils",
-    "@configs": "./configs",
-    "@storeDatabaseFirebase": "./store-database-firebase",
     "@cloudStoreDatabase": "fb-cloud-store-database"
   },
   "engines": {

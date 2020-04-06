@@ -1,4 +1,4 @@
-operationId: /projects/
+operationId: projects.create
 tags:
   - Projects
 summary: POST /projects/
@@ -20,10 +20,6 @@ requestBody:
             type: integer
             description: Input status of project. -1- pending,0-in progress, 1- done
             example: 0
-          managerId:
-            type: string
-            description: Input of project manager ID.
-            example: "azoom001"
         required:
           - id
           - projectName
@@ -42,8 +38,6 @@ responses:
               type: string
             status:
               type: integer
-            managerId:
-              type: string
             isActive:
               type: boolean
             created:
@@ -56,7 +50,6 @@ responses:
               "id": "azoom-vn-hr-001",
               "projectName": "azoom-hr-vn",
               "status": 0,
-              "managerId": "azoom001",
               "createdUserId": "azoom0019",
               "isActive": true,
               "created": "2020/04/01 15:49:59",

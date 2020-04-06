@@ -1,4 +1,4 @@
-operationId: applications/timesheets/
+operationId: timesheetsApplications.create
 tags:
   - Applications
 summary: POST /applications/timesheets/

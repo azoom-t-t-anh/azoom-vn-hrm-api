@@ -1,4 +1,4 @@
-operationId: users/{userId}/getdetail
+operationId: users.update
 tags:
   - Users
 summary: PUT /users/{userId}/

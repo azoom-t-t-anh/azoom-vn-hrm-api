@@ -1,4 +1,4 @@
-operationId: /timesheets/checkout/
+operationId: timesheets.checkout
 tags:
   - timesheets
 summary: POST /timesheets/checkout/

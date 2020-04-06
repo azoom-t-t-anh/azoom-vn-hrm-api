@@ -1,4 +1,4 @@
-operationId: applications/timesheets/.getlist
+operationId: timesheetsApplications.getList
 tags:
   - Applications
 summary: GET /applications/timesheets/
