@@ -1,13 +1,13 @@
 export const isAdmin = roleId => {
-  return roleId == 1
+  return roleId == process.env.POSITION_ADMIN
 }
 export const isEditor = roleId => {
-  return roleId == 2
+  return roleId == process.env.POSITION_EDITOR
 }
 export const isProjectManager = roleId => {
-  return roleId == 3
+  return roleId == process.env.POSITION_PROJECTMANAGER
 }
 
 export const isUser = roleId => {
-  return roleId == 4
+  return roleId == process.env.POSITION_USER
 }

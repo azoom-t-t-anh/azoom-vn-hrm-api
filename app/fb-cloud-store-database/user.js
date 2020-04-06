@@ -1,8 +1,11 @@
-import { getTable } from '@configs/database'
-const firebase = require('firebase')
 const date = require('date-and-time')
 const _ = require('lodash')
 const bcrypt = require('bcrypt')
+const firebase = require('firebase')
+
+const userCollection = () => {
+  return firebase.firestore().collection(process.env.DB_TABLE_USER)
+}
 
 export const user = {
   id: '',
@@ -17,21 +20,21 @@ export const user = {
   totalPaidLeaveDate: 0,
   contractType: 0,
   position: 'Dev',
-  positionPermissionId: 4,
+  positionPermissionId: 1,
   isActive: true,
   created: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
   updated: ''
 }
 
 const checkEmailExist = async useremail => {
-  const queryData = await getTable(process.env.DB_TABLE_USER)
+  const queryData = await userCollection()
     .where('email', '==', useremail)
     .get()
   return !queryData.empty
 }
 
 export const checkIdUserExist = async userId => {
-  const queryData = await getTable(process.env.DB_TABLE_USER)
+  const queryData = await userCollection()
     .where('id', '==', userId)
     .get()
   return !queryData.empty
@@ -46,14 +49,14 @@ export const isValidUser = async (id, email) => {
 
 export const saveUser = async data => {
   data.password = bcrypt.hashSync(data.password, 10)
-  const users = await getTable(process.env.DB_TABLE_USER)
+  const users = await userCollection()
     .doc(data.id)
     .set(data)
   return users
 }
 
 export const updateUser = async (userId, dataReq) => {
-  const queryData = await getTable(process.env.DB_TABLE_USER)
+  const queryData = await userCollection()
     .where('id', '==', userId)
     .get()
   queryData.docs.map(item =>
@@ -66,10 +69,7 @@ export const updateUser = async (userId, dataReq) => {
 
 export const getAllUser = async (page, number) => {
   const result = { count: 0, data: [] }
-  const query = await getTable(process.env.DB_TABLE_USER).orderBy(
-    'created',
-    'desc'
-  )
+  const query = await userCollection().orderBy('created', 'desc')
   const datall = await query.get()
   result.count = datall.empty ? 0 : await datall.docs.length
   if (!page) {
@@ -94,14 +94,14 @@ export const getAllUser = async (page, number) => {
 }
 
 export const getUserId = async userId => {
-  const queryData = await getTable(process.env.DB_TABLE_USER)
+  const queryData = await userCollection()
     .where('id', '==', userId)
     .get()
   return queryData.empty ? '' : queryData.docs[0].data()
 }
 
 export const getUser = async (email, password) => {
-  const queryData = await getTable(process.env.DB_TABLE_USER)
+  const queryData = await userCollection()
     .where('email', '==', email)
     .get()
   const userDoc = queryData.docs.find(doc =>
