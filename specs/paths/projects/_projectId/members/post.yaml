@@ -19,19 +19,30 @@ requestBody:
             description: Input user ID of member, who is a project participant.
             example: "azoom002"
           joiningProcess:
-            type: object
-            properties:
-              position:
-                type: integer
-                description: 1- mamager of project, 2- member of project
-              startDate:
-                type: string
-                format: date-time
-                description: Date of participation in the project
-              endDate:
-                type: string
-                format: date-time
-                description: Date leaving the project
+            type: array
+            description: joining Process
+            Item:
+              type: object
+              properties:
+                position:
+                  type: integer
+                  description: 1- mamager of project, 2- member of project
+                startDate:
+                  type: string
+                  format: date-time
+                  description: Date of participation in the project
+                endDate:
+                  type: string
+                  format: date-time
+                  description: Date leaving the project
+            example:
+              [
+                {
+                  "position": 2,
+                  "startDate": "2020-04-06T09:37:35Z",
+                  "endDate": "2020-04-06T09:37:35Z",
+                },
+              ]
         required:
           - projectId
           - memberId

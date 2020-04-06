@@ -21,6 +21,7 @@ requestBody:
         properties:
           joiningProcess:
             type: array
+            description: joining Process
             Item:
               type: object
               properties:
