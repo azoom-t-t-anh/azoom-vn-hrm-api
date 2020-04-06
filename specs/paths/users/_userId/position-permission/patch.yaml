@@ -1,8 +1,8 @@
-operationId: user/{userId}/update-role
+operationId: users.updatePositionPermission
 tags:
   - Users
-summary: PATCH /users/{userId}/update-role
-description: Updated role for user
+summary: PATCH /users/{userId}/positionPermission
+description: Updated position permission for user
 parameters:
   - userId: page
     in: path

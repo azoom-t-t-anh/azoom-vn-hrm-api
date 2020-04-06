@@ -1,4 +1,4 @@
-operationId: authentications/login/
+operationId: authentications.login
 tags:
   - Authentications
 summary: POST /authentications/login/

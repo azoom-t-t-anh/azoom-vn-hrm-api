@@ -1,4 +1,4 @@
-operationId: users/
+operationId: users.getList
 tags:
   - Users
 summary: GET /users/

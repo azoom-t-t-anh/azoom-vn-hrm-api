@@ -1,4 +1,4 @@
-operationId: users/post
+operationId: users.create
 tags:
   - Users
 summary: POST /users/post

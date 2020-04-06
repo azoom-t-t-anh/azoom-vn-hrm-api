@@ -3,7 +3,7 @@ import {
   saveTimesheet,
   getTimesheetUserdate,
   timesheet
-} from '@cloudStoreDatabase/time-sheet'
+} from '@cloudStoreDatabase/timesheet'
 const date = require('date-and-time')
 
 module.exports = async (req, res) => {

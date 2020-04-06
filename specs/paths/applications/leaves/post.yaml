@@ -1,4 +1,4 @@
-operationId: applications/leaves/
+operationId: leavesApplications.create
 tags:
   - Applications
 summary: POST /aplications/leaves/

@@ -7,7 +7,7 @@ import {
   getTimesheetUserdate,
   saveTimesheet,
   timesheet
-} from '@cloudStoreDatabase/time-sheet'
+} from '@cloudStoreDatabase/timesheet'
 import { isAdmin, isEditor } from '@helpers/check-rule'
 import {
   getMemberOfProjectList,

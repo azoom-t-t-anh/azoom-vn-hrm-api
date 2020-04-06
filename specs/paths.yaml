@@ -14,26 +14,20 @@
     $ref: paths/applications/leaves/post.yaml
   get:
     $ref: paths/applications/leaves/get.yaml
-/applications/leaves/{leaveAppId}/approved/:
+/applications/leaves/{leaveAppId}/{isApproved}/:
   patch:
-    $ref: paths/applications/leaves/_leaveAppId/approved/patch.yaml
-/applications/leaves/{leaveAppId}/reject/:
+    $ref: paths/applications/leaves/_leaveAppId/_isApproved/patch.yaml
+/applications/timesheets/{timesheetAppId}/{isApproved}/:
   patch:
-    $ref: paths/applications/leaves/_leaveAppId/reject/patch.yaml
-/applications/timesheets/{timesheetAppId}/approved/:
-  patch:
-    $ref: paths/applications/timesheets/_timesheetAppId/approved/patch.yaml
-/applications/timesheets/{timesheetAppId}/reject/:
-  patch:
-    $ref: paths/applications/timesheets/_timesheetAppId/reject/patch.yaml
+    $ref: paths/applications/timesheets/_timesheetAppId/_isApproved/patch.yaml
 /users/:
   post:
     $ref: paths/users/post.yaml
   get:
     $ref: paths/users/get.yaml
-/users/{userId}/update-permission/:
+/users/{userId}/position-permission/:
   patch:
-    $ref: paths/users/_userId/update-permission/patch.yaml
+    $ref: paths/users/_userId/position-permission/patch.yaml
 /users/{userId}/:
   put:
     $ref: paths/users/_userId/put.yaml

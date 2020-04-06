@@ -5,7 +5,7 @@ import {
 import {
   updateTimesheet,
   getTimesheetUserdate
-} from '@cloudStoreDatabase/time-sheet'
+} from '@cloudStoreDatabase/timesheet'
 
 import { isAdmin, isEditor } from '@helpers/check-rule'
 import {

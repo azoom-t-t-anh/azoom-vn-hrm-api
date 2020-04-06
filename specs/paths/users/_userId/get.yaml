@@ -1,4 +1,4 @@
-operationId: users/{userId}/
+operationId: users.getDetail
 tags:
   - Users
 summary: GET /users/{userId}/

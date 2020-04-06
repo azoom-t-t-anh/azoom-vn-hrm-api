@@ -10,9 +10,9 @@ export const projectMember = {
   id: '',
   projectId: '',
   memberId: '',
-  joiningStatus: [
+  joiningProcess: [
     {
-      positionScore: 1,
+      position: 1,
       start: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
       end: ''
     }
@@ -56,7 +56,7 @@ export const saveProjectMember = async data => {
 export const getProjectListOfManagerId = async managerId => {
   const queryData = await projectMemberCollection()
     .where('memberId', '==', managerId)
-    .where('joiningStatus.positionScore', '==', 1)
+    .where('joiningProcess.position', '==', 1)
     .get()
   return queryData.empty ? [] : queryData.docs.map(doc => doc.data())
 }
