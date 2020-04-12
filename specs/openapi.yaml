@@ -1,0 +1,19 @@
+openapi: 3.0.0
+servers:
+  - url: hr-management-5ifnouqsqa-an.a.run.app
+info:
+  title: HR Management API
+  description: HR Management API
+  version: "1.0.0"
+paths:
+  $ref: paths.yaml
+components:
+  responses:
+    $ref: responses.yaml
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: apiKey
+security:
+  - ApiKeyAuth: []

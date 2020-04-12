@@ -1,0 +1,84 @@
+operationId: timesheetsApplications.create
+tags:
+  - Applications
+summary: POST /applications/timesheets/
+description: Create new application about want to update timesheet.
+requestBody:
+  content:
+    application/json:
+      schema:
+        properties:
+          startTime:
+            type: string
+            format: hh:mm
+            description: Input startTime
+            example: "08:30"
+          endTime:
+            type: string
+            format: hh:mm
+            description: Input endTime.
+            example: "17:30"
+          requireDate:
+            type: string
+            format: date
+            example: 2020/03/28
+          requireContent:
+            type: string
+            description: Input content of required.
+            example: "I want to change time working for 2013/03/12"
+        required:
+          - startTime
+          - endTime
+          - requireDate
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            id:
+              type: string
+            userId:
+              type: string
+            approvalUserId:
+              type: string
+            startTime:
+              type: string
+            endTime:
+              type: string
+            requireDate:
+              type: string
+              format: date
+            requiredContent:
+              type: string
+            isActive:
+              type: boolean
+            created:
+              type: string
+              format: date-time
+            updated:
+              format: date-time
+          example:
+            {
+              "startTime": "08:30",
+              "endTime": "17:30",
+              "requireDate": "2020/03/30",
+              "requiredContent": "I want to change time working for 2013/03/12",
+              "id": "azoom00920200330150334",
+              "userId": "azoom009",
+              "approvalUserId": "",
+              "requiredDate": "",
+              "timesheetId": "",
+              "status": -1,
+              "isActive": true,
+              "created": "2020/03/30 15:34:03",
+              "updated": "",
+            }
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  500:
+    $ref: "#/components/responses/500"

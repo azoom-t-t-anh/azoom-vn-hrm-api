@@ -1,0 +1,52 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "env $(grep -v '^#' ./.env) node index.js",
+    "dev": "env $(grep -v '^#' ./.env) nodemon index.js"
+  },
+  "dependencies": {
+    "bcrypt": "^4.0.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "date-and-time": "^0.13.1",
+    "date-time": "^3.1.0",
+    "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "express-promise-router": "^3.0.3",
+    "openapi-express-middleware": "^0.0.2",
+    "firebase": "^7.11.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
+    "module-alias": "^2.2.2",
+    "morgan": "^1.9.1",
+    "nnn-router": "^1.0.5",
+    "npm": "^6.14.2",
+    "redis": "^3.0.2",
+    "statuses": "^1.5.0",
+    "node-mocks-http": "^1.7.6",
+    "to-case": "^2.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.4",
+    "prettier": "^2.0.2"
+  },
+  "_moduleAliases": {
+    "@root": "./",
+    "@app": "./",
+    "@specs": "../specs",
+    "@routes": "./routes",
+    "@middleware": "./middleware",
+    "@helpers": "./helpers",
+    "@util": "./util",
+    "@cloudStoreDatabase": "fb-cloud-store-database",
+    "@constants": "./constants"
+  },
+  "engines": {
+    "node": "10"
+  }
+}

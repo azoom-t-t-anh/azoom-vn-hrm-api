@@ -1,0 +1,63 @@
+operationId: projects.create
+tags:
+  - Projects
+summary: POST /projects/
+description: Create new project.
+requestBody:
+  content:
+    application/json:
+      schema:
+        properties:
+          id:
+            type: string
+            description: Input project ID
+            example: "azoom-vn-hr-001"
+          projectName:
+            type: string
+            description: Input projectName.
+            example: "azoom-hr-vn"
+          status:
+            type: integer
+            description: Input status of project. -1- pending,0-in progress, 1- done
+            example: 0
+        required:
+          - id
+          - projectName
+          - managerId
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            id:
+              type: string
+            projectName:
+              type: string
+            status:
+              type: integer
+            isActive:
+              type: boolean
+            created:
+              type: string
+              format: date-time
+            updated:
+              format: date-time
+          example:
+            {
+              "id": "azoom-vn-hr-001",
+              "projectName": "azoom-hr-vn",
+              "status": 0,
+              "createdUserId": "azoom0019",
+              "isActive": true,
+              "created": "2020/04/01 15:49:59",
+              "updated": "",
+            }
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  500:
+    $ref: "#/components/responses/500"

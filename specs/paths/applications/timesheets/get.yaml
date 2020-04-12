@@ -1,0 +1,54 @@
+operationId: timesheetsApplications.getList
+tags:
+  - Applications
+summary: GET /applications/timesheets/
+parameters:
+  - name: page
+    in: query
+    description: Page number
+    schema:
+      type: integer
+  - name: limit
+    in: query
+    description: Limit number
+    schema:
+      type: string
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Total account
+            data:
+              type: array
+          example:
+            {
+              "count": 5,
+              "data":
+                [
+                  {
+                    "approvalUserId": "",
+                    "created": "2020/03/30 15:34:03",
+                    "endTime": "17:30",
+                    "id": "azoom00920200330150334",
+                    "status": 1,
+                    "requiredContent": "I want to change time working for 2013/03/12",
+                    "requiredDate": "2020/03/28",
+                    "startTime": "08:30",
+                    "isActive": true,
+                    "updated": "",
+                    "userId": "azoom009",
+                  },
+                ],
+            }
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  500:
+    $ref: "#/components/responses/500"

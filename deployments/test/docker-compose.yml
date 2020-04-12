@@ -1,0 +1,44 @@
+version: "3"
+services:
+  bengal-test-mysql:
+    image: mysql:5.7
+    container_name: bengal-test-mysql
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - ../development/mysql/initdb:/docker-entrypoint-initdb.d
+    ports:
+      - ${MYSQL_PORT}:3306
+    network_mode: cloudbuild
+  bengal-test-mailhog:
+    build:
+      context: ../development/
+      dockerfile: ./mailhog/Dockerfile
+    ports:
+      - 1025:1025
+      - 8025:8025
+    network_mode: cloudbuild
+  bengal-test-workspace:
+    build:
+      context: ./firebase-emulator
+      args:
+        FIREBASE_TOOLS_VERSION: ${FIREBASE_TOOLS_VERSION}
+    container_name: bengal-test-workspace
+    stdin_open: true
+    tty: true
+    image: bengalapi/test:emulator-1.0
+    volumes:
+      - ../../../bengal-api:/usr/local/bengal-api
+      - ./firebase-emulator/firebase.json:/usr/local/bengal-api/firebase.json
+      - ./firebase-emulator/firestore.indexes.json:/usr/local/bengal-api/firestore.indexes.json
+      - ./firebase-emulator/firestore.rules:/usr/local/bengal-api/firestore.rules
+    ports:
+      - ${API_PORT}:5005
+      - 8080:8080
+    network_mode: cloudbuild
+networks:
+  default:
+    external:
+      name: cloudbuild

@@ -1,0 +1,59 @@
+operationId: users.getList
+tags:
+  - Users
+summary: GET /users/
+parameters:
+  - name: page
+    in: query
+    description: Page number
+    schema:
+      type: integer
+  - name: limit
+    in: query
+    description: Limit number
+    schema:
+      type: string
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Total account
+            data:
+              type: array
+          example:
+            {
+              "count": 10,
+              "data":
+                [
+                  {
+                    "address": "hn-vn",
+                    "birthDate": "1996/05/4",
+                    "created": "2020/03/30 12:26:21",
+                    "dateJoined": "2020/03/27",
+                    "email": "abc@gmail.com",
+                    "firstName": "azoom",
+                    "id": "azoom00199898",
+                    "isActive": true,
+                    "lastName": "vu",
+                    "password": "$2b$10$AnPvQLT4fGBQjrF2Unw/j.xwUfht8TLgqaiMi1DH2E.ECtjc3KoQ.",
+                    "positionPermissionId": 3,
+                    "tel": "096985478",
+                    "updated": "",
+                    "userName": "azoomvn",
+                    "zipCode": "",
+                    "zipcode": "10000",
+                  },
+                ],
+            }
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  500:
+    $ref: "#/components/responses/500"

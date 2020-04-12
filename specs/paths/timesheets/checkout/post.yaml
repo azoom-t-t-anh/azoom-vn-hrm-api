@@ -1,0 +1,34 @@
+operationId: timesheets.checkout
+tags:
+  - Timesheets
+summary: POST /timesheets/checkout/
+description: checkout for time start working.
+requestBody:
+  content:
+    application/json:
+      schema:
+        properties:
+          userId:
+            type: string
+            description: Input ID
+            example: "AZ-19"
+        required:
+          - userId
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Notification about checkout.
+              example: Checkout successfully. || You have not checked in yet.
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  500:
+    $ref: "#/components/responses/500"

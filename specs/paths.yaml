@@ -1,0 +1,50 @@
+/authentications/login/:
+  post:
+    $ref: paths/authentications/login/post.yaml
+/authentications/logout/{isAll}/:
+  post:
+    $ref: paths/authentications/logout/post.yaml
+/applications/timesheets/:
+  post:
+    $ref: paths/applications/timesheets/post.yaml
+  get:
+    $ref: paths/applications/timesheets/get.yaml
+/applications/leaves/:
+  post:
+    $ref: paths/applications/leaves/post.yaml
+  get:
+    $ref: paths/applications/leaves/get.yaml
+/applications/leaves/{leaveAppId}/{isApproved}/:
+  patch:
+    $ref: paths/applications/leaves/_leaveAppId/_isApproved/patch.yaml
+/applications/timesheets/{timesheetAppId}/{isApproved}/:
+  patch:
+    $ref: paths/applications/timesheets/_timesheetAppId/_isApproved/patch.yaml
+/users/:
+  post:
+    $ref: paths/users/post.yaml
+  get:
+    $ref: paths/users/get.yaml
+/users/{userId}/position-permission/:
+  patch:
+    $ref: paths/users/_userId/position-permission/patch.yaml
+/users/{userId}/:
+  put:
+    $ref: paths/users/_userId/put.yaml
+  get:
+    $ref: paths/users/_userId/get.yaml
+/timesheets/checkin/:
+  post:
+    $ref: paths/timesheets/checkin/post.yaml
+/timesheets/checkout/:
+  post:
+    $ref: paths/timesheets/checkout/post.yaml
+/projects/:
+  post:
+    $ref: paths/projects/post.yaml
+/projects/{projectId}/members/:
+  post:
+    $ref: paths/projects/_projectId/members/post.yaml
+/projects/{projectId}/members/{memberId}/:
+  patch:
+    $ref: paths/projects/_projectId/members/_memberId/patch.yaml

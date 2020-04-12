@@ -1,0 +1,55 @@
+'200':
+  description: OK
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            description: メッセージ
+            example: OK
+'400':
+  description: Bad Request
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            description: メッセージ
+            example: 不正なリクエストです
+'401':
+  description: Unauthorized
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            description: メッセージ
+            example: 認証に失敗しました
+'404':
+  description: Not Found
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            description: メッセージ
+            example: リソースが見つかりません
+'500':
+  description: Internal Server Error
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            description: メッセージ
+            example: サーバーエラーが発生しました
