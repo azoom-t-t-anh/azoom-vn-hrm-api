@@ -1,0 +1,99 @@
+operationId: projects.getMembers.
+tags:
+  - Projects
+summary: GET /projects/{projectId}/members/
+description: Get member of project
+parameters:
+  - name: projectId
+    in: path
+    description: Project ID
+    schema:
+      type: string
+      description: id of project
+      example: "azoom0019"
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            members:
+              type: array
+              items:
+                type: object
+                properties:
+                  fullName:
+                    type: string
+                    description: name of member
+                    example: "Nguyen Van A"
+                  isActive:
+                    type: integer
+                    description: status active of member, 0- inactive, 1- active
+                    example: 1
+                  memberId:
+                    type: string
+                    description: user Id of member in project
+                    example: "azomm-0019"
+                  createdDate:
+                    type: string
+                    format: date
+                    description: date create member in project
+                    example: "2020/03/25"
+                  updateDate:
+                    type: string
+                    format: date
+                    description: date update member in project
+                    example: "2020/04/05"
+                  createdUserId:
+                    type: string
+                    description: id of user create member in project
+                    example: "azoom0020"
+                  position:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        end:
+                          type: string
+                          format: date
+                          description: date leaving project of member
+                          example: "2020-04-02"
+                        positionScore:
+                          type: integer
+                          description: 1- project leader, 0- member
+                          example: 1
+                        start:
+                          type: string
+                          format: date
+                          description: date join project of member
+                          example: "2020-04-02"
+          example:
+            {
+              "members":
+                [
+                  {
+                    "fullName": "nguyen van A",
+                    "isActive": true,
+                    "memberId": "azoom001",
+                    "createdDate": "2020/04/23",
+                    "createdUserId": "azoom0019",
+                    "position":
+                      [
+                        {
+                          "end": "2020-04-10",
+                          "positionScore": 1,
+                          "start": "2020-04-06",
+                        },
+                      ],
+                    "updatedDate": "2020/04/24",
+                  },
+                ],
+            }
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  500:
+    $ref: "#/components/responses/500"

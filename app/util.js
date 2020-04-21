@@ -37,7 +37,7 @@ exports.execute = async (func, req) => {
     mockRes.res = result
   }
   await func(mockReq, mockRes)
-  return mockRes.res
+  return { status: mockRes._getStatusCode(), body: mockRes.res }
 }
 
 exports.oneToOne = (leftList, leftKey, rightList, rightKey, as) => {
