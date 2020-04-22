@@ -1,49 +1,42 @@
-import { member as pmReq } from '@constants/models'
+import firebase from 'firebase'
+import date from 'date-and-time'
+import _ from 'lodash/fp'
+import { projectCollection } from '@root/database.js'
 import { isAdmin } from '@helpers/check-rule'
-const getProjectById = require('@routes/projects/_projectId/get')
-const _ = require('lodash/fp')
-import { execute } from '@root/util'
-import getUserById from '../../../users/_userId/get'
-import saveProject from '../../put'
+import { initMember } from '@helpers/project/initMember'
+import { execute } from '@root/util.js'
+import getProjectId from '@routes/projects/_projectId/get.js'
+import getMemberId from '@routes/projects/_projectId/members/_memberId/get.js'
+import getUserId from '@routes/users/_userId/get.js'
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   const { projectId } = req.params
-  const data = _.defaultsDeep(pmReq, req.body)
-  data.projectId = projectId
-  const project = await execute(getProjectById, { params: { projectId } })
-
-  if (!(await project)) {
-    return res.sendStatus(400)
-  }
-  if (isAdmin(req.user.positionPermissionId)) {
-    if (await isValidProjectMember(data.id, project)) {
-      data.createdUserId = req.user.id
-      const members = insertOrUpdateMember(project, data)
-      data.members = members
-      await execute(saveProject, { body: project })
-      return res.send(oldMember)
+  try {
+    if (!isAdmin(req.user.positionPermissionId)) return res.sendStatus(403)
+    const memberProfile = _.defaultsDeep(req.body, initMember)
+    const project = await execute(getProjectId, {
+      query: { projectId },
+    })
+    if (project.status == 404 || !project.body) return res.sendStatus(404)
+    const user = await execute(getUserId, {
+      params: { userId: memberProfile.memberId },
+    })
+    if (user.status == 404 || !user.body) return res.sendStatus(404)
+    const member = await execute(getMemberId, {
+      params: { projectId, memberId: memberProfile.memberId },
+    })
+    if (member.status != 404) return res.sendStatus(400)
+    memberProfile.createdUserId = req.user.id
+    memberProfile.createdDate = date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')
+    memberProfile.fullName = user.body.fullName
+    const addMember = {
+      members: firebase.firestore.FieldValue.arrayUnion(memberProfile),
     }
-    return res.sendStatus(400)
+    await projectCollection().doc(projectId).update(addMember)
+    return res.send(memberProfile)
+  } catch (error) {
+    res.sendStatus(500)
   }
-
-  return res.sendStatus(403)
 }
 
-const isValidProjectMember = async (id, project) => {
-  const user = await execute(getUserById, { params: { userId: id } })
-  const isContained = project.members.find(member.id === id && member.isActive)
-  return !user || isContained
-}
 
-const insertOrUpdateMember = (project, newMember) => {
-  const oldMember = project.members.filter((member) => member.id === newMember.id)
-  if (oldMember) {
-    return project.members.reduce((members, member) => {
-      if (member.id === newMember.id) {
-        member = _.defaultsDeep(member, newMember)
-      }
-      return [...members, member]
-    }, [])
-  }
-  return [...project.members, newMember]
-}
