@@ -1,0 +1,114 @@
+operationId: projects.updateMember
+tags:
+  - Projects
+summary: Put /projects/{projectId}/members/{memberId}/
+description: Update infomation to member
+parameters:
+  - name: projectId
+    in: path
+    description: Project ID
+    schema:
+      type: string
+  - name: memberId
+    in: path
+    description: Member ID
+    schema:
+      type: string
+requestBody:
+  content:
+    application/json:
+      schema:
+        properties:
+          isActive:
+            type: integer
+            description: Status of member in the project,0- inactive,1- active. Default is 1.
+          position:
+            type: array
+            description: joining Process
+            items:
+              type: object
+              properties:
+                positionScore:
+                  type: integer
+                  description: 1- project leader, 0- member of project
+                start:
+                  type: string
+                  format: date
+                  description: Date of participation in the project
+                end:
+                  type: string
+                  format: date-time
+                  description: Date leaving the project
+            example:
+              [
+                {
+                  "positionScore": 2,
+                  "start": "2020-04-06",
+                  "end": "2020-04-08",
+                },
+              ]
+        required:
+          - projectId
+          - memberId
+          - position
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            memberId:
+              type: string
+            projectId:
+              type: string
+            position:
+              type: array
+              description: joining Process
+              items:
+                type: object
+                properties:
+                  positionScore:
+                    type: integer
+                    description: 1- project leader, 0- member of project
+                  start:
+                    type: string
+                    format: date
+                    description: Date of participation in the project
+                  end:
+                    type: string
+                    format: date-time
+                    description: Date leaving the project
+            createdUserId:
+              type: string
+            isActive:
+              type: boolean
+            createdDate:
+              type: string
+              format: date
+            updatedDate:
+              format: date
+          example:
+            {
+              "memberId": "azoom001",
+              "position": [
+                  {
+                      "positionScore": 1,
+                      "start": "2020-04-06",
+                      "end": "2020-04-08"
+                  }
+              ],
+              "isActive": true,
+              "createdUserId": "azoom0019",
+              "createdDate": "2020/04/23 09:28:57",
+              "updatedDate": "2020/04/24 10:33:35",
+              "fullName": "nguyen van A",
+              "projectId": "project-009"
+            }
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  500:
+    $ref: "#/components/responses/500"
