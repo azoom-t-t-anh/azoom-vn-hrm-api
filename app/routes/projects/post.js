@@ -1,28 +1,48 @@
-import { project as projectReq } from '@constants/models'
-import { isAdmin, isProjectManager } from '@helpers/check-rule'
-import { execute } from '@root/util'
-import getProjectById from '@routes/projects/_projectId/get'
-import saveProject from '@routes/projects/put'
-
-import _ from 'lodash'
-
-module.exports = async (req, res) => {
-  if (!(isAdmin(req.user.positionPermissionId) || isProjectManager(req.user.positionPermissionId))) {
-    return res.sendStatus(403)
-  }
-  const data = _.defaultsDeep(req.body, projectReq)
-
-  if (await isValidProject(data)) {
-    data.createdUserId = req.user.id
-    await execute(saveProject, { body: data })
-    return res.send(data)
-  }
-  return res.sendStatus(400)
+import { format } from 'date-fns/fp'
+import _ from 'lodash/fp'
+import getRole from '@helpers/users/getRole'
+import { projectCollection } from '@root/database'
+import { execute } from '@root/util.js'
+import getProjectId from '@routes/projects/_projectId/get.js'
+import getUserId from '@routes/users/_userId/get.js'
+const initProject = {
+  id: '',
+  projectName: '',
+  createdUserId: '',
+  startDate: '',
+  endDate: '',
+  status: -1,
+  isActive: true,
+  created: format('yyyy-MM-dd HH:mm:ss', new Date()),
+  updated: '',
+  managerId: '',
+  members: [],
 }
 
-const isValidProject = async (projectId) => {
-  if (projectId && !(await execute(getProjectById, { params: { projectId } }))) {
-    return true;
+export default async (req, res) => {
+  try {
+    const createdUserId = req.user.id
+    const role = await getRole(createdUserId)
+    if (role !== 'admin' || role !== 'project manager')
+      return res.sendStatus(403)
+    const { id, managerId, projectName } = req.body
+    if (id == '' || managerId == '' || projectName == '')
+      return res.sendStatus(400)
+    const user = await execute(getUserId, {
+      params: { userId: managerId },
+    })
+    if (user.status == 404 || !user.body) return res.sendStatus(400)
+    const isValidProjectId = await execute(getProjectId, {
+      query: { projectId: id },
+    })
+    if (isValidProjectId.status != 404) return res.sendStatus(400)
+    const newProject = {
+      createUserId,
+      ..._.defaultsDeep(initProject, req.body),
+    }
+    await projectCollection().doc(newProject.id).set(newProject)
+    return res.send(newProject)
+  } catch (error) {
+    res.sendStatus(500)
   }
-  return false
 }
