@@ -139,3 +139,10 @@ export const getTsApp = async timsheetAppId => {
     .get()
   return queryData.empty ? '' : queryData.docs[0].data()
 }
+
+export const getTsApp = async timsheetAppId => {
+  const queryData = await timesheetAppCollection()
+    .where('id', '==', timsheetAppId)
+    .get()
+  return queryData.empty ? '' : queryData.docs[0].data()
+}

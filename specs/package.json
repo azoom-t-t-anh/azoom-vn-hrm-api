@@ -1,0 +1,19 @@
+{
+  "name": "azoom-hr-management",
+  "version": "1.0.0",
+  "author": "Azoom",
+  "license": "The Unlicense",
+  "scripts": {
+    "build:openapi": "rm -rf openapi.json && multi-file-swagger openapi.yaml > ../app/openapi.json",
+    "build:doc": "redoc-cli bundle ../app/openapi.json -o ../app/openapi.html",
+    "serve": "yarn build:openapi && redoc-cli serve ../app/openapi.json"
+  },
+  "devDependencies": {
+    "multi-file-swagger": "^2.3.0",
+    "redoc": "^2.0.0-rc.18",
+    "redoc-cli": "^0.9.2"
+  },
+  "dependencies": {
+    "firebase-admin": "^8.10.0"
+  }
+}
