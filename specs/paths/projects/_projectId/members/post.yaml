@@ -16,7 +16,6 @@ requestBody:
         properties:
           memberId:
             type: string
-            description: Input user ID of member, who is a project participant.
             example: "azoom002"
           joiningProcess:
             type: array
