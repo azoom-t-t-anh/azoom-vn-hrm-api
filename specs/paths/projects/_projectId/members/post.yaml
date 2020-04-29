@@ -17,35 +17,37 @@ requestBody:
           memberId:
             type: string
             example: "azoom002"
-          joiningProcess:
+          isActive:
+            type: integer
+            description: Status of member in the project,0- inactive,1- active. Default is 1.
+          position:
             type: array
             description: joining Process
-            Item:
+            items:
               type: object
               properties:
-                position:
+                positionScore:
                   type: integer
-                  description: 1- mamager of project, 2- member of project
-                startDate:
+                  description: 1- project leader, 0- member of project
+                start:
                   type: string
-                  format: date-time
+                  format: date
                   description: Date of participation in the project
-                endDate:
+                end:
                   type: string
                   format: date-time
                   description: Date leaving the project
             example:
               [
                 {
-                  "position": 2,
-                  "startDate": "2020-04-06T09:37:35Z",
-                  "endDate": "2020-04-06T09:37:35Z",
+                  "positionScore": 1,
+                  "start": "2020-04-06",
+                  "end": "2020-04-08",
                 },
               ]
         required:
-          - projectId
           - memberId
-          - joiningProcess
+          - position
 responses:
   200:
     description: Success
@@ -54,34 +56,37 @@ responses:
         schema:
           type: object
           properties:
-            id:
+            memberId:
               type: string
             projectId:
               type: string
-            memberId:
-              type: string
-            joiningProcess:
-              type: boolean
+            position:
+              type: array
             createdUserId:
               type: string
             isActive:
               type: boolean
-            created:
+            createdDate:
               type: string
               format: date-time
-            updated:
+            updatedDate:
               format: date-time
           example:
             {
-              "projectId": "azoom-vn-hr-001",
-              "memberId": "azoom002",
-              "id": "azoom-vn-hr-001_azoom00220200401",
-              "joiningProcess":
-                [{ "position": 1, "start": "2020/04/01 15:49:59", "end": "" }],
+              "memberId": "azoom001",
+              "position": [
+                  {
+                      "positionScore": 1,
+                      "start": "2020-04-06",
+                      "end": "2020-04-08"
+                  }
+              ],
               "isActive": true,
               "createdUserId": "azoom0019",
-              "created": "2020/04/01 15:49:59",
-              "updated": "",
+              "createdDate": "2020/04/23 10:35:58",
+              "updatedDate": "",
+              "fullName": "nguyen van A",
+              "projectId": "project-009"
             }
   400:
     $ref: "#/components/responses/400"
