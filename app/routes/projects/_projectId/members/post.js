@@ -17,7 +17,7 @@ export default async (req, res) => {
     const project = await execute(getProjectId, {
       query: { projectId },
     })
-    if (project.status == 404 || !project.body) return res.sendStatus(404)
+    if (project.status === 404 || !project.body) return res.sendStatus(404)
     const user = await execute(getUserId, {
       params: { userId: memberProfile.memberId },
     })
