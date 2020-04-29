@@ -6,8 +6,8 @@ export default async (req, res) => {
     const project = await projectCollection().doc(projectId).get()
     if (!project.exists) return res.sendStatus(404)
     const { members } = project.data()
-    if (!members || members.length == 0) return res.sendStatus(404)
-    const memberProfile = members.filter((member) => member.memberId == memberId)
+    if (!members || members.length === 0) return res.sendStatus(404)
+    const memberProfile = members.filter(member => member.memberId === memberId)
     if (!memberProfile) return res.sendStatus(404)
     res.send(memberProfile)
   } catch (error) {
