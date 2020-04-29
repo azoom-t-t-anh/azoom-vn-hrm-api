@@ -32,6 +32,10 @@ export const userTokenCollection = () => {
   return fireStore.collection(process.env.DB_TABLE_USER_TOKEN)
 }
 
+export const paymentCollection = () => {
+  return fireStore.collection(process.env.DB_TABLE_PAYMENT_APPLICATION)
+}
+
 export const timesheetApplicationCollection = () => {
-  return fireStore.collection(process.env.DB_TABLE_TIME_SHEET_APPLICATION)
+  return fireStore.collection(process.env.DB_TABLE_TIME_SHEET)
 }

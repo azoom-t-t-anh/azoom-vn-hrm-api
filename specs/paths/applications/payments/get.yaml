@@ -1,0 +1,88 @@
+operationId: paymentsApplications.getList
+tags: 
+  - Applications
+summary: GET list payments applications
+parameters:
+  - name: page
+    in: query
+    description: Page number
+    schema:
+      type: integer
+      minimum: 1
+  - name: limit
+    in: query
+    description: Limit number
+    schema:
+      type: integer
+      minimum: 1
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Total account
+            paymentApplications:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: payment id
+                    example: "payment-001"
+                  created:
+                    type: date-time
+                    description: date create payment
+                    example: 2020/03/30 15:34:03
+                  status:
+                    type: number
+                    description: pending or reject or approved
+                    example: 1
+                  reason:
+                    type: string
+                    description: reason
+                    example: reason...
+                  amount:
+                    type: string
+                    description: amount payment
+                    example: 123000
+                  isActive:
+                    type: boolean
+                    description: check active
+                    example: true
+                  updated:
+                    type: date-time
+                    description: date update payment
+                    example: 2020/03/30 15:34:03
+                  userId:
+                    type: string
+                    description: id user login
+                    example: azoom003
+          example:
+            {
+              "count": 2,
+              "paymentApplications":
+                [
+                  {
+                    "id": "payment-001",
+                    "created": "2020/03/30 15:34:03",
+                    "status": 1,
+                    "reason": "reason...",
+                    "amount": 123000,
+                    "isActive": true,
+                    "updated": "",
+                    "userId": "azoom003"
+                  },
+                ],
+            }
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  500:
+    $ref: "#/components/responses/500"
