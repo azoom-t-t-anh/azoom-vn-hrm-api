@@ -1,0 +1,22 @@
+operationId: users.addPaidLeave
+tags:
+  - Users
+summary: PATCH  /users/paid-leave/add
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+          example: { "message": "Add paid leave successful" }
+
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  500:
+    $ref: "#/components/responses/500"

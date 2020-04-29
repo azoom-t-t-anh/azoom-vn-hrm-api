@@ -39,6 +39,9 @@
     $ref: paths/users/_userId/put.yaml
   get:
     $ref: paths/users/_userId/get.yaml
+/users/paid-leave/add:
+  patch:
+    $ref: paths/users/paid-leave/add-paid-leave/patch.yaml
 /timesheets/checkin/:
   post:
     $ref: paths/timesheets/checkin/post.yaml
