@@ -47,14 +47,3 @@ exports.oneToOne = (leftList, leftKey, rightList, rightKey, as) => {
     delete left[leftKey]
   })
 }
-
-exports.getDatesBetween = ({ startDate, endDate }) => {
-  dates = []
-
-  while (startDate <= endDate) {
-    dates.push(date.format(startDate, 'YYYY/MM/DD'))
-    startDate = date.addDays(startDate, 1)
-  }
-
-  return dates
-}
