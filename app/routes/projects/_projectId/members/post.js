@@ -25,7 +25,7 @@ export default async (req, res) => {
     const member = await execute(getMemberId, {
       params: { projectId, memberId: memberProfile.memberId },
     })
-    if (member.status != 404) return res.sendStatus(400)
+    if (member.status !== 404) return res.sendStatus(400)
     memberProfile.createdUserId = req.user.id
     memberProfile.createdDate = date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')
     memberProfile.fullName = user.body.fullName
@@ -38,5 +38,4 @@ export default async (req, res) => {
     res.sendStatus(500)
   }
 }
-
 
