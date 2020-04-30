@@ -1,7 +1,8 @@
 operationId: users.addPaidLeave
 tags:
   - Users
-summary: PATCH  /users/paid-leave/add
+summary: AddPaidLeave every month
+description: Them 1 ngay nghi phep co luong cho tat ca nhan vien chinh thuc
 responses:
   200:
     description: Success
@@ -12,8 +13,7 @@ responses:
           properties:
             message:
               type: string
-          example: { "message": "Add paid leave successful" }
-
+              example: 'Add paid leave successful'
   400:
     $ref: "#/components/responses/400"
   401:

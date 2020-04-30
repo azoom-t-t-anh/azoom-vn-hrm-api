@@ -11,7 +11,7 @@ parameters:
     schema:
       type: string
   - name: isApproved
-    in: path
+    in: query
     description: is approved. False- reject application. True- approved application
     example: true
     default: flase

@@ -1,7 +1,7 @@
 /authentications/login/:
   post:
     $ref: paths/authentications/login/post.yaml
-/authentications/logout/{isAll}/:
+/authentications/logout/:
   post:
     $ref: paths/authentications/logout/post.yaml
 /applications/timesheets/:
@@ -9,39 +9,38 @@
     $ref: paths/applications/timesheets/post.yaml
   get:
     $ref: paths/applications/timesheets/get.yaml
+/applications/timesheets/{timesheetAppId}/:
+  patch:
+    $ref: paths/applications/timesheets/_timesheetAppId/patch.yaml
 /applications/leaves/:
   post:
     $ref: paths/applications/leaves/post.yaml
   get:
     $ref: paths/applications/leaves/get.yaml
+/applications/leaves/{leaveAppId}/:
+  patch:
+    $ref: paths/applications/leaves/_leaveAppId/patch.yaml
 /application/payments/:
   get:
     $ref: paths/applications/payments/get.yaml
-/applications/leaves/{leaveAppId}/{isApproved}/:
-  patch:
-    $ref: paths/applications/leaves/_leaveAppId/_isApproved/patch.yaml
-/applications/timesheets/{timesheetAppId}/:
-  patch:
-    $ref: paths/applications/timesheets/_timesheetAppId/patch.yaml
 /users/:
   post:
     $ref: paths/users/post.yaml
   get:
     $ref: paths/users/get.yaml
-/users/{userId}/position-permission/:
-  patch:
-    $ref: paths/users/_userId/position-permission/patch.yaml
-/users/{userId}/deactive/:
-  patch:
-    $ref: paths/users/_userId/deactive/patch.yaml
 /users/{userId}/:
   put:
     $ref: paths/users/_userId/put.yaml
   get:
     $ref: paths/users/_userId/get.yaml
-/users/paid-leave/add:
+  delete:
+    $ref: paths/users/_userId/delete.yaml
+/users/{userId}/position-permission/:
   patch:
-    $ref: paths/users/paid-leave/add-paid-leave/patch.yaml
+    $ref: paths/users/_userId/position-permission/patch.yaml
+/users/paid-leave/one-more-day/:
+  patch:
+    $ref: paths/users/paid-leave/one-more-day/patch.yaml
 /timesheets/checkin/:
   post:
     $ref: paths/timesheets/checkin/post.yaml
