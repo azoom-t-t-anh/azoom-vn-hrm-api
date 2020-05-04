@@ -2,11 +2,15 @@ import firebase from 'firebase'
 import _ from 'lodash/fp'
 import date from 'date-and-time'
 import { userCollection } from '@root/database'
-
+import authGoogleSchedulerReq from '@helpers/users/authGoogleSchedulerReq'
 const fireStore = firebase.firestore()
 const officialContractType = 2
+
 export default async (req, res) => {
   try {
+    const authToken = req.header('AUTHORIZATION') || ''
+    const isValidToken = await authGoogleSchedulerReq(authToken)
+    if (!isValidToken) return res.sendStatus(401)
     const officialUsers = await userCollection()
       .where('contractType', '==', officialContractType)
       .get()
