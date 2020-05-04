@@ -7,10 +7,10 @@ export default async function (userId, isApproved) {
 
   const approvalPoint = isApproved
     ? {
-        [process.env.POSITION_ADMIN]: 3,
-        [process.env.POSITION_EDITOR]: 2,
-        [process.env.POSITION_PROJECTMANAGER]: 1,
-      }[user.positionPermissionId] || 0
+      [process.env.POSITION_ADMIN]: 3,
+      [process.env.POSITION_EDITOR]: 2,
+      [process.env.POSITION_PROJECTMANAGER]: 1,
+    }[user.positionPermissionId] || 0
     : 0
 
   return {

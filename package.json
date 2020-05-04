@@ -8,6 +8,7 @@
   "scripts": {
     "build:doc": "yarn docker:build:specs:image && yarn build:doc:docker",
     "dev": "cd app && yarn dev",
+    "lint": "cd app && yarn lint",
     "specs": "yarn specs:build && redoc-cli serve ./app/openapi.json",
     "specs:build": "cd specs && multi-file-swagger openapi.yaml > ../app/openapi.json"
   },

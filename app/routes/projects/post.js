@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
 
 const isValidProject = async (projectId) => {
   if (projectId && !(await execute(getProjectById, { params: { projectId } }))) {
-    return true
+    return true;
   }
   return false
 }

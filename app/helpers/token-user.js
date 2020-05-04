@@ -51,12 +51,12 @@ export const destroyALLTokenOfUser = async userId => {
     ? ''
     : queryData.docs.map(item =>
       userTokenCollection()
-          .doc(item.id)
-          .update({
-            isActive: false,
-            updated: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')
-          })
-      )
+        .doc(item.id)
+        .update({
+          isActive: false,
+          updated: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')
+        })
+    )
 }
 
 export const destroyToken = async tokenFromClient => {
@@ -67,9 +67,9 @@ export const destroyToken = async tokenFromClient => {
     ? ''
     : queryData.docs.map(item =>
       userTokenCollection()
-          .doc(item.id)
-          .update({
-            isActive: false
-          })
-      )
+        .doc(item.id)
+        .update({
+          isActive: false
+        })
+    )
 }

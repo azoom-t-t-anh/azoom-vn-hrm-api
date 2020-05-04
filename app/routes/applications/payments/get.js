@@ -15,7 +15,7 @@ export default async (req, res) => {
   if(role !== 'user' && role !== 'admin') return res.sendStatus(403) 
 
   let connection = paymentCollection()
-  if (role == 'user') {
+  if (role === 'user') {
     connection = connection.where('userId', '==', userId)
   }
 

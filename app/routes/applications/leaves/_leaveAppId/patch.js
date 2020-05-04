@@ -13,8 +13,7 @@ import calculateApprovalPoints from '@helpers/calculateApprovalPoints'
 
 module.exports = async (req, res) => {
   const { leaveAppId } = req.params
-  const { isApproved = false } = req.query
-
+  const { isApproved = false } = req.query
   const existedLeaveApplication = await execute(getLeaveApp, { params: { leaveAppId } })
   if (!existedLeaveApplication) {
     return res.sendStatus(404)
