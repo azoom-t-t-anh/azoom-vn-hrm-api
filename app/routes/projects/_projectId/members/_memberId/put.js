@@ -1,5 +1,4 @@
 import _ from 'lodash/fp'
-import date from 'date-and-time'
 import { isAdmin } from '@helpers/check-rule'
 import updateMember from '@helpers/project/updateMember'
 import { projectCollection } from '@root/database.js'
@@ -7,6 +6,7 @@ import { execute } from '@root/util.js'
 import getProjectId from '@routes/projects/_projectId/get.js'
 import getUserId from '@routes/users/_userId/get.js'
 import getMemberId from '@routes/projects/_projectId/members/_memberId/get.js'
+import { format } from 'date-fns/fp'
 
 export default async (req, res) => {
   try {
@@ -24,7 +24,7 @@ export default async (req, res) => {
     
     const { members } = project.body
     const newMember = _.defaultsDeep(member.body, req.body)
-    newMember.updatedDate = date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')
+    newMember.updatedDate = format('yyyy/MM/dd HH:mm:ss', new Date())
     const updateListMember = updateMember(members, newMember)
     await projectCollection()
       .doc(projectId)

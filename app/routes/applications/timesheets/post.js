@@ -1,7 +1,7 @@
 import { timesheetApplication as timeAppReq } from '@constants/models'
 import {timesheetApplicationCollection} from '@root/database'
 
-const _ = require('lodash/fp')
+import _ from 'lodash/fp'
 
 module.exports = async (req, res) => {
   const data = _.defaultsDeep(timeAppReq, req.body)

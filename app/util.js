@@ -1,22 +1,22 @@
-const { camel, snake } = require('to-case')
-const _ = require('lodash/fp')
-const httpMocks = require('node-mocks-http')
+import { camel, snake } from 'to-case'
+import _ from 'lodash/fp'
+import httpMocks from 'node-mocks-http'
 
-exports.camelize = (obj) => {
+export const camelize = (obj) => {
   return Object.entries(obj).reduce((o, [key, value]) => {
     o[camel(key)] = value
     return o
   }, {})
 }
 
-exports.underscore = (obj) => {
+export const underscore = (obj) => {
   return Object.entries(obj).reduce((o, [key, value]) => {
     o[snake(key)] = value
     return o
   }, {})
 }
 
-exports.flowAsync = (...fns) => {
+export const flowAsync = (...fns) => {
   const wrap = (fn) => (args) => {
     return new Promise((resolve) => {
       return resolve(args)
@@ -26,11 +26,11 @@ exports.flowAsync = (...fns) => {
   return _.flow(wrappedFns)
 }
 
-exports.placeholders = (array) => {
+export const placeholders = (array) => {
   return array.map((_) => '?').join(',')
 }
 
-exports.execute = async (func, req) => {
+export const execute = async (func, req) => {
   const mockReq = httpMocks.createRequest(req)
   const mockRes = httpMocks.createResponse()
   mockRes.send = (result) => {
@@ -40,7 +40,7 @@ exports.execute = async (func, req) => {
   return { status: mockRes._getStatusCode(), body: mockRes.res }
 }
 
-exports.oneToOne = (leftList, leftKey, rightList, rightKey, as) => {
+export const oneToOne = (leftList, leftKey, rightList, rightKey, as) => {
   leftList.forEach((left) => {
     const right = rightList.find((right) => right[rightKey] === left[leftKey])
     left[as] = right || null

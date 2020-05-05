@@ -4,7 +4,7 @@ import { execute } from '@root/util'
 import getProjectById from '@routes/projects/_projectId/get'
 import saveProject from '@routes/projects/put'
 
-const _ = require('lodash')
+import _ from 'lodash'
 
 module.exports = async (req, res) => {
   if (!(isAdmin(req.user.positionPermissionId) || isProjectManager(req.user.positionPermissionId))) {

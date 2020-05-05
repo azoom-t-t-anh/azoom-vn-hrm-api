@@ -1,5 +1,5 @@
-const date = require('date-and-time')
+import { format } from 'date-fns/fp'
 
 export default function (userId, time = new Date()) {
-  return userId + '_' + date.format(time, 'YYYYMMDD')
+  return userId + '_' + format('yyyyMMdd', time)
 }

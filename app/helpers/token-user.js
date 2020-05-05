@@ -1,7 +1,7 @@
-const date = require('date-and-time')
-const _ = require('lodash')
+import _ from 'lodash'
+import { format } from 'date-fns/fp'
 
-const firebase = require('firebase')
+import firebase from 'firebase'
 
 import { userTokenCollection } from '@root/database'
 
@@ -44,7 +44,8 @@ export const destroyALLTokenOfUser = async userId => {
       .doc(item.id)
       .update({
         isActive: false,
-        updated: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')
+        updated: format('yyyy/MM/dd HH:mm:ss', new Date())
+
       })
   )
   return queryData.empty
@@ -54,7 +55,7 @@ export const destroyALLTokenOfUser = async userId => {
         .doc(item.id)
         .update({
           isActive: false,
-          updated: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')
+          updated: format('yyyy/MM/dd HH:mm:ss', new Date())
         })
     )
 }

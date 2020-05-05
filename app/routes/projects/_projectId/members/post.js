@@ -1,5 +1,4 @@
 import firebase from 'firebase'
-import date from 'date-and-time'
 import _ from 'lodash/fp'
 import { projectCollection } from '@root/database.js'
 import { isAdmin } from '@helpers/check-rule'
@@ -8,6 +7,8 @@ import { execute } from '@root/util.js'
 import getProjectId from '@routes/projects/_projectId/get.js'
 import getMemberId from '@routes/projects/_projectId/members/_memberId/get.js'
 import getUserId from '@routes/users/_userId/get.js'
+import { format } from 'date-fns/fp'
+
 
 export default async (req, res) => {
   const { projectId } = req.params
@@ -27,7 +28,7 @@ export default async (req, res) => {
     })
     if (member.status !== 404) return res.sendStatus(400)
     memberProfile.createdUserId = req.user.id
-    memberProfile.createdDate = date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')
+    memberProfile.createdDate = format('yyyy/MM/dd HH:mm:ss', new Date())
     memberProfile.fullName = user.body.fullName
     const addMember = {
       members: firebase.firestore.FieldValue.arrayUnion(memberProfile),

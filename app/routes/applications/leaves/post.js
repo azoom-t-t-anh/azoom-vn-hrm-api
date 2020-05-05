@@ -1,6 +1,6 @@
-const { execute } = require('@root/util')
-const saveLeaveApplication = require('@routes/applications/leaves/put.js')
-const constants = require('@root/constants/index')
+import { execute } from '@root/util'
+import saveLeaveApplication from '@routes/applications/leaves/put.js'
+import * as constants from '@root/constants/index'
 import { parse, eachDayOfInterval, format } from 'date-fns/fp'
 
 module.exports = async (req, res) => {

@@ -1,6 +1,6 @@
 import firebase from 'firebase'
 import _ from 'lodash/fp'
-import date from 'date-and-time'
+import { format } from 'date-fns/fp'
 import { userCollection } from '@root/database'
 import authGoogleSchedulerReq from '@helpers/users/authGoogleSchedulerReq'
 const fireStore = firebase.firestore()
@@ -20,7 +20,7 @@ export default async (req, res) => {
         const newTotalPaidLeaveDate = user.data().totalPaidLeaveDate + 1
         transaction.update(user.ref, {
           totalPaidLeaveDate: newTotalPaidLeaveDate,
-          updated: date.format(new Date(), 'YYYY/MM/DD HH:mm:ss'),
+          updated: format('YYYY/MM/DD HH:mm:ss', new Date())
         })
       })
     })

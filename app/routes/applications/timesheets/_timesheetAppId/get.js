@@ -1,6 +1,6 @@
-const { timesheetApplicationCollection } = require('@root/database')
+import { timesheetApplicationCollection } from '@root/database'
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   try {
     const { timesheetAppId } = req.params
     const existTimesheetApplication = await timesheetApplicationCollection()

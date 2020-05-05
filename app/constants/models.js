@@ -1,5 +1,5 @@
 import * as firebase from 'firebase'
-import date from 'date-and-time'
+import { format } from 'date-fns/fp'
 
 export const project = {
   id: '',
@@ -48,7 +48,8 @@ export const timesheet = {
   startTime: '',
   endTime: '',
   leaveTypeId: '',
-  checkedDate: date.format(new Date(), 'YYYY/MM/DD'),
+  checkedDate: format('yyyy/MM/dd', new Date()),
+
   isCorrect: false,
 }
 

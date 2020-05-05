@@ -2,7 +2,7 @@ import { execute } from '@root/util.js'
 import checkExistTimesheet from '@routes/timesheets/get.js'
 import saveTimesheet from '@routes/timesheets/post.js'
 import updateTimesheet from '@routes/timesheets/patch.js'
-import date from 'date-and-time'
+import { format } from 'date-fns/fp'
 
 export default async (req, res) => {
   try {
@@ -13,7 +13,7 @@ export default async (req, res) => {
       const newTimesheet = {
         userId,
         checkedDate: new Date(),
-        startTime: date.format(new Date(), 'HH:mm'),
+        startTime: format('HH:mm', new Date()),
         endTime: '',
         created: new Date(),
         updated: '',
@@ -24,7 +24,7 @@ export default async (req, res) => {
       }
     } else if (!checkedInRecord.startTime) {
       const updateProperties = {
-        startTime: date.format(new Date(), 'HH:mm'),
+        startTime: format('HH:mm', new Date()),
         updated: new Date(),
       }
 

@@ -1,4 +1,4 @@
-const { projectCollection } = require('@root/database')
+import { projectCollection } from '@root/database'
 
 export default async (req, res) => {
   const { managerId, memberId, status } = req.query
