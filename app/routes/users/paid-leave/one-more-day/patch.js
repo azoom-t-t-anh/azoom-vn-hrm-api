@@ -1,13 +1,14 @@
 import firebase from 'firebase'
-import _ from 'lodash/fp'
 import { format } from 'date-fns/fp'
 import { userCollection } from '@root/database'
 import authGoogleSchedulerReq from '@helpers/users/authGoogleSchedulerReq'
 const fireStore = firebase.firestore()
 const officialContractType = 2
-
+const validDateAddPaidLeave = '01'
 export default async (req, res) => {
   try {
+    const nowDate = format('dd', new Date())
+    if (nowDate !== validDateAddPaidLeave) return res.sendStatus(400)
     const authToken = req.header('AUTHORIZATION') || ''
     const isValidToken = await authGoogleSchedulerReq(authToken)
     if (!isValidToken) return res.sendStatus(401)
@@ -20,7 +21,7 @@ export default async (req, res) => {
         const newTotalPaidLeaveDate = user.data().totalPaidLeaveDate + 1
         transaction.update(user.ref, {
           totalPaidLeaveDate: newTotalPaidLeaveDate,
-          updated: format('YYYY/MM/DD HH:mm:ss', new Date())
+          updated: format('yyyy/MM/dd HH:mm:ss', new Date()),
         })
       })
     })
