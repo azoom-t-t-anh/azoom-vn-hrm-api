@@ -11,19 +11,83 @@ requestBody:
           id:
             type: string
             description: Input project ID
-            example: "azoom-vn-hr-001"
+            example: 'azoom-vn-hr-001'
           projectName:
             type: string
             description: Input projectName.
-            example: "azoom-hr-vn"
+            example: 'azoom-hr-vn'
           status:
             type: integer
             description: Input status of project. -1- pending,0-in progress, 1- done
             example: 0
-        required:
-          - id
-          - projectName
-          - managerId
+          members:
+            type: array
+            items:
+              type: object
+              properties:
+                fullName:
+                  type: string
+                  description: name of member
+                  example: 'Nguyen Van A'
+                isActive:
+                  type: integer
+                  description: status active of member, 0- inactive, 1- active
+                  example: 1
+                memberId:
+                  type: string
+                  description: user Id of member in project
+                  example: 'azomm-0019'
+                createdDate:
+                  type: string
+                  format: date
+                  description: date create member in project
+                  example: '2020/03/25'
+                updateDate:
+                  type: string
+                  format: date
+                  description: date update member in project
+                  example: '2020/04/05'
+                createdUserId:
+                  type: string
+                  description: id of user create member in project
+                  example: 'azoom0020'
+                position:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      end:
+                        type: string
+                        format: date
+                        description: date leaving project of member
+                        example: '2020-04-02'
+                      positionScore:
+                        type: integer
+                        description: 1- project leader, 0- member
+                        example: 1
+                      start:
+                        type: string
+                        format: date
+                        description: date join project of member
+                        example: '2020-04-02'
+          managerId:
+            type: string
+            description: id of manager
+            example: 'azoom001'
+          startDate:
+            type: string
+            description: date start project
+            format: date
+            example: '2020-04-05'
+          endDate:
+            type: string
+            description: date finish project
+            format: date
+            example: '2020-06-07'
+          required:
+            - id
+            - projectName
+            - managerId
 responses:
   200:
     description: Success
@@ -44,20 +108,32 @@ responses:
               type: string
               format: date-time
             updated:
+              type: string
               format: date-time
+            managerId:
+              type: string
+            members:
+              type: array
+              items:
+
           example:
             {
-              "id": "azoom-vn-hr-001",
-              "projectName": "azoom-hr-vn",
-              "status": 0,
-              "createdUserId": "azoom0019",
-              "isActive": true,
-              "created": "2020/04/01 15:49:59",
-              "updated": "",
+              'id': 'project-012',
+              'projectName': 'test',
+              'status': '-1',
+              'managerID': 'azoom001',
+              'startDate': '2020-04-05',
+              'endDate': '2020-06-07',
+              'createdUserId': 'azoom-0019',
+              'isActive': true,
+              'created': '2020/04/27 15:30:23',
+              'updated': '',
+              'mangerId': '',
+              'members': [],
             }
   400:
-    $ref: "#/components/responses/400"
+    $ref: '#/components/responses/400'
   401:
-    $ref: "#/components/responses/401"
+    $ref: '#/components/responses/401'
   500:
-    $ref: "#/components/responses/500"
+    $ref: '#/components/responses/500'
