@@ -22,10 +22,11 @@ const initProject = {
 export default async (req, res) => {
   try {
     const createdUserId = req.user.id
+    const { id, managerId, projectName } = req.body
+
     const role = await getRole(createdUserId)
     if (role !== 'admin' || role !== 'project manager')
       return res.sendStatus(403)
-    const { id, managerId, projectName } = req.body
     if (id == '' || managerId == '' || projectName == '')
       return res.sendStatus(400)
     const user = await execute(getUserId, {
