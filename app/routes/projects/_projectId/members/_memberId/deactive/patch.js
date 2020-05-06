@@ -19,6 +19,7 @@ export default async (req, res) => {
     if (listMember.status === 404 || !members) return res.sendStatus(400)
     const user = await execute(getUserId, { params: { userId: memberId } })
     if (user.status === 404 || !user.body) return res.sendStatus(400)
+    // TODO: chỉnh sửa lại sau khi tách project-member ra 1 nơi riêng.
     const memberInfo = await execute(getMemberId, {
       params: { projectId, memberId },
     })
