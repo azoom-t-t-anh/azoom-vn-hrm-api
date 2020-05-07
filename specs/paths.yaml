@@ -22,10 +22,12 @@
 /applications/leaves/{leaveAppId}/:
   patch:
     $ref: paths/applications/leaves/_leaveAppId/patch.yaml
-/application/payments/:
+/applications/payments/:
   get:
     $ref: paths/applications/payments/get.yaml
-/application/payments/{paymentAppId}/:
+  post:
+    $ref: paths/applications/payments/post.yaml
+/applications/payments/{paymentAppId}/:
   get:
     $ref: paths/applications/payments/_paymentAppId/get.yaml
 /users/:

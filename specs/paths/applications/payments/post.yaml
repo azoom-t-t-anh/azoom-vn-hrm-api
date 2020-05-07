@@ -1,0 +1,78 @@
+operationId: paymentsApplications.create
+tags: 
+  - Applications
+summary: Create new payments applications
+requestBody:
+  content:
+    application/json:
+      schema:
+        properties:
+          status:
+            type: number
+            description: pending or reject or approved
+            example: -1
+          reason:
+            type: string
+            description: reason
+            example: reason...
+          amount:
+            type: string
+            description: amount payment
+            example: 123000
+          isActive:
+            type: boolean
+            description: check active
+            example: false
+        required:
+          - status
+          - reason
+          - amount
+          - isActive
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            id:
+              type: string
+              description: payment id
+              example: "payment-001"
+            created:
+              type: date-time
+              description: date create payment
+              example: 2020/03/30 15:34:03
+            status:
+              type: number
+              description: pending or reject or approved
+              example: -1
+            reason:
+              type: string
+              description: reason
+              example: reason...
+            amount:
+              type: string
+              description: amount payment
+              example: 123000
+            isActive:
+              type: boolean
+              description: check active
+              example: false
+            updated:
+              type: date-time
+              description: date update payment
+              example: 2020/03/30 15:34:03
+            userId:
+              type: string
+              description: id user login
+              example: azoom003
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  500:
+    $ref: "#/components/responses/500"
+
+
