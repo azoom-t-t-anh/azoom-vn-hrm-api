@@ -55,6 +55,9 @@
 /users/paid-leave/reset-paid-leave/:
   patch:
     $ref: paths/users/paid-leave/reset-paid-leave/patch.yaml
+/users/paid-leave/{userId}/subtract-paid-leave:
+  patch:
+    $ref: paths/users/paid-leave/_userId/subtract-paid-leave/patch.yaml
 /timesheets/checkin/:
   post:
     $ref: paths/timesheets/checkin/post.yaml
