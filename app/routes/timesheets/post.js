@@ -1,5 +1,5 @@
 import { timesheetCollection } from '@root/database'
-import initTimesheetId from '@helpers/timesheets/initTimesheetId'
+import initTimesheetId from '@helpers/initNewId'
 
 export default async (req, res) => {
   try {

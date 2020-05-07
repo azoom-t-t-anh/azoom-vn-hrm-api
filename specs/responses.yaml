@@ -32,7 +32,7 @@
             description: メッセージ
             example: 認証に失敗しました
 '403':
-  description: Forbiden
+  description: Forbidden
   content:
     application/json:
       schema:
@@ -40,8 +40,8 @@
         properties:
           message:
             type: string
-            description: You don't have permission to perform this action
-            example: Forbiden
+            description: メッセージ
+            example: 全く許可しません
 '404':
   description: Not Found
   content:

@@ -80,3 +80,6 @@
 /projects/{projectId}/members/{memberId}/deactive:
   patch:
     $ref: paths/projects/_projectId/members/_memberId/deactive/patch.yaml
+/notifications/:
+  post:
+    $ref: paths/notifications/post.yaml
