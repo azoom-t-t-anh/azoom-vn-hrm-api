@@ -5,36 +5,34 @@ import updateTimesheet from '@routes/timesheets/patch.js'
 import { format } from 'date-fns/fp'
 
 export default async (req, res) => {
-  try {
-    const { userId } = req.body
-    const checkedInRecord = await execute(checkExistTimesheet, { params: { userId, time: new Date() } })
+  const userId = req.user.id
+  const responseTimesheet = await execute(checkExistTimesheet, { params: { userId, time: new Date() } })
+  const [checkedInRecord] = responseTimesheet.body
+  const startTime = format('HH:mm', new Date())
 
-    if (!checkedInRecord) {
-      const newTimesheet = {
-        userId,
-        checkedDate: new Date(),
-        startTime: format('HH:mm', new Date()),
-        endTime: '',
-        created: new Date(),
-        updated: '',
-      }
+  if (checkedInRecord && checkedInRecord.startTime) return res.send({ message: `You checked in at ${checkedInRecord.startTime}.` })
 
-      if (await execute(saveTimesheet, { body: newTimesheet })) {
-        return res.send({ message: 'Checkin successfully.' })
-      }
-    } else if (!checkedInRecord.startTime) {
-      const updateProperties = {
-        startTime: format('HH:mm', new Date()),
-        updated: new Date(),
-      }
-
-      if (await execute(updateTimesheet, { body: updateProperties, query: { timesheetAppId: checkedInRecord.id } })) {
-        return res.send({ message: 'Checkin successfully.' })
-      }
-    } else {
-      return res.send({ message: `You checked in at ${checkedInRecord.startTime}` })
+  if (checkedInRecord && !checkedInRecord.startTime) {
+    const updateProperties = {
+      startTime,
+      updated: new Date(),
     }
-  } catch (error) {
-    return res.status(500).send({ message: 'Server internal error.' })
+    const updateResult = await execute(updateTimesheet, { body: updateProperties, query: { timesheetAppId: checkedInRecord.id } })
+    
+    if (updateResult.status !== 200) throw new Error("Internal Server Error")
+    return res.send({ message: `Checkin successfully at ${startTime}.` })
   }
+
+  const newTimesheet = {
+    userId,
+    checkedDate: new Date(),
+    startTime,
+    endTime: '',
+    created: new Date(),
+    updated: '',
+  }
+  const saveResult = await execute(saveTimesheet, { body: newTimesheet })
+
+  if (saveResult.status !== 200) throw new Error("Internal Server Error")
+  return res.send({ message: `Checkin successfully at ${startTime}.` })
 }
