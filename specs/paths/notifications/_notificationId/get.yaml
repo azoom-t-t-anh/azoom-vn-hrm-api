@@ -1,0 +1,72 @@
+operationId: notifications.read
+tags:
+  - Notifications
+summary: Get info of a notification
+parameters:
+  - name: notificationId
+    in: path
+    description: Id of notification which you want to get info
+    example: U012SE071RC20200508-112112
+    schema:
+      type: string
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            senderId:
+                type: string
+                description: ID of sender
+            receiverIds:
+              type: array
+              description: List receiverIds
+            title:
+              type: string
+              description: Notification title
+            content:
+              type: Notification content
+              description: Input notification content
+            notifiId:
+              type: string
+              description: ID of record
+            created:
+              type: string
+              format: date-time
+              description: Date and time the record was inserted
+            updated:
+              type: string
+              format: date-time
+              description: Date and time the record was last updated
+            status:
+              type: boolean
+              description: Status send notification of record
+            triedTimes:
+              type: number
+              description: Tried times send notification
+            isActive:
+              type: boolean
+              description: Status active of record
+          example:
+            {
+              "senderId": "U012SE071RC",
+              "receiverIds": ["U012SE071RC", "ABCDSE071RC", "EFGHSE071RC"],
+              "title": "[Leave Request] At 2020-05-05 l.v.long want to using paid leave",
+              "content": "Cause...I want...",
+              "notifiId": "U012SE071RC20200507-110932",
+              "created": "2020/03/30 15:34:03",
+              "updated": "",
+              "status": false,
+              "triedTimes": 0,
+              "isActive": true,
+            }
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  404:
+    $ref: "#/components/responses/404"
+  500:
+    $ref: "#/components/responses/500"
