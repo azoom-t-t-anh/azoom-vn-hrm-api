@@ -83,3 +83,6 @@
 /notifications/:
   post:
     $ref: paths/notifications/post.yaml
+  get:
+    $ref: paths/notifications/get.yaml
+
