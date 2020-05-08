@@ -1,0 +1,37 @@
+operationId: paymentsApplications.approvedOrReject
+tags: 
+  - Applications
+summary: Approved or reject payment
+parameters:
+  - name: paymentAppId
+    in: path
+    description: Id of payment application
+    example: payment-001
+    schema:
+      type: string
+  - name: isApproved
+    in: query
+    description: 0- reject application. 1- approved application
+    example: 1
+    default: 0
+    schema:
+      type: string
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+          example: { "message": "Approved successfully." }
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  403:
+    $ref: "#/components/responses/403"
+  500:
+    $ref: "#/components/responses/500"

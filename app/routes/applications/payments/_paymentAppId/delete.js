@@ -8,7 +8,7 @@ export default async (req, res) => {
 
   const payment = await paymentCollection().doc(paymentAppId).get()
   if (!payment.exists) return res.sendStatus(404)
-  if (payment.data().status !== status.inPending) return res.sendStatus(400)
+  if (payment.data().status !== status.pending) return res.sendStatus(400)
 
   const role = await getRole(userId)
   if (role != 'admin' && payment.data().userId !== userId) return res.sendStatus(403)

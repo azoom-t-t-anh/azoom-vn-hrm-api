@@ -3,11 +3,11 @@ import { execute } from '@root/util.js'
 
 export default async function (userId, isApproved) {
   const user = await execute(getUser, { params: { userId } })
-  if (!user) return
-  const approvalPoint = isApproved ? user.positionPermissionId : 0
+  if (!user.body) return
+  const approvalPoint = isApproved ? user.body.positionPermissionId : 0
   return {
-    userId: user.id,
-    name: user.fullName,
+    userId: user.body.id,
+    name: user.body.fullName,
     createdDate: new Date(),
     approvalPoint,
   }

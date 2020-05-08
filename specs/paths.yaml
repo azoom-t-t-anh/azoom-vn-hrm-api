@@ -36,6 +36,8 @@
     $ref: paths/applications/payments/_paymentAppId/get.yaml
   delete:
     $ref: paths/applications/payments/_paymentAppId/delete.yaml
+  patch:
+    $ref: paths/applications/payments/_paymentAppId/patch.yaml
 /users/:
   post:
     $ref: paths/users/post.yaml
