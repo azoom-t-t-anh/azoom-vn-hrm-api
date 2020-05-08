@@ -30,6 +30,8 @@
 /applications/payments/{paymentAppId}/:
   get:
     $ref: paths/applications/payments/_paymentAppId/get.yaml
+  delete:
+    $ref: paths/applications/payments/_paymentAppId/delete.yaml
 /users/:
   post:
     $ref: paths/users/post.yaml

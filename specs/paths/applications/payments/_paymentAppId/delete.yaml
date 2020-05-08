@@ -1,0 +1,34 @@
+operationId: paymentsApplications.delete
+tags: 
+  - Applications
+summary: Delete payment
+parameters:
+  - name: paymentAppId
+    in: path
+    description: Id of payment application
+    example: payment-001
+    schema:
+      type: string
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Notification about update role.
+              example: successfully.
+          example: { "message": "successfully" }
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  403:
+    $ref: "#/components/responses/403"
+  404:
+    $ref: "#/components/responses/404"
+  500:
+    $ref: "#/components/responses/500"
