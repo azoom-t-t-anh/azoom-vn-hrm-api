@@ -1,0 +1,48 @@
+operationId: notifications.update
+tags:
+  - Notifications
+summary: Updated info of a notification
+parameters:
+  - name: notificationId
+    in: path
+    description: Id of notification will be update
+    example: U012SE071RC20200508-112112
+    schema:
+      type: string
+requestBody:
+  content:
+    application/json:
+      schema:
+        properties:
+          status:
+            type: boolean
+            description: Input status of notification will be update.
+            example: true
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: boolean
+            triedTimes:
+              type: integer
+            updated:
+              type: date-time
+          example:
+            {
+              "status": true,
+              "triedTimes": 2,
+              "updated": "2020-05-08T05:37:31.632Z",
+            }
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  404:
+    $ref: "#/components/responses/404"
+  500:
+    $ref: "#/components/responses/500"

@@ -85,4 +85,6 @@
     $ref: paths/notifications/post.yaml
   get:
     $ref: paths/notifications/get.yaml
-
+/notifications/{notificationId}/:
+  put:
+    $ref: paths/notifications/_notificationId/put.yaml
