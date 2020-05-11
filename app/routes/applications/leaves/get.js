@@ -6,10 +6,9 @@ import getRole from '@helpers/users/getRole'
 export default async (req, res) => {
   const pageNumber = parseInt(req.query.pageNumber) || 0
   const count = parseInt(req.query.count) || ''
-
-  const role = await getRole(req.user.id)
+  const role = await getRole(req.user.positionPermissionId)
   if (['admin', 'editor'].includes(role)) {
-    return res.send(await getLeaveAppOfUsers(pageNumber, count))
+    return res.send(await getAllLeaveAppOfUserList(pageNumber, count, []))
   }
 
   if (role === 'project manager') {
