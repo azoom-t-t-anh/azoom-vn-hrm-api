@@ -1,5 +1,5 @@
 import express from 'express'
-import { verifyToken } from '@helpers/jwtTokenr'
+import { verifyToken } from '@helpers/jwtToken'
 import getToken from '@routes/authentications/tokens/get'
 import verifySlackRequest from '@helpers/verify-requests/slack'
 
