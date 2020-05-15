@@ -1,6 +1,7 @@
 import { slackBot } from '@helpers/slack/createSlackbot'
 import { execute } from '@root/util'
 import saveNotification from '@routes/notifications/post.js'
+// TODO: Cho ra chơi với constansts hoặc env
 const urlChannel = `https://slack.com/app_redirect?channel=`
 const colorNotification = '#3AA3E3'
 
