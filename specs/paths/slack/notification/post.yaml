@@ -68,11 +68,19 @@ responses:
     content:
       application/json:
         schema:
-          type: object
-          properties:
-            message:
-              type: string
-              example: "Send Notification Successful"
+          type: array
+          items:
+            type: object
+            properties:
+              memberId:
+                type: string
+              status:
+                type: boolean
+              example:
+                [
+                  { "memberId": "U014HF74KL0", "status": "true" },
+                  { "memberId": "U013605DDGD", "status": "true" },
+                ]
 
   400:
     $ref: "#/components/responses/400"

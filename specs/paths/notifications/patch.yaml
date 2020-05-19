@@ -1,0 +1,22 @@
+operationId: notifcations.resendNotifcations
+tags:
+  - Notifications
+summary: PATCH /notifications/
+description: Resend notifications that its status is false
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+          example: { "message": "Resend notifications successful." }
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  500:
+    $ref: "#/components/responses/500"
