@@ -3,6 +3,7 @@ tags:
   - Authentications
 summary: POST /authentications/login/
 description: Log into the hr-azoom-vn system
+security: []
 requestBody:
   content:
     application/json:

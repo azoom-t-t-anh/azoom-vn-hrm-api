@@ -20,7 +20,7 @@ const defaultUser = {
   contractType: 0,
   position: 'Dev',
   positionPermissionId: 1,
-  isActive: true,
+  isActive: 1,
   created: new Date(),
   updated: ''
 }
