@@ -9,30 +9,35 @@ export default async (req, res) => {
   // TODO: remove 2 line parser below when openAPI is applied
   page = parseInt(page)
   limit = parseInt(limit)
-  const totalIgnorePayment = (page - 1) * limit
 
-  const role = await getRole(userId)
+  const role = await getRole(req.user.positionPermissionId)
   if(!['admin', 'editor'].includes(role)) return res.sendStatus(403) 
 
+  const payments = await getPayments(userId, role, page, limit)
+
+  return res.send(payments)
+}
+
+const getPayments = async (userId, role, page, limit) => {
   let connection = paymentCollection()
   if (role === 'user') {
     connection = connection.where('userId', '==', userId)
   }
 
+  const totalIgnorePayment = (page - 1) * limit
   const allPayments = await connection.orderBy('created').get()
   connection = connection.orderBy('created').limit(limit)
 
   let payments
   if (page === 1) {
     payments = await connection.get()
-    if(payments.empty) return res.send({ 'count' : allPayments.size, 'paymentApplications': [] })
   } else {
     const lastIgnorePayment = allPayments.docs[totalIgnorePayment - 1]
     payments = await connection.startAfter(lastIgnorePayment.data().created).get()
   }
 
-  return res.send({
-    'count' : allPayments.size, 
-    'paymentApplications': payments.docs.map(doc => doc.data())
-  })
+  return {
+    count: allPayments.size,
+    paymentApplications: payments.empty ? [] : payments.docs.map(doc => doc.data())
+  }
 }

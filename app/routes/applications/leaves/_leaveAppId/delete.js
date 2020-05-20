@@ -1,11 +1,12 @@
 import { leaveApplicationCollection } from '@root/database.js'
 import { applicationStatus } from '@root/constants.js'
 import getRole from '@helpers/users/getRole'
+import { getLeaveApplication } from '@routes/applications/leaves/_leaveAppId/get.js'
 
 export default async (req, res) => {
   try {
     const { leaveAppId } = req.params
-    const leaveApplicationSnapshot = await leaveApplicationCollection().doc(leaveAppId).get()
+    const leaveApplicationSnapshot = await getLeaveApplication(leaveAppId)
     const { id, userId, status, isActive = false, approvalUsers = [] } = leaveApplicationSnapshot.exists
       ? leaveApplicationSnapshot.data()
       : {}
@@ -17,11 +18,15 @@ export default async (req, res) => {
       approvalUsers.length === 0 &&
       (['admin', 'editor'].includes(role) || userId === req.user.id)
     ) {
-      await leaveApplicationCollection().doc(id).update({ isActive: false })
+      await deleteLeaveApplication(id)
       return res.send({ message: 'Successfully.' })
     }
     return res.sendStatus(403)
   } catch {
     res.sendStatus(500)
   }
+}
+
+const deleteLeaveApplication = async (id) => {
+  return leaveApplicationCollection().doc(id).update({ isActive: false })
 }

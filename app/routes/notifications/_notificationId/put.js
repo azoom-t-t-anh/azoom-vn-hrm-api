@@ -9,9 +9,13 @@ export default async (req, res) => {
       triedTimes: existNotification.data().triedTimes + 1,
       updated: new Date()
     }
-    await notificationCollection().doc(req.params.notificationId).update(data)
+    await updateNotification(req.params.notificationId, data)
     return res.send(data)
   } catch {
     return res.status(500).send({ message: 'Notification update failed' })
   }
+}
+
+const updateNotification = async (id, data) => {
+  return notificationCollection().doc(id).update(data)
 }

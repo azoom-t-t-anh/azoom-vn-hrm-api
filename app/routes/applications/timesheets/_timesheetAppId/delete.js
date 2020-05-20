@@ -17,6 +17,10 @@ export default async (req, res) => {
   }
   if (role !== 'admin' && exitTimesheetApp.userId !== userId) return res.sendStatus(403)
 
-  await timesheetApplicationCollection().doc(timesheetAppId).update({ isActive: 0 })
+  await deleteTimesheetApplication(timesheetAppId)
   return res.send({ message: `Timesheet application ${timesheetAppId} was deleted` })
+}
+
+const deleteTimesheetApplication = async (timesheetAppId) => {
+  return timesheetApplicationCollection().doc(timesheetAppId).update({ isActive: 0 })
 }

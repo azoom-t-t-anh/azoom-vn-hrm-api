@@ -12,6 +12,10 @@ export default async (req, res) => {
 
   const role = await getRole(req.user.positionPermissionId)
   if (role !== 'admin' && payment.data().userId !== userId) return res.sendStatus(403)
-  await paymentCollection().doc(paymentAppId).update({ isActive: false })
+  await deletePayment(paymentAppId)
   return res.sendStatus(200)
+}
+
+const deletePayment = async (paymentAppId) => {
+  return paymentCollection().doc(paymentAppId).update({ isActive: false })
 }

@@ -24,6 +24,11 @@ export default async (req, res) => {
   }
   
   const newPayment = {...defaultPayment, ...payment}
-  await paymentCollection().doc(newPayment.id).set(newPayment)
+  await createNewPayment(newPayment.id, newPayment)
   return res.send(newPayment)
 }
+
+const createNewPayment = async (newPaymentId, newPayment) => {
+  return paymentCollection().doc(newPaymentId).set(newPayment)
+}
+

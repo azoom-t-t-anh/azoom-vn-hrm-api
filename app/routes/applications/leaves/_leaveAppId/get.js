@@ -3,8 +3,8 @@ import { leaveApplicationCollection } from '@root/database'
 export default async (req, res) => {
   try {
     const { leaveAppId } = req.params
+    const existedLeaveApplication = await getLeaveApplication(leaveAppId)
 
-    const existedLeaveApplication = await leaveApplicationCollection().doc(leaveAppId).get()
     if (existedLeaveApplication.exists) {
       res.send(existedLeaveApplication.data())
     } else {
@@ -14,3 +14,10 @@ export default async (req, res) => {
     res.sendStatus(500)
   }
 }
+
+const getLeaveApplication = async (leaveAppId) => {
+  return leaveApplicationCollection().doc(leaveAppId).get()
+}
+
+export { getLeaveApplication }
+

@@ -13,8 +13,15 @@ export default async (req, res) => {
   const role = await getRole(req.user.positionPermissionId)
   if (!role) return res.sendStatus(403)
 
+  let timesheetApps = await getTimesheetApplications(userId, role, page, limit)
+
+  return res.send(timesheetApps)
+
+}
+
+const getTimesheetApplications = async (userId, role, page, limit) => {
   const userIds =
-    role === 'project manager' ? await getUserIdsByManagerId(userId) : []
+    role === "project manager" ? await getUserIdsByManagerId(userId) : []
   const totalIgnoreApp = (page - 1) * limit
   let query = timesheetApplicationCollection().where('isActive', '==', 1)
 
@@ -37,18 +44,19 @@ export default async (req, res) => {
       .get()
   }
 
-  return res.send({
+  return {
     count: allTimesheetApps.size,
-    timesheetApplications: timesheetApps.docs.map((appSnapshot) => {
+    timesheetApplications: timesheetApps.docs.map(appSnapshot => {
       const app = appSnapshot.data()
       return {
         ...app,
         created: app.created.toDate(),
-        updated: app.updated ? app.updated.toDate() : undefined,
+        updated: app.updated ? app.updated.toDate() : undefined
       }
-    }),
-  })
+    })
+  }
 }
+
 export const getUserIdsByManagerId = async (managerId) => {
   const projects = await execute(getProject, { query: { managerId } })
   if (projects.status === 404 || !projects.body) return [managerId]

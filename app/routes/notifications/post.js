@@ -12,6 +12,10 @@ export default async (req, res) => {
     triedTimes: 0,
     isActive: true
   }
-  await notificationCollection().doc(notifiId).set(notification)
+  await createNewNotification(notification)
   return res.send(notification)
+}
+
+const createNewNotification = async (notification) => {
+  return notificationCollection().doc(notification.notifiId).set(notification)
 }

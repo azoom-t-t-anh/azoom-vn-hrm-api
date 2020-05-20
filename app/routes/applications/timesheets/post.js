@@ -21,6 +21,11 @@ export default async (req, res) => {
   }
   const saveTimesheetApp = { ...defaultTimesheetApp,  ...newTimesheetApp }
   
-  await timesheetApplicationCollection().doc(saveTimesheetApp.id).set(saveTimesheetApp)
+  await createNewTimesheetApplication(saveTimesheetApp)
+
   return res.send(saveTimesheetApp)
+}
+
+const createNewTimesheetApplication = async (newTimesheetApp) => {
+  return timesheetApplicationCollection().doc(newTimesheetApp.id).set(newTimesheetApp)
 }

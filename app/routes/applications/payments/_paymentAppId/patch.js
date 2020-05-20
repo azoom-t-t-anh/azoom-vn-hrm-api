@@ -22,6 +22,10 @@ export default async (req, res) => {
       newApprovalUsers
     ]
   }
-  await paymentCollection().doc(paymentAppId).update(updatedPaymentApp)
+  await updatePayment(paymentAppId, updatedPaymentApp)
   return res.sendStatus(200)
+}
+
+const updatePayment = async (paymentAppId, updatedPaymentApp) => {
+  return paymentCollection().doc(paymentAppId).update(updatedPaymentApp)
 }
