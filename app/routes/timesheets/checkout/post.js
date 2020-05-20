@@ -6,9 +6,18 @@ import { format } from 'date-fns/fp'
 
 export default async (req, res) => {
   const userId = req.user.id
-  const responseTimesheet = await execute(getExistTimesheet, { params: { userId, time: new Date() } })
+  const timezone = new Date().getTimezoneOffset() / -60
+  const responseTimesheet = await execute(
+    getExistTimesheet, { 
+      query: { 
+        userIds: userId,
+        time: format('yyyy-MM-dd', new Date()),
+        timezone: timezone >= 0 ? `+${timezone}` : timezone 
+      }
+    }
+  )
   const [existedTimesheet] = responseTimesheet.body
-  const endTime = format('HH:mm', new Date())
+  const endTime = new Date()
   const warningMessage = existedTimesheet && existedTimesheet.startTime ? '' : ' But you have not checked in today.'
 
   if (existedTimesheet && existedTimesheet.endTime) return res.send({ message: `You checked out at ${existedTimesheet.endTime}.${warningMessage}` })

@@ -6,9 +6,18 @@ import { format } from 'date-fns/fp'
 
 export default async (req, res) => {
   const userId = req.user.id
-  const responseTimesheet = await execute(checkExistTimesheet, { params: { userId, time: new Date() } })
+  const timezone = new Date().getTimezoneOffset() / -60
+  const responseTimesheet = await execute(
+    checkExistTimesheet, {
+      query: {
+        userIds: userId,
+        time: format('yyyy-MM-dd',new Date()),
+        timezone: timezone >= 0 ? `+${timezone}` : timezone
+      }
+    }
+  )
   const [checkedInRecord] = responseTimesheet.body
-  const startTime = format('HH:mm', new Date())
+  const startTime = new Date()
 
   if (checkedInRecord && checkedInRecord.startTime) return res.send({ message: `You checked in at ${checkedInRecord.startTime}.` })
 

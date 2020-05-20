@@ -1,29 +1,46 @@
 import { timesheetCollection } from '@root/database'
-import { endOfDay, format, parse, startOfMonth, lastDayOfMonth } from 'date-fns/fp'
+import { addHours, format, startOfMonth, lastDayOfMonth } from 'date-fns/fp'
 
 export default async (req, res) => {
   try {
-    const { userIds = '', time, startDate, endDate } = req.query
+    const { userIds = req.user.id, time, timezone = '+0', startDate, endDate } = req.query
 
+    const timezoneCheck = Number(timezone)
+    if (isNaN(timezoneCheck) || timezoneCheck > 12 || timezoneCheck < -12 ) return res.status(500).send({
+      message: 'Error timezone'
+    })
     let query = timesheetCollection()
     if (userIds.length) {
       const ids = userIds.split(/,/)
       query = query.where('userId', 'in', ids)
     }
     if (time) {
-      query = query.where('checkedDate', '==', parse(new Date(), 'yyyy-MM-dd'), time)
+      const startTimeServer = new Date(`${time} 00:00:00 GMT ${timezone}`)
+      const endTimeServer = addHours(24, startTimeServer)
+
+      if (!(isValidDate(startTimeServer))) return res.status(500).send({ message: 'Error time' })
+      query = query.where('checkedDate', '>=', startTimeServer).where('checkedDate', '<', endTimeServer)
     } else if (startDate || endDate) {
       if (startDate) {
-        query = query.where('checkedDate', '>=', parse(new Date(), 'yyyy-MM-dd', startDate))
+        const startTimeRangeServer = new Date(`${startDate} 00:00:00 GMT ${timezone}`)
+
+        if (!(isValidDate(startTimeRangeServer))) return res.status(500).send({ message: 'Error time range' })
+        query = query.where('checkedDate', '>=', startTimeRangeServer)
       }
       if (endDate) {
-        const end = endOfDay(parse(new Date(), 'yyyy-MM-dd', endDate))
-        query = query.where('checkedDate', '<=', end)
+        const endTimeRangeServer = new Date(`${endDate} 23:59:59 GMT ${timezone}`)
+
+        if (!(isValidDate(endTimeRangeServer))) return res.status(500).send({ message: 'Error time range' })
+        query = query.where('checkedDate', '<=', endTimeRangeServer)
       }
     } else {
+      const serverTimezone = new Date().getTimezoneOffset() / -60
+      const startOfMonthClient = addHours(serverTimezone - Number(timezone), startOfMonth(new Date()) )
+      const endOfMonthClient = addHours(serverTimezone - Number(timezone) + 24, lastDayOfMonth(new Date()) )
+
       query = query
-        .where('checkedDate', '>=', startOfMonth(new Date()))
-        .where('checkedDate', '<=', lastDayOfMonth(new Date()))
+        .where('checkedDate', '>=', startOfMonthClient)
+        .where('checkedDate', '<', endOfMonthClient)
     }
     const results = await query.get()
 
@@ -31,12 +48,16 @@ export default async (req, res) => {
       results.docs
         .map((doc) => doc.data())
         .reduce((docs, doc) => {
-          const checkedDate = doc.checkedDate.toDate()
+          const checkedDate = addHours( Number(timezone), doc.checkedDate.toDate())
           doc.checkedDate = format('yyyy-MM-dd', checkedDate)
           return [...docs, doc]
         }, [])
     )
-  } catch {
+  } catch(e) {
+    console.error(e)
     res.status(500).send({ message: 'Error when get timesheets from firebase.' })
   }
+}
+function isValidDate(date) {
+  return date instanceof Date && !isNaN(date);
 }
