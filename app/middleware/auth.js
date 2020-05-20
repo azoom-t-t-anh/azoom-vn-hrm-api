@@ -1,7 +1,7 @@
 import express from 'express'
 import { verifyToken } from '@helpers/jwtToken'
 import getToken from '@routes/authentications/tokens/get'
-import verifySlackRequest from '@helpers/verify-requests/slack'
+import verifySlackRequest from '@middleware/verifyRequests/slack'
 
 const router = new express.Router()
 

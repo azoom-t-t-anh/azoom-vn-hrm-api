@@ -3,7 +3,7 @@ import saveLeaveApplication from '@routes/applications/leaves/put.js'
 import { applicationStatus } from '@root/constants.js'
 import { parse, eachDayOfInterval, format } from 'date-fns/fp'
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   const { startDate, endDate, leaveTypeId, userId = req.user.id, requiredContent } = req.body
 
   const requiredDates = eachDayOfInterval({

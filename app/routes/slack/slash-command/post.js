@@ -28,7 +28,7 @@ import getPaymentsApplications from '@routes/applications/payments/get.js'
 import createPaymentsApplication from '@routes/applications/payments/post.js'
 import deletePaymentsApplication from '@routes/applications/payments/_paymentAppId/delete.js'
 import getPaymentDetail from '@routes/applications/payments/_paymentAppId/get.js'
-import verifySlackRequest from '@helpers/verify-requests/slack'
+import verifySlackRequest from '@middleware/verifyRequests/slack'
 
 const notImplementMessage = 'Sorry. This command is being implemented.'
 
