@@ -6,8 +6,9 @@ export default async (req, res) => {
     const timesheet = req.body
 
     await timesheetCollection().doc(timesheetAppId).update(timesheet)
-    res.sendStatus(200)
-  } catch(error) {
-    res.status(500).send({ message: "Error when save timesheet to firebase."})
+    const savedTimesheet = await timesheetCollection().doc(timesheetAppId).get()
+    res.send(savedTimesheet.exists ? savedTimesheet.data() : {})
+  } catch {
+    res.status(500).send({ message: 'Error when save timesheet to firebase.' })
   }
 }

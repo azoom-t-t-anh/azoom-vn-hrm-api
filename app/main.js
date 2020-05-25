@@ -1,10 +1,19 @@
 import express from 'express'
+import http from 'http'
 import nnnRouter from 'nnn-router'
 import promiseRouter from 'express-promise-router'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import expressOpenApiMiddleware from 'openapi-express-middleware'
+import Server from 'socket.io'
 import swaggerFile from './openapi.json'
+import { initIOListener } from './socket'
+import * as constants from '@root/constants'
+
+const options = {
+  transports: ['polling', 'websocket'],
+  allowUpgrades: true
+}
 
 import statuses from 'statuses'
 
@@ -46,7 +55,7 @@ app.use(
   (error, req, res, next) => {
     if (error) {
       return res.status(400).json({
-        message: error.message,
+        message: error.message
       })
     }
     return next()
@@ -61,10 +70,15 @@ app.use(
   }
 )
 
-app.listen(process.env.PORT || 8080, err => {
+const server = http.createServer(app)
+const io = Server(server, options)
+
+server.listen(process.env.PORT || 8080, (err) => {
   if (err) {
     return console.error(err)
   }
+  initIOListener(io)
+  console.log(`Server is running at port ${process.env.PORT || 8080}`);
 })
 
-export default app
+export { app, server, io }

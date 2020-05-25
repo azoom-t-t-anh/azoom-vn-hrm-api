@@ -99,7 +99,7 @@ export default async (req, res) => {
 //TODO: Doan nay logic co van de
 const updateLeaveToTimesheet = async (userId, dateList) => {
   dateList.forEach(async (element) => {
-    const data = await execute(getTimesheetUserDate, {
+    const timesheetUserDateResponse = await execute(getTimesheetUserDate, {
       params: { userId, time: element.date }
     })
     if (timesheetUserDateResponse.status !== 200) {

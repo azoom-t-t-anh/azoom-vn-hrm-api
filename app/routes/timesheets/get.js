@@ -10,7 +10,8 @@ export default async (req, res) => {
       time,
       timezone = '+0',
       startDate,
-      endDate
+      endDate,
+      getAll = false
     } = req.query
 
     const timezoneCheck = Number(timezone)
@@ -19,7 +20,7 @@ export default async (req, res) => {
         message: 'Error timezone'
       })
     let query = timesheetCollection()
-    if (userIds.length) {
+    if (userIds.length && !getAll) {
       const ids = userIds.split(/,/)
       query = query.where('userId', 'in', ids)
     }
@@ -68,17 +69,19 @@ export default async (req, res) => {
     }
     const timesheetSnapshot = await query.get()
     if (timesheetSnapshot.empty) return res.send([])
+
     const timesheets = await timesheetSnapshot.docs
       .map((doc) => doc.data())
-      .reduce(async (docs, doc) => {
+      .reduce( (docs, doc) => {
         const checkedDate = addHours(Number(timezone), doc.checkedDate.toDate())
         doc.checkedDate = format('yyyy-MM-dd', checkedDate)
-
-        doc.fullName = await loadUserFullNameById(doc.userId)
-        return [...docs, doc]
+        const timesheet = addAdditionalDataAndFormat(doc)
+        return [...docs, timesheet]
       }, [])
     
-    res.send(timesheets)
+      
+
+    res.send(await Promise.all(timesheets))
   } catch (e) {
     console.error(e)
     res
@@ -90,10 +93,11 @@ function isValidDate(date) {
   return date instanceof Date && !isNaN(date)
 }
 
-const loadUserFullNameById = async (userId) => {
-  const userResponse = await execute(getUserById, {
-    params: { userId}
+export const addAdditionalDataAndFormat = async (timesheet) => {
+  const userNameResponse = await execute(getUserById, {
+    params: { userId: timesheet.userId }
   })
-  if (userResponse.status === 200) return userResponse.body.fullName
-  return userId
+  timesheet.fullName =
+    userNameResponse.status === 200 ? userNameResponse.body.fullName : ''
+  return timesheet
 }

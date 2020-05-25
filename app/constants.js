@@ -12,3 +12,10 @@ export const leaveType = {
   makeUpLeaveMorning: 8,
   makeUpLeaveAfternoon: 9,
 }
+export const rooms = {
+  TIMELINE: 'timeline'
+}
+
+export const events = {
+  LOGTIME: 'logtime'
+}
