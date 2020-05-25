@@ -1,9 +1,13 @@
 import { sign as jwtSign, verify as jwtVerify } from 'jsonwebtoken'
 
-export const generateToken = ({ id, positionPermissionId }, secretSignature, tokenLife) => {
+export const generateToken = (
+  { id, positionPermissionId, fullName, slackId },
+  secretSignature,
+  tokenLife
+) => {
   return new Promise((resolve, reject) => {
     jwtSign(
-      { data: { id, positionPermissionId } },
+      { data: { id, positionPermissionId, fullName, slackId } },
       secretSignature,
       {
         algorithm: 'HS256',

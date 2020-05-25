@@ -1,8 +1,9 @@
-import {userTokenCollection} from '@root/database'
+import { userTokenCollection } from '@root/database'
+import { format } from 'date-fns/fp'
 export default async (req, res) => {
   const { isAll = false } = req.query
   if (isAll) {
-    await destroyALLTokenOfUser(req.user.id)
+    await destroyAllTokenOfUser(req.user.id)
   } else {
     await destroyToken(req.token.tokenCode)
   }
@@ -18,7 +19,7 @@ export const destroyAllTokenOfUser = async (userId) => {
       .doc(item.id)
       .update({
         isActive: false,
-        updated: format('yyyy/MM/dd HH:mm:ss', new Date()),
+        updated: format('yyyy/MM/dd HH:mm:ss', new Date())
       })
   )
   return queryData.empty
@@ -28,7 +29,7 @@ export const destroyAllTokenOfUser = async (userId) => {
           .doc(item.id)
           .update({
             isActive: false,
-            updated: format('yyyy/MM/dd HH:mm:ss', new Date()),
+            updated: format('yyyy/MM/dd HH:mm:ss', new Date())
           })
       )
 }
@@ -41,7 +42,7 @@ export const destroyToken = async (tokenFromClient) => {
     ? ''
     : queryData.docs.map((item) =>
         userTokenCollection().doc(item.id).update({
-          isActive: false,
+          isActive: false
         })
       )
 }

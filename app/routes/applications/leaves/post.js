@@ -4,11 +4,17 @@ import { applicationStatus } from '@root/constants.js'
 import { parse, eachDayOfInterval, format } from 'date-fns/fp'
 
 export default async (req, res) => {
-  const { startDate, endDate, leaveTypeId, userId = req.user.id, requiredContent } = req.body
+  const {
+    startDate,
+    endDate,
+    leaveTypeId,
+    userId = req.user.id,
+    requiredContent
+  } = req.body
 
   const requiredDates = eachDayOfInterval({
     start: parse(new Date(), 'yyyy/MM/dd', startDate),
-    end: parse(new Date(), 'yyyy/MM/dd', endDate),
+    end: parse(new Date(), 'yyyy/MM/dd', endDate)
   }).map((date) => format('yyyy/MM/dd', date))
   const data = {
     id: setId(userId),
@@ -19,6 +25,7 @@ export default async (req, res) => {
     createdDate: new Date(),
     status: applicationStatus.pending,
     isActive: true,
+    approvalUsers: []
   }
   const result = await execute(saveLeaveApplication, { body: data })
   if (result.status !== 200) {

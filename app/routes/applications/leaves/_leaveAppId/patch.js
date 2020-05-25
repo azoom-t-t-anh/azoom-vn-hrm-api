@@ -23,14 +23,18 @@ const timesheet = {
 
 export default async (req, res) => {
   const { leaveAppId } = req.params
-  const { isApproved = false } = req.query
+  let { isApproved = 0 } = req.query
+
+  //TODO: remove this line when turned on the validation
+  isApproved = parseInt(isApproved)
+
   const leaveAppResponse = await execute(getLeaveApp, {
     params: { leaveAppId }
   })
   if (leaveAppResponse.status !== 200) {
     return res.sendStatus(leaveAppResponse.status)
   }
-  const existedLeaveApplication = getLeaveAppResponse.body
+  const existedLeaveApplication = leaveAppResponse.body
   if (existedLeaveApplication.status !== applicationStatus.pending) {
     return res
       .status(400)
@@ -50,7 +54,7 @@ export default async (req, res) => {
 
   const isUserEditedBefore = existedLeaveApplication.approvalUsers
     ? existedLeaveApplication.approvalUsers.find(
-        (approvalUser) => approvalUser.userId === userId
+        (approvalUser) => approvalUser.userId === req.user.id
       )
     : false
 
@@ -59,48 +63,35 @@ export default async (req, res) => {
       message: 'This application has been already approved/rejected.'
     })
 
-  const approvalUser = newApprovalUser(req.user, isApproved)
+  const approvalUser = await newApprovalUser(req.user, isApproved)
   existedLeaveApplication.approvalUsers.push(approvalUser)
-
-  if (!isApproved) {
-    existedLeaveApplication.status = status.rejected
-    await execute(saveLeaveApplication, { body: existedLeaveApplication })
-    return res.send({ message: 'Rejected successfully.' })
-  }
 
   if (!isApproved) {
     existedLeaveApplication.status = applicationStatus.rejected
     await execute(saveLeaveApplication, { body: existedLeaveApplication })
-    return res.send({ message: 'Successfully.' })
+    return res.send({ message: 'Rejected successfully.' })
   }
+  existedLeaveApplication.approvalCosre = await calculateApprovalPoints(
+    existedLeaveApplication.approvalUsers
+  )
 
   if (existedLeaveApplication.approvalCosre >= process.env.POSITION_ADMIN) {
-    existedLeaveApplication.status = status.approved
+    existedLeaveApplication.status = applicationStatus.approved
     updateLeaveToTimesheet(
       existedLeaveApplication.userId,
       existedLeaveApplication.requiredDates,
       existedLeaveApplication.leaveTypeId
     )
-
-    if (existedLeaveApplication.approvalCosre >= process.env.POSITION_ADMIN) {
-      existedLeaveApplication.status = applicationStatus.approved
-      updateLeaveToTimesheet(
-        existedLeaveApplication.userId,
-        existedLeaveApplication.requiredDates
-      )
-    }
-    await execute(saveLeaveApplication, { body: existedLeaveApplication })
-    return res.send({ message: 'Successfully.' })
   }
 
   await execute(saveLeaveApplication, { body: existedLeaveApplication })
   return res.send({ message: 'Approved successfully.' })
 }
 //TODO: Doan nay logic co van de
-const updateLeaveToTimesheet = async (userId, dateList) => {
-  dateList.forEach(async (element) => {
+const updateLeaveToTimesheet = async (userId, dateList, leaveTypeId) => {
+  dateList.forEach(async (time) => {
     const timesheetUserDateResponse = await execute(getTimesheetUserDate, {
-      params: { userId, time: element.date }
+      params: { userId, time }
     })
     if (timesheetUserDateResponse.status !== 200) {
       timesheet.userId = userId
