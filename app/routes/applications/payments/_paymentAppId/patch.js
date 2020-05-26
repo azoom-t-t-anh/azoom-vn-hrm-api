@@ -14,7 +14,7 @@ export default async (req, res) => {
   const role = await getRole(req.user.positionPermissionId)
   if (role !== 'admin') return res.sendStatus(403)
 
-  const newApprovalUsers = await initNewApprovalUser(userId, isApproved)
+  const newApprovalUsers = await initNewApprovalUser(req.user, isApproved)
   const updatedPaymentApp = {
     updated: new Date(),
     status: Number(isApproved),

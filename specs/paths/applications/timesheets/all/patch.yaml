@@ -1,0 +1,29 @@
+operationId: allTimesheetsApplications.approvedOrReject
+tags:
+  - Applications
+summary: PATCH /applications/timesheets/all/
+description: Approved or reject to applications
+parameters:
+  - name: isApproved
+    in: query
+    description: is approved. 0- reject applications. 1- approved applications
+    example: 1
+    schema:
+      type: number
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+          example: { "message": "Approved successful applications." }
+  400:
+    $ref: "#/components/responses/400"
+  401:
+    $ref: "#/components/responses/401"
+  500:
+    $ref: "#/components/responses/500"
