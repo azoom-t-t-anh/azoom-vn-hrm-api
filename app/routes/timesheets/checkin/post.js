@@ -2,7 +2,7 @@ import { execute } from '@root/util.js'
 import checkExistTimesheet from '@routes/timesheets/get.js'
 import saveTimesheet from '@routes/timesheets/post.js'
 import updateTimesheet from '@routes/timesheets/patch.js'
-import { format } from 'date-fns/fp'
+import { format, startOfDay } from 'date-fns/fp'
 import { sendMessageToRoom } from '@root/socket'
 import * as constants from '@root/constants'
 import { addAdditionalDataAndFormat } from '@routes/timesheets/get'
@@ -48,11 +48,11 @@ export default async (req, res) => {
 
   const newTimesheet = {
     userId,
-    checkedDate: new Date(),
+    checkedDate: startOfDay(new Date()),
     startTime,
     endTime: '',
     created: new Date(),
-    updated: ''
+    updated: new Date()
   }
   const saveResult = await execute(saveTimesheet, { body: newTimesheet })
 

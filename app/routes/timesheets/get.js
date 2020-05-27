@@ -67,19 +67,20 @@ export default async (req, res) => {
         .where('checkedDate', '>=', startOfMonthClient)
         .where('checkedDate', '<', endOfMonthClient)
     }
-    const timesheetSnapshot = await query.get()
+    const timesheetSnapshot = await query
+      .orderBy('checkedDate')
+      .orderBy('updated', 'desc')
+      .get()
     if (timesheetSnapshot.empty) return res.send([])
 
     const timesheets = await timesheetSnapshot.docs
       .map((doc) => doc.data())
-      .reduce( (docs, doc) => {
+      .reduce((docs, doc) => {
         const checkedDate = addHours(Number(timezone), doc.checkedDate.toDate())
         doc.checkedDate = format('yyyy-MM-dd', checkedDate)
         const timesheet = addAdditionalDataAndFormat(doc)
         return [...docs, timesheet]
       }, [])
-    
-      
 
     res.send(await Promise.all(timesheets))
   } catch (e) {
