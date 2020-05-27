@@ -4,6 +4,7 @@ export default async function (user, isApproved) {
     userId: user.id,
     name: user.fullName,
     createdDate: new Date(),
-    approvalPoint
+    approvalPoint,
+    slackId: user.slackId
   }
 }

@@ -10,6 +10,7 @@ import newApprovalUser from '@helpers/users/initNewApprovalUser'
 import calculateApprovalPoints from '@helpers/applications/calculateApprovalPoints'
 import getRole from '@helpers/users/getRole'
 import { format } from 'date-fns/fp'
+import sendNotificationSlackBot from '@routes/slack/notification/post.js'
 
 const timesheet = {
   id: '',
@@ -54,21 +55,23 @@ export default async (req, res) => {
 
   const isUserEditedBefore = existedLeaveApplication.approvalUsers
     ? existedLeaveApplication.approvalUsers.find(
-        (approvalUser) => approvalUser.userId === req.user.id
-      )
+      (approvalUser) => approvalUser.userId === req.user.id
+    )
     : false
 
   if (isUserEditedBefore)
     return res.status(400).send({
       message: 'This application has been already approved/rejected.'
     })
-
   const approvalUser = await newApprovalUser(req.user, isApproved)
   existedLeaveApplication.approvalUsers.push(approvalUser)
+  const slackIds = existedLeaveApplication.approvalUsers
+    .map((leaveApplication) => leaveApplication.slackId)
 
   if (!isApproved) {
     existedLeaveApplication.status = applicationStatus.rejected
     await execute(saveLeaveApplication, { body: existedLeaveApplication })
+    await sendNofification(slackIds, req.user.slackId, existedLeaveApplication.id)
     return res.send({ message: 'Rejected successfully.' })
   }
   existedLeaveApplication.approvalCosre = await calculateApprovalPoints(
@@ -85,6 +88,7 @@ export default async (req, res) => {
   }
 
   await execute(saveLeaveApplication, { body: existedLeaveApplication })
+  await sendNofification(slackIds, req.user.slackId, existedLeaveApplication.id)
   return res.send({ message: 'Approved successfully.' })
 }
 //TODO: Doan nay logic co van de
@@ -105,4 +109,21 @@ const updateLeaveToTimesheet = async (userId, dateList, leaveTypeId) => {
       await execute(updateTimesheet, { body: data })
     }
   })
+}
+
+const sendNofification = async (receiverIds, senderId, requestId) => {
+  const notification = {
+    receiverIds,
+    senderId,
+    requestId,
+    title: 'Đơn xin nghỉ phép',
+    content: 'Hi anh. Vì lý do cá nhận , em xin phép nghỉ buổi ngày hôm nay ạ !',
+    typeId: 1,
+    typeNotice: 'leave-application',
+    options: [{ typeOption: 'button', value: 'Approve' }, { typeOption: 'button', value: 'Reject' }]
+  }
+  return await execute(sendNotificationSlackBot,
+    {
+      body: notification,
+    })
 }

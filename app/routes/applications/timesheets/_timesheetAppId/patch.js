@@ -7,6 +7,7 @@ import initNewApprovalUser from '@helpers/users/initNewApprovalUser'
 import calculateApprovalPoints from '@helpers/applications/calculateApprovalPoints'
 import getRole from '@helpers/users/getRole'
 import firebase from 'firebase'
+import sendNotificationSlackBot from '@routes/slack/notification/post.js'
 
 export default async function(req, res) {
   const { timesheetAppId } = req.params
@@ -25,26 +26,49 @@ export default async function(req, res) {
 
   const role = await getRole(req.user.positionPermissionId)
   const permissionToEdit = await checkPermissionOfManager(userId, exitTimesheetApp.userId)
+
   if (!permissionToEdit && !['admin', 'editor'].includes(role)) return res.sendStatus(403)
 
   const newApprovalUser = await initNewApprovalUser(req.user, isApproved)
   const totalApprovalPoints = calculateApprovalPoints([...exitTimesheetApp.approvalUsers, newApprovalUser])
+  const slackIds = existedLeaveApplication.approvalUsers
+  .map((leaveApplication) => leaveApplication.slackId)
   const updateTimesheetApp = {
     updated: new Date(),
     approvalUsers: firebase.firestore.FieldValue.arrayUnion(newApprovalUser)
   }
   if (!isApproved) {
     await saveTimesheetApp(timesheetAppId, { ...updateTimesheetApp, status: applicationStatus.reject })
+    await sendNofification(slackIds, req.user.slackId, exitTimesheetApp.id)
     return res.send( { message: "Rejected successfully." } )
   } else if (totalApprovalPoints >= process.env.POSITION_ADMIN) {
     await saveTimesheetApp(timesheetAppId, { ...updateTimesheetApp, status: applicationStatus.approved })
+    await sendNofification(slackIds, req.user.slackId, exitTimesheetApp.id)
     return res.send( { message: "Approved successfully." } )
   } else {
     await saveTimesheetApp(timesheetAppId, updateTimesheetApp)
+    await sendNofification(slackIds, req.user.slackId, exitTimesheetApp.id)
     return res.send( { message: "Approved successfully." } )
   }
 }
 
 const saveTimesheetApp = async function(timesheetAppId, timesheetApp) {
   return timesheetApplicationCollection().doc(timesheetAppId).update(timesheetApp)
+}
+
+const sendNofification = async (receiverIds, senderId, requestId) => {
+  const notification = {
+    receiverIds,
+    senderId,
+    requestId,
+    title: 'Đơn xin điều chỉnh bảng chấm công',
+    content: 'Hi anh .  Vì một số vấn đề , em xin phép đóng góp ý kiến điều chỉnh lại bảng chấm công!',
+    typeId: 1,
+    typeNotice: 'timesheet-application',
+    options: [{ typeOption: 'button', value: 'Approve' }, { typeOption: 'button', value: 'Reject' }]
+  }
+  return await execute(sendNotificationSlackBot,
+    {
+      body: notification,
+    })
 }
