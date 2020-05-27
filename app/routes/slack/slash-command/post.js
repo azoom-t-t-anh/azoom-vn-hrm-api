@@ -36,19 +36,26 @@ export default async (req, res) => {
   const request = req.body
   const { user_id } = request.body
   const commandText = request.body.text
-  
-  if (!verifySlackRequest(request))
-    await slackPostMessage(user_id, 'We are sorry but we are not able to authenticate you.')
 
-  const userResponse = await execute(getUserBySlackId, { params: { slackId: user_id } } )
+  if (!verifySlackRequest(request))
+    await slackPostMessage(
+      user_id,
+      'We are sorry but we are not able to authenticate you.'
+    )
+
+  const userResponse = await execute(getUserBySlackId, {
+    params: { slackId: user_id }
+  })
   const user = userResponse.body
-  if (!user)
-    return await slackPostMessage(userId, 
+  if (userResponse.status === 404)
+    return await slackPostMessage(
+      user_id,
       `> Sorry, You did not register account before
-      > Please register HRM account first`)
+      > Please register HRM account first`
+    )
   const params = commandParser(commandText)
-  const {resource, action} = getSlashCommandAction(commandText)
-  
+  const { resource, action } = getSlashCommandAction(commandText)
+
   const slashCommands = {
     ':': () => {
       return `
@@ -84,136 +91,298 @@ export default async (req, res) => {
       `
     },
     'users:profile': async (user, { userId }) => {
-      const validResult = validParams(['userId'], { userId } , commandText)
+      const validResult = validParams(['userId'], { userId }, commandText)
       if (validResult !== true) return validResult
       return execute(getUserDetail, { params: { userId }, user })
     },
-    'users:list': async (user, { page, limit}) => {
+    'users:list': async (user, { page, limit }) => {
       return execute(getUsers, { query: { page, limit }, user })
     },
     'users:': async (user) => {
       return execute(getUserDetail, { params: { userId: user.id }, user })
     },
     'users:create': async (user, params, commandText) => {
-      const validResult = validParams(['id', 'username', 'password', 'email'], params , commandText)
+      const validResult = validParams(
+        ['id', 'username', 'password', 'email'],
+        params,
+        commandText
+      )
       if (validResult !== true) return validResult
       return execute(createUser, { body: params, user })
     },
     'users:update': async (user, params) => {
-      return execute(updateUser, { body: params, user, params: { userId: params.id } })
+      return execute(updateUser, {
+        body: params,
+        user,
+        params: { userId: params.id }
+      })
     },
     'users:deactive': async (user, { id }, commandText) => {
-      const validResult = validParams(['id'], { id } , commandText)
+      const validResult = validParams(['id'], { id }, commandText)
       if (validResult !== true) return validResult
       return execute(deactiveUser, { user, params: { userId: id } })
     },
-    'users:permission': async (user, { id, positionPermissionId }, commandText) => {
-      const validResult = validParams(['id', 'positionPermissionId'], { id, positionPermissionId } , commandText)
+    'users:permission': async (
+      user,
+      { id, positionPermissionId },
+      commandText
+    ) => {
+      const validResult = validParams(
+        ['id', 'positionPermissionId'],
+        { id, positionPermissionId },
+        commandText
+      )
       if (validResult !== true) return validResult
-      return execute(updatePermissionUser, { user, params: { userId: id }, body: { positionPermissionId } })
+      return execute(updatePermissionUser, {
+        user,
+        params: { userId: id },
+        body: { positionPermissionId }
+      })
     },
     'projects:get-member': async (user, { projectId }, commandText) => {
-      const validResult = validParams(['projectId'], { projectId } , commandText)
+      const validResult = validParams(['projectId'], { projectId }, commandText)
       if (validResult !== true) return validResult
       return execute(getMembers, { params: { projectId }, user })
     },
-    'application-timesheets:approval': async (user, { timesheetAppId, status }, commandText) => {
-      const validResult = validParams(['timesheetAppId', 'status'], { timesheetAppId, status } , commandText)
+    'application-timesheets:approval': async (
+      user,
+      { timesheetAppId, status },
+      commandText
+    ) => {
+      const validResult = validParams(
+        ['timesheetAppId', 'status'],
+        { timesheetAppId, status },
+        commandText
+      )
       if (validResult !== true) return validResult
-      return execute(approvalTimesheetApp, { params: { timesheetAppId }, user, query: { isApproved: status === "approve" } })
+      return execute(approvalTimesheetApp, {
+        params: { timesheetAppId },
+        user,
+        query: { isApproved: status === 'approve' }
+      })
     },
-    'projects:add-member': async (user, { projectId, userId, positionScore, startTime, endTime }, commandText) => {
-      const validResult = validParams(['projectId', 'userId', 'positionScore'], { projectId, userId, positionScore } , commandText)
+    'projects:add-member': async (
+      user,
+      { projectId, userId, positionScore, startTime, endTime },
+      commandText
+    ) => {
+      const validResult = validParams(
+        ['projectId', 'userId', 'positionScore'],
+        { projectId, userId, positionScore },
+        commandText
+      )
       if (validResult !== true) return validResult
-      return execute(addMember, { params: { projectId }, user, body: { memberId: userId, position: [ { positionScore, start: startTime, end: endTime } ] } })
+      return execute(addMember, {
+        params: { projectId },
+        user,
+        body: {
+          memberId: userId,
+          position: [{ positionScore, start: startTime, end: endTime }]
+        }
+      })
     },
     'application-leaves:delete': async (user, { leaveAppId }, commandText) => {
-      const validResult = validParams(['leaveAppId'], { leaveAppId } , commandText)
+      const validResult = validParams(
+        ['leaveAppId'],
+        { leaveAppId },
+        commandText
+      )
       if (validResult !== true) return validResult
       return execute(deleteLeaveApplication, { params: { leaveAppId }, user })
     },
-    'timesheets:': async (user, { userIds, time, startDate, endDate, userId }, commandText) => {
-      const validResult = validParams(['userIds'], { userIds } , commandText)
+    'timesheets:': async (
+      user,
+      { userIds, time, startDate, endDate, userId },
+      commandText
+    ) => {
+      const validResult = validParams(['userIds'], { userIds }, commandText)
       if (validResult !== true) return validResult
-      return execute(getTimesheets, { params: { userIds: userIds || userId, time, startDate, endDate}, user })
+      return execute(getTimesheets, {
+        params: { userIds: userIds || userId, time, startDate, endDate },
+        user
+      })
     },
     'application-payments:list': async (user, { page, limit }) => {
-      return execute(getPaymentsApplications, { query: { page, limit }, user } )
+      return execute(getPaymentsApplications, { query: { page, limit }, user })
     },
-    'application-timesheets:create': async (user, { date, startTime, endTime, reason = "" }, commandText) => {
-      const validResult = validParams(['date', 'startTime', 'endTime'], { date, startTime, endTime } , commandText)
+    'application-timesheets:create': async (
+      user,
+      { date, startTime, endTime, reason = '' },
+      commandText
+    ) => {
+      const validResult = validParams(
+        ['date', 'startTime', 'endTime'],
+        { date, startTime, endTime },
+        commandText
+      )
       if (validResult !== true) return validResult
-      return execute(createTimesheetApp, { body: { requiredDates: date, startTime, endTime, requiredContent: reason }, user } )
+      return execute(createTimesheetApp, {
+        body: {
+          requiredDates: date,
+          startTime,
+          endTime,
+          requiredContent: reason
+        },
+        user
+      })
     },
     'application-timesheets:list': async (user, { page, limit }) => {
-      return execute(getTimesheetsApplication, { query: { page, limit  }, user } )
+      return execute(getTimesheetsApplication, { query: { page, limit }, user })
     },
-    'application-timesheets:delete': async (user, { timesheetAppId }, commandText) => {
-      const validResult = validParams(['timesheetAppId'], { timesheetAppId } , commandText)
+    'application-timesheets:delete': async (
+      user,
+      { timesheetAppId },
+      commandText
+    ) => {
+      const validResult = validParams(
+        ['timesheetAppId'],
+        { timesheetAppId },
+        commandText
+      )
       if (validResult !== true) return validResult
-      return execute(deleteTimesheetApp, { params: { timesheetAppId }, user } )
+      return execute(deleteTimesheetApp, { params: { timesheetAppId }, user })
     },
     'permission:list': async (user, params) => {
       return notImplementMessage
     },
-    'projects:list': async (user,  { managerId, memberId }) => {
-      return execute(getProjects, { query: { managerId, memberId }, user } )
+    'projects:list': async (user, { managerId, memberId }) => {
+      return execute(getProjects, { query: { managerId, memberId }, user })
     },
-    'projects:create': async (user, { id, managerId, projectName }, commandText) => {
-      const validResult = validParams(['id', 'managerId', 'projectName'], { id, managerId, projectName } , commandText)
+    'projects:create': async (
+      user,
+      { id, managerId, projectName },
+      commandText
+    ) => {
+      const validResult = validParams(
+        ['id', 'managerId', 'projectName'],
+        { id, managerId, projectName },
+        commandText
+      )
       if (validResult !== true) return validResult
-      return execute(createProject, { body: { id, managerId, projectName }, user } )
+      return execute(createProject, {
+        body: { id, managerId, projectName },
+        user
+      })
     },
     'projects:update-member': async (user, params) => {
       return notImplementMessage
     },
-    'projects:remove-member': async (user, { projectId, memberId }, commandText) => {
-      const validResult = validParams(['projectId', 'memberId'], { projectId, memberId } , commandText)
+    'projects:remove-member': async (
+      user,
+      { projectId, memberId },
+      commandText
+    ) => {
+      const validResult = validParams(
+        ['projectId', 'memberId'],
+        { projectId, memberId },
+        commandText
+      )
       if (validResult !== true) return validResult
-      return execute(removeMember, { body: { id, managerId, projectName }, user } )
+      return execute(removeMember, {
+        body: { id, managerId, projectName },
+        user
+      })
     },
     'checkin:': async (user) => {
-      return execute(checkIn, { user } )
+      return execute(checkIn, { user })
     },
     'checkout:': async (user) => {
-      return execute(checkOut, { user } )
+      return execute(checkOut, { user })
     },
     'application-payments:get': async (user, { paymentAppId }) => {
-      return execute(getPaymentDetail, { user, query: { paymentAppId } } )
+      return execute(getPaymentDetail, { user, query: { paymentAppId } })
     },
     'application-timesheets:all': async (user, params) => {
       return notImplementMessage
     },
-    'application-leaves:create': async (user, { startDate, endDate, leaveType, reason = "" }, commandText) => {
-      const validResult = validParams(['startDate', 'endDate', 'leaveType' ], { startDate, endDate, leaveType } , commandText)
+    'application-leaves:create': async (
+      user,
+      { startDate, endDate, leaveType, reason = '' },
+      commandText
+    ) => {
+      const validResult = validParams(
+        ['startDate', 'endDate', 'leaveType'],
+        { startDate, endDate, leaveType },
+        commandText
+      )
       if (validResult !== true) return validResult
-      return execute(createLeaveApplication, { body: { startDate, endDate, userId: user.id, leaveTypeId: leaveType, requiredContent: reason }, user })
+      return execute(createLeaveApplication, {
+        body: {
+          startDate,
+          endDate,
+          userId: user.id,
+          leaveTypeId: leaveType,
+          requiredContent: reason
+        },
+        user
+      })
     },
     'application-leaves:list': async (user, { page = 1, limit = 15 }) => {
-      return execute(getLeaveApplications, { query: { pageNumber: page, count: limit }, user })
+      return execute(getLeaveApplications, {
+        query: { pageNumber: page, count: limit },
+        user
+      })
     },
-    'application-leaves:approval': async (user, { leaveAppId, status }, commandText) => {
-      const validResult = validParams(['leaveAppId', 'status'], { leaveAppId, status } , commandText)
+    'application-leaves:approval': async (
+      user,
+      { leaveAppId, status },
+      commandText
+    ) => {
+      const validResult = validParams(
+        ['leaveAppId', 'status'],
+        { leaveAppId, status },
+        commandText
+      )
       if (validResult !== true) return validResult
-      return execute(approvalLeaveApplications, { params: { leaveAppId }, user, query: { isApproved: status === "approve" } })
+      return execute(approvalLeaveApplications, {
+        params: { leaveAppId },
+        user,
+        query: { isApproved: status === 'approve' }
+      })
     },
-    'application-payments:create': async (user, { amount, reason }, commandText) => {
-      const validResult = validParams(['amount', 'reason'], { amount, reason } , commandText)
+    'application-payments:create': async (
+      user,
+      { amount, reason },
+      commandText
+    ) => {
+      const validResult = validParams(
+        ['amount', 'reason'],
+        { amount, reason },
+        commandText
+      )
       if (validResult !== true) return validResult
-      return execute(createPaymentsApplication, { body: { amount, reason }, user })
+      return execute(createPaymentsApplication, {
+        body: { amount, reason },
+        user
+      })
     },
     'application-payments:approval': async (user, params) => {
       return notImplementMessage
     },
-    'application-payments:delete': async (user, { paymentAppId }, commandText) => {
-      const validResult = validParams(['paymentAppId'], { paymentAppId } , commandText)
+    'application-payments:delete': async (
+      user,
+      { paymentAppId },
+      commandText
+    ) => {
+      const validResult = validParams(
+        ['paymentAppId'],
+        { paymentAppId },
+        commandText
+      )
       if (validResult !== true) return validResult
-      return execute(deletePaymentsApplication, { query: { paymentAppId }, user })
-    },
+      return execute(deletePaymentsApplication, {
+        query: { paymentAppId },
+        user
+      })
+    }
   }
 
-  const executeResponse = await slashCommands[`${resource}:${action}`](user, params, commandText)
-  
+  const executeResponse = await slashCommands[`${resource}:${action}`](
+    user,
+    params,
+    commandText
+  )
+
   await slackApi.post('/chat.postMessage', {
     body: {
       channel: user.slackId,
@@ -234,69 +403,72 @@ const slackPostMessage = async (channelId, message) => {
   })
 }
 
-const getSlashCommandAction = commandText => {
-  if (!commandText) return {
-    resource: "",
-    action: ""
-  }
-  const [resourceArg = "", actionAndParam = ""] = commandText.split(':', 2)
+const getSlashCommandAction = (commandText) => {
+  if (!commandText)
+    return {
+      resource: '',
+      action: ''
+    }
+  const [resourceArg = '', actionAndParam = ''] = commandText.split(':', 2)
   const [actionArg] = actionAndParam.split(' ', 1)
-  const resource = {
-    'u': 'users',
-    'user': 'users',
-    'users': 'users',
-    'permission': 'permission',
-    'permissions': 'permission',
-    'per': 'permission',
-    'projects': 'projects',
-    'project': 'projects',
-    'p': 'projects',
-    'checkin': 'checkin',
-    'in': 'checkin',
-    'checkout': 'checkout',
-    'out': 'checkout',
-    'timesheet': 'timesheets',
-    'timesheets': 'timesheets',
-    'ts': 'timesheets',
-    'application-timesheet': 'application-timesheets',
-    'application-timesheets': 'application-timesheets',
-    'ats': 'application-timesheets',
-    'application-leave': 'application-leaves',
-    'application-leaves': 'application-leaves',
-    'al': 'application-leaves',
-    'application-payment': 'application-payments',
-    'application-payments': 'application-payments',
-    'ap': 'application-payments',
-  }[resourceArg] || ""
-  const action = {
-    'l': 'list',
-    'list': 'list',
-    'c': 'create',
-    'create': 'create',
-    'per': 'permission',
-    'permission': 'permission',
-    'd': 'deactive',
-    'deactive': 'deactive',
-    'u': 'update',
-    'update': 'update',
-    'p': 'profile',
-    'profile': 'profile',
-    'gm': 'get-member',
-    'get-member': 'get-member',
-    'am': 'add-member',
-    'add-member': 'add-member',
-    'um': 'update-member',
-    'update-member': 'update-member',
-    'rm': 'remove-member',
-    'remove-member': 'remove-member',
-    'ap': 'approval',
-    'approval': 'approval',
-    'r': 'remove',
-    'remove': 'remove',
-    'all': 'all',
-    'del': 'delete',
-    'delete': 'delete'
-  }[actionArg] || ""
+  const resource =
+    {
+      u: 'users',
+      user: 'users',
+      users: 'users',
+      permission: 'permission',
+      permissions: 'permission',
+      per: 'permission',
+      projects: 'projects',
+      project: 'projects',
+      p: 'projects',
+      checkin: 'checkin',
+      in: 'checkin',
+      checkout: 'checkout',
+      out: 'checkout',
+      timesheet: 'timesheets',
+      timesheets: 'timesheets',
+      ts: 'timesheets',
+      'application-timesheet': 'application-timesheets',
+      'application-timesheets': 'application-timesheets',
+      ats: 'application-timesheets',
+      'application-leave': 'application-leaves',
+      'application-leaves': 'application-leaves',
+      al: 'application-leaves',
+      'application-payment': 'application-payments',
+      'application-payments': 'application-payments',
+      ap: 'application-payments'
+    }[resourceArg] || ''
+  const action =
+    {
+      l: 'list',
+      list: 'list',
+      c: 'create',
+      create: 'create',
+      per: 'permission',
+      permission: 'permission',
+      d: 'deactive',
+      deactive: 'deactive',
+      u: 'update',
+      update: 'update',
+      p: 'profile',
+      profile: 'profile',
+      gm: 'get-member',
+      'get-member': 'get-member',
+      am: 'add-member',
+      'add-member': 'add-member',
+      um: 'update-member',
+      'update-member': 'update-member',
+      rm: 'remove-member',
+      'remove-member': 'remove-member',
+      ap: 'approval',
+      approval: 'approval',
+      r: 'remove',
+      remove: 'remove',
+      all: 'all',
+      del: 'delete',
+      delete: 'delete'
+    }[actionArg] || ''
 
   return {
     resource,
@@ -305,8 +477,9 @@ const getSlashCommandAction = commandText => {
 }
 
 const validParams = (requiredParams = [], object, commandText) => {
-  const undefinedKey = requiredParams.find(key => object[key] === undefined)
-  if (undefinedKey) return `You are missing ${undefinedKey}
+  const undefinedKey = requiredParams.find((key) => object[key] === undefined)
+  if (undefinedKey)
+    return `You are missing ${undefinedKey}
   Your command: /hrm ${commandText}`
   return true
 }
