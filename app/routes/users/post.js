@@ -5,9 +5,10 @@ import getRole from '@helpers/users/getRole.js'
 import getUserByEmail from '@routes/users/_email/get'
 import getUserById from '@routes/users/_userId/get'
 import { execute } from '@root/util.js'
+import { format } from 'date-fns/fp'
 
 const defaultUser = {
-  id: '',
+  id: 'azoom' + format('yyyyMMddHHmmss', new Date()),
   userName: '',
   fullName: '',
   email: '',
@@ -30,10 +31,16 @@ export default async (req, res) => {
 
   const role = await getRole(req.user.positionPermissionId)
   if (!['admin', 'editor'].includes(role)) return res.sendStatus(403)
-  if(!isValidUser(user.id, user.email)) return res.sendStatus(400)
-  const newUser = { ...defaultUser, ...user, password: bcrypt.hashSync(user.password, 10)}
+  if (!isValidUser(user.id, user.email)) return res.sendStatus(400)
+  const newUser = {
+    ...defaultUser,
+    ...user,
+    password: bcrypt.hashSync(user.password, 10)
+  }
   await userCollection().doc(newUser.id).set(newUser)
-  res.send(user)
+  const savedUser = await userCollection().doc(newUser.id).get()
+
+  res.send(savedUser.exists ? _.omit(['password'], savedUser.data()) : {})
 }
 
 const isValidUser = async (id, email) => {
