@@ -23,7 +23,8 @@ const defaultUser = {
   positionPermissionId: 1,
   isActive: 1,
   created: new Date(),
-  updated: ''
+  updated: '',
+  slackId:''
 }
 
 export default async (req, res) => {
