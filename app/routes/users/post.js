@@ -8,7 +8,7 @@ import { execute } from '@root/util.js'
 import { format } from 'date-fns/fp'
 
 const defaultUser = {
-  id: 'azoom' + format('yyyyMMddHHmmss', new Date()),
+  id: '',
   userName: '',
   fullName: '',
   email: '',
@@ -36,6 +36,7 @@ export default async (req, res) => {
   const newUser = {
     ...defaultUser,
     ...user,
+    id: 'azoom' + format('yyyyMMddHHmmss', new Date()),
     password: bcrypt.hashSync(user.password, 10)
   }
   await userCollection().doc(newUser.id).set(newUser)
