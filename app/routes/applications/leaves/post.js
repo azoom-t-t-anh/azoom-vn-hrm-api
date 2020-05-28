@@ -4,6 +4,7 @@ import { applicationStatus } from '@root/constants.js'
 import { parse, eachDayOfInterval, format } from 'date-fns/fp'
 import { userCollection } from '@root/database'
 import sendNotificationSlackBot from '@routes/slack/notification/post.js'
+import {permissions} from '@root/constants'
 
 export default async (req, res) => {
   const {
@@ -47,7 +48,7 @@ const getSlackIdsByPermission = async () => {
   let results = await userCollection()
     .where('positionPermissionId',
       'in',
-      [parseInt(process.env.POSITION_EDITOR), parseInt(process.env.POSITION_ADMIN)])
+      [permissions.editor, permissions.admin])
     .get()
   return results.docs
     .map((doc) => doc.data().slackId)

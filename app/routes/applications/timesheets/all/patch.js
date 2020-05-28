@@ -4,7 +4,7 @@ import initNewApprovalUser from '@helpers/users/initNewApprovalUser'
 import calculateApprovalPoints from '@helpers/applications/calculateApprovalPoints'
 import getRole from '@helpers/users/getRole'
 import firebase from 'firebase'
-import { applicationStatus } from '@root/constants'
+import { applicationStatus, permissions } from '@root/constants'
 const fireStore = firebase.firestore()
 
 export default async function (req, res) {
@@ -49,7 +49,7 @@ const updateTimesheetApplications = async (timesheetApps, isApproved, userId) =>
           }
           if (!isApproved) {
             updateTimesheetApp.status = applicationStatus.rejected
-          } else if (totalApprovalPoints >= process.env.POSITION_ADMIN) {
+          } else if (totalApprovalPoints >= permissions.admin) {
             updateTimesheetApp.status = applicationStatus.approved
           }
           await transaction.update(timesheetApp.ref, updateTimesheetApp)

@@ -1,5 +1,5 @@
 import { execute } from '@root/util'
-import { applicationStatus } from '@root/constants.js'
+import { applicationStatus, permissions } from '@root/constants.js'
 import getLeaveApp from '@routes/applications/leaves/_leaveAppId/get'
 import saveLeaveApplication from '@routes/applications/leaves/put'
 import checkPermissionOfManager from '@helpers/project/checkPermissionOfManager'
@@ -78,7 +78,7 @@ export default async (req, res) => {
     existedLeaveApplication.approvalUsers
   )
 
-  if (existedLeaveApplication.approvalCosre >= process.env.POSITION_ADMIN) {
+  if (existedLeaveApplication.approvalCosre >= permissions.admin) {
     existedLeaveApplication.status = applicationStatus.approved
     updateLeaveToTimesheet(
       existedLeaveApplication.userId,

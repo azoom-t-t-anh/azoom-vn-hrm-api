@@ -1,10 +1,12 @@
+import { permissions } from '@root/constants'
+
 export default async function (positionPermissionId = '') {
   return (
     {
-      [process.env.POSITION_ADMIN]: 'admin',
-      [process.env.POSITION_EDITOR]: 'editor',
-      [process.env.POSITION_PROJECTMANAGER]: 'project manager',
-      [process.env.POSITION_USER]: 'user',
+      [permissions.admin]: 'admin',
+      [permissions.editor]: 'editor',
+      [permissions.projectManager]: 'project manager',
+      [permissions.user]: 'user'
     }[positionPermissionId] || ''
   )
 }

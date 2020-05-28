@@ -1,6 +1,6 @@
 import { execute } from '@root/util.js'
 import { timesheetApplicationCollection } from '@root/database'
-import { applicationStatus } from '@root/constants.js'
+import { applicationStatus, permissions } from '@root/constants.js'
 import getExistTimesheetApp from '@routes/applications/timesheets/_timesheetAppId/get.js'
 import checkPermissionOfManager from '@helpers/project/checkPermissionOfManager'
 import initNewApprovalUser from '@helpers/users/initNewApprovalUser'
@@ -41,7 +41,7 @@ export default async function(req, res) {
     await saveTimesheetApp(timesheetAppId, { ...updateTimesheetApp, status: applicationStatus.reject })
     await sendNofification(slackIds, req.user.slackId, exitTimesheetApp.id)
     return res.send( { message: "Rejected successfully." } )
-  } else if (totalApprovalPoints >= process.env.POSITION_ADMIN) {
+  } else if (totalApprovalPoints >= permissions.admin) {
     await saveTimesheetApp(timesheetAppId, { ...updateTimesheetApp, status: applicationStatus.approved })
     await sendNofification(slackIds, req.user.slackId, exitTimesheetApp.id)
     return res.send( { message: "Approved successfully." } )

@@ -12,6 +12,12 @@ export const leaveType = {
   makeUpLeaveMorning: 8,
   makeUpLeaveAfternoon: 9,
 }
+export const permissions = {
+  user: 1,
+  projectManager: 2,
+  editor: 6,
+  admin: 10
+}
 export const rooms = {
   TIMELINE: 'timeline'
 }
