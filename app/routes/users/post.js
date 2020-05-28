@@ -32,7 +32,8 @@ export default async (req, res) => {
 
   const role = await getRole(req.user.positionPermissionId)
   if (!['admin', 'editor'].includes(role)) return res.sendStatus(403)
-  if (!isValidUser(user.id, user.email)) return res.sendStatus(400)
+  const validUser = await isValidUser(user.id, user.email)
+  if (!validUser) return res.sendStatus(400)
   const newUser = {
     ...defaultUser,
     ...user,
