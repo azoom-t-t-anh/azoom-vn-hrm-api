@@ -8,7 +8,7 @@ export default async (req, res) => {
   const count = parseInt(req.query.count) || ''
   const role = await getRole(req.user.positionPermissionId)
   if (['admin', 'editor'].includes(role)) {
-    return res.send(await getAllLeaveAppOfUserList(pageNumber, count, []))
+    return res.send(await getLeaveAppOfUsers(pageNumber, count, []))
   }
 
   if (role === 'project manager') {

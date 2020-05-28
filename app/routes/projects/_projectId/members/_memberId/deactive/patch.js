@@ -32,19 +32,19 @@ export default async (req, res) => {
     )
       return res.sendStatus(400)
     const newMember = { ...memberInfo.body }
-    const { position = [] } = newMember.body
+    const { position = [] } = newMember
     newMember.updatedDate = format('yyyy/MM/dd HH:mm:ss', new Date())
     newMember.isActive = 0
     newMember.position = [
       ..._.initial(position),
-      updatePosition(_.last(position)),
+      updatePosition(_.last(position) || {}),
     ]
     const updateListMember = updateMember(members, newMember)
     await projectCollection()
       .doc(projectId)
       .update({ members: updateListMember })
-    return res.send(member.body)
-  } catch (error) {
+    return res.send(newMember)
+  } catch {
     res.sendStatus(500)
   }
 }

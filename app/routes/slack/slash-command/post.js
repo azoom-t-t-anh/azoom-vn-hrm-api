@@ -84,7 +84,7 @@ export default async (req, res) => {
          R \`/hrm application-payments:get paymentAppId=payment-001 \` → Get detail of a Payment Application
          R \`/hrm application-payments:create amount=100000 reason=team-building \` → Create a new Payment Application
          R \`/hrm application-payments:delete paymentAppId=payment-001 \` → Delete a new Payment Application
-         R \`/hrm timesheets userIds=azoom-19,azoom-20,azoom-21 time=2020-04-30 startDate=2020-04-28 endDate=2020-05-01 \` → Get your timesheet in 'time' and between 'startDate' and 'endDate'
+         R \`/hrm timesheets: userIds=azoom-19,azoom-20,azoom-21 time=2020-04-30 startDate=2020-04-28 endDate=2020-05-01 \` → Get your timesheet in 'time' and between 'startDate' and 'endDate'
         W \`/hrm checkin\` → Check in
         W \`/hrm checkout\` → Check out
         -------------------------------------------------------------------------

@@ -4,7 +4,7 @@ import { applicationStatus } from '@root/constants.js'
 
 export default async (req, res) => {
   const userId = req.user.id
-  const { paymentAppId } = req.query
+  const { paymentAppId } = req.params
 
   const payment = await paymentCollection().doc(paymentAppId).get()
   if (!payment.exists) return res.sendStatus(404)

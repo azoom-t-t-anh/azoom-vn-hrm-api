@@ -7,7 +7,7 @@ export default async (req, res) => {
     if (!project.exists) return res.sendStatus(404)
     const { members = [] } = project.data()
     if (members.length === 0) return res.sendStatus(404)
-    const [ memberProfile ] = members.filter( x => x.memberId === memberId )
+    const [ memberProfile ] = members.filter( x => x.id === memberId )
     if (!memberProfile) return res.sendStatus(404)
     res.send(memberProfile)
   } catch (error) {
