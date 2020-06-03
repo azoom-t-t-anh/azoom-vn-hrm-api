@@ -20,4 +20,3 @@ const getLeaveApplication = async (leaveAppId) => {
 }
 
 export { getLeaveApplication }
-

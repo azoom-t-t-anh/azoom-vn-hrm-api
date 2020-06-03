@@ -11,7 +11,7 @@ export default (commandText, seperator = '=') => {
       'p': 'password',
       'email': 'email',
       'e': 'email',
-      'permissionId': 'permissionId',
+      'positionPermissionId': 'positionPermissionId',
       'pid': 'permissionId',
       'userId': 'userId',
       'uid': 'userId',

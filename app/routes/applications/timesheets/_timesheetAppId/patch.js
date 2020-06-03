@@ -17,10 +17,9 @@ export default async function(req, res) {
 
   if (responseTimesheet.status === 404 || !responseTimesheet.body) return res.sendStatus(404)
   const exitTimesheetApp = responseTimesheet.body
-  if (exitTimesheetApp.status !== applicationStatus.inPending) {
+  if (exitTimesheetApp.status !== applicationStatus.pending) {
     return res.status(400).send({ message: 'This Application has been already approved/rejected.' })
   }
-
   const isUserEditedBefore = exitTimesheetApp.approvalUsers.find(approvalUser => approvalUser.userId === userId)
   if (isUserEditedBefore) return res.status(400).send( { message: "You have already approved/rejected this application." } )
 
@@ -31,7 +30,7 @@ export default async function(req, res) {
 
   const newApprovalUser = await initNewApprovalUser(req.user, isApproved)
   const totalApprovalPoints = calculateApprovalPoints([...exitTimesheetApp.approvalUsers, newApprovalUser])
-  const slackIds = existedLeaveApplication.approvalUsers
+  const slackIds = exitTimesheetApp.approvalUsers
   .map((leaveApplication) => leaveApplication.slackId)
   const updateTimesheetApp = {
     updated: new Date(),

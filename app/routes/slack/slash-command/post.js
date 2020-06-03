@@ -29,6 +29,14 @@ import createPaymentsApplication from '@routes/applications/payments/post.js'
 import deletePaymentsApplication from '@routes/applications/payments/_paymentAppId/delete.js'
 import getPaymentDetail from '@routes/applications/payments/_paymentAppId/get.js'
 import verifySlackRequest from '@middleware/verifyRequests/slack'
+import _ from 'lodash/fp'
+import { userFields } from '@helpers/slack/model/user.js'
+import { projectFields, memberFields } from '@helpers/slack/model/project.js'
+import { leaveApplicaitionFields } from '@helpers/slack/model/application-leave.js'
+import { paymentApplicaitionFields } from '@helpers/slack/model/application-payment.js'
+import { timesheetApplicaitionFields } from '@helpers/slack/model/application-timesheet.js'
+import { timesheetFields } from '@helpers/slack/model/timesheet.js'
+
 
 const notImplementMessage = 'Sorry. This command is being implemented.'
 
@@ -36,7 +44,6 @@ export default async (req, res) => {
   const request = req.body
   const { user_id } = request.body
   const commandText = request.body.text
-
   if (!verifySlackRequest(request))
     await slackPostMessage(
       user_id,
@@ -68,9 +75,9 @@ export default async (req, res) => {
         W \`/hrm users:update id=azoom-19 username=azoom-19 password=123456 email=azoom@gmail.com\` → Update an user
         W \`/hrm users:deactive id=azoom-19\` → Deactive an user
         W \`/hrm users:permission id=azoom-19 permissionId=3\` → Change permission of an user
-         R \`/projects:list managerId=azoom-005 memberId=azoom-001\` → List and Find project
-        W \`/projects:create id=project-002 managerId=azoom-005 projectName=hrm\` → Create a new project
-         R \`/hrm project:get-member projectId=project-005\` → Get all member in project
+         R \`/hrm projects:list managerId=azoom-005 memberId=azoom-001\` → List and Find project
+        W \`/hrm projects:create id=project-002 managerId=azoom-005 projectName=hrm\` → Create a new project
+         R \`/hrm projects:get-member projectId=project-005\` → Get all member in project
         W \`/hrm projects:add-member projectId=project-005 userId=azoom-19 positionScore=1 startTime=2020-04-06 endTime=2020-04-08\` → Add an member to project
         W \`/hrm projects:remove-member projectId=project-005 memberId=azoom-19\` → Remove member from a project
         W \`/hrm application-timesheets:create date=2020/05/08 startTime=08:00 endTime=17:00 reason=Hom-nay-troi-dep-qua \` → Create new timesheet application
@@ -93,13 +100,16 @@ export default async (req, res) => {
     'users:profile': async (user, { userId }) => {
       const validResult = validParams(['userId'], { userId }, commandText)
       if (validResult !== true) return validResult
-      return execute(getUserDetail, { params: { userId }, user })
+      const { status, body } = await execute(getUserDetail, { params: { userId }, user })
+      return getMessageByAction(status, action, resource, body)
     },
     'users:list': async (user, { page, limit }) => {
-      return execute(getUsers, { query: { page, limit }, user })
+      const { status, body } = await execute(getUsers, { query: { page, limit }, user })
+      return getMessageByAction(status, action, resource, body)
     },
     'users:': async (user) => {
-      return execute(getUserDetail, { params: { userId: user.id }, user })
+      const { status, body } = await execute(getUserDetail, { params: { userId: user.id }, user })
+      return getMessageByAction(status, action, resource, body)
     },
     'users:create': async (user, params, commandText) => {
       const validResult = validParams(
@@ -108,19 +118,22 @@ export default async (req, res) => {
         commandText
       )
       if (validResult !== true) return validResult
-      return execute(createUser, { body: params, user })
+      const { status } = await execute(createUser, { body: params, user })
+      return getMessageByAction(status, action, resource)
     },
     'users:update': async (user, params) => {
-      return execute(updateUser, {
+      const { status } = await execute(updateUser, {
         body: params,
         user,
         params: { userId: params.id }
       })
+      return getMessageByAction(status, action, resource)
     },
     'users:deactive': async (user, { id }, commandText) => {
       const validResult = validParams(['id'], { id }, commandText)
       if (validResult !== true) return validResult
-      return execute(deactiveUser, { user, params: { userId: id } })
+      const { status } = await execute(deactiveUser, { user, params: { userId: id } })
+      return getMessageByAction(status, action, resource)
     },
     'users:permission': async (
       user,
@@ -133,16 +146,18 @@ export default async (req, res) => {
         commandText
       )
       if (validResult !== true) return validResult
-      return execute(updatePermissionUser, {
+      const { status } = await execute(updatePermissionUser, {
         user,
         params: { userId: id },
         body: { positionPermissionId }
       })
+      return getMessageByAction(status, action, resource)
     },
     'projects:get-member': async (user, { projectId }, commandText) => {
       const validResult = validParams(['projectId'], { projectId }, commandText)
       if (validResult !== true) return validResult
-      return execute(getMembers, { params: { projectId }, user })
+      const { status, body } = await execute(getMembers, { params: { projectId }, user })
+      return getMessageByAction(status, action, resource, body.members)
     },
     'application-timesheets:approval': async (
       user,
@@ -155,11 +170,12 @@ export default async (req, res) => {
         commandText
       )
       if (validResult !== true) return validResult
-      return execute(approvalTimesheetApp, {
+      const result = await execute(approvalTimesheetApp, {
         params: { timesheetAppId },
         user,
         query: { isApproved: status === 'approve' }
       })
+      return getMessageByAction(result.status, action, resource)
     },
     'projects:add-member': async (
       user,
@@ -172,7 +188,7 @@ export default async (req, res) => {
         commandText
       )
       if (validResult !== true) return validResult
-      return execute(addMember, {
+      const { status } = await execute(addMember, {
         params: { projectId },
         user,
         body: {
@@ -180,6 +196,7 @@ export default async (req, res) => {
           position: [{ positionScore, start: startTime, end: endTime }]
         }
       })
+      return getMessageByAction(status, action, resource)
     },
     'application-leaves:delete': async (user, { leaveAppId }, commandText) => {
       const validResult = validParams(
@@ -188,7 +205,8 @@ export default async (req, res) => {
         commandText
       )
       if (validResult !== true) return validResult
-      return execute(deleteLeaveApplication, { params: { leaveAppId }, user })
+      const { status } = await execute(deleteLeaveApplication, { params: { leaveAppId }, user })
+      return getMessageByAction(status, action, resource)
     },
     'timesheets:': async (
       user,
@@ -197,13 +215,15 @@ export default async (req, res) => {
     ) => {
       const validResult = validParams(['userIds'], { userIds }, commandText)
       if (validResult !== true) return validResult
-      return execute(getTimesheets, {
+      const { status, body } = await execute(getTimesheets, {
         params: { userIds: userIds || userId, time, startDate, endDate },
         user
       })
+      return getMessageByAction(status, action, resource, body)
     },
     'application-payments:list': async (user, { page, limit }) => {
-      return execute(getPaymentsApplications, { query: { page, limit }, user })
+      const { status, body } = await execute(getPaymentsApplications, { query: { page, limit }, user })
+      return getMessageByAction(status, action, resource, body.paymentApplications)
     },
     'application-timesheets:create': async (
       user,
@@ -216,7 +236,7 @@ export default async (req, res) => {
         commandText
       )
       if (validResult !== true) return validResult
-      return execute(createTimesheetApp, {
+      const { status } = await execute(createTimesheetApp, {
         body: {
           requiredDates: date,
           startTime,
@@ -225,9 +245,11 @@ export default async (req, res) => {
         },
         user
       })
+      return getMessageByAction(status, action, resource)
     },
     'application-timesheets:list': async (user, { page, limit }) => {
-      return execute(getTimesheetsApplication, { query: { page, limit }, user })
+      const { status, body } = await execute(getTimesheetsApplication, { query: { page, limit }, user })
+      return getMessageByAction(status, action, resource, body.timesheetApplications)
     },
     'application-timesheets:delete': async (
       user,
@@ -240,13 +262,15 @@ export default async (req, res) => {
         commandText
       )
       if (validResult !== true) return validResult
-      return execute(deleteTimesheetApp, { params: { timesheetAppId }, user })
+      const { status } = await execute(deleteTimesheetApp, { params: { timesheetAppId }, user })
+      return getMessageByAction(status, action, resource)
     },
     'permission:list': async (user, params) => {
       return notImplementMessage
     },
     'projects:list': async (user, { managerId, memberId }) => {
-      return execute(getProjects, { query: { managerId, memberId }, user })
+      const { status, body } = await execute(getProjects, { query: { managerId, memberId }, user })
+      return getMessageByAction(status, action, resource, body)
     },
     'projects:create': async (
       user,
@@ -259,10 +283,11 @@ export default async (req, res) => {
         commandText
       )
       if (validResult !== true) return validResult
-      return execute(createProject, {
+      const { status } = await execute(createProject, {
         body: { id, managerId, projectName },
         user
       })
+      return getMessageByAction(status, action, resource)
     },
     'projects:update-member': async (user, params) => {
       return notImplementMessage
@@ -278,19 +303,23 @@ export default async (req, res) => {
         commandText
       )
       if (validResult !== true) return validResult
-      return execute(removeMember, {
-        body: { id, managerId, projectName },
+      const { status } = await execute(removeMember, {
+        params: { projectId, memberId },
         user
       })
+      return getMessageByAction(status, action, resource)
     },
     'checkin:': async (user) => {
-      return execute(checkIn, { user })
+      const { status } = await execute(checkIn, { user })
+      return getMessageByAction(status, action, resource)
     },
     'checkout:': async (user) => {
-      return execute(checkOut, { user })
+      const { status } = await execute(checkOut, { user })
+      return getMessageByAction(status, action, resource)
     },
     'application-payments:get': async (user, { paymentAppId }) => {
-      return execute(getPaymentDetail, { user, query: { paymentAppId } })
+      const { status, body } = await execute(getPaymentDetail, { user, params: { paymentAppId } })
+      return getMessageByAction(status, action, resource, body)
     },
     'application-timesheets:all': async (user, params) => {
       return notImplementMessage
@@ -306,7 +335,7 @@ export default async (req, res) => {
         commandText
       )
       if (validResult !== true) return validResult
-      return execute(createLeaveApplication, {
+      const { status } = await execute(createLeaveApplication, {
         body: {
           startDate,
           endDate,
@@ -316,12 +345,14 @@ export default async (req, res) => {
         },
         user
       })
+      return getMessageByAction(status, action, resource)
     },
     'application-leaves:list': async (user, { page = 1, limit = 15 }) => {
-      return execute(getLeaveApplications, {
+      const { status, body } = await execute(getLeaveApplications, {
         query: { pageNumber: page, count: limit },
         user
       })
+      return getMessageByAction(status, action, resource, body.data)
     },
     'application-leaves:approval': async (
       user,
@@ -351,10 +382,11 @@ export default async (req, res) => {
         commandText
       )
       if (validResult !== true) return validResult
-      return execute(createPaymentsApplication, {
+      const { status } = await execute(createPaymentsApplication, {
         body: { amount, reason },
         user
       })
+      return getMessageByAction(status, action, resource)
     },
     'application-payments:approval': async (user, params) => {
       return notImplementMessage
@@ -370,10 +402,11 @@ export default async (req, res) => {
         commandText
       )
       if (validResult !== true) return validResult
-      return execute(deletePaymentsApplication, {
-        query: { paymentAppId },
+      const { status } = await execute(deletePaymentsApplication, {
+        params: { paymentAppId },
         user
       })
+      return getMessageByAction(status, action, resource)
     }
   }
 
@@ -386,7 +419,8 @@ export default async (req, res) => {
   await slackApi.post('/chat.postMessage', {
     body: {
       channel: user.slackId,
-      text: executeResponse.body || executeResponse
+      text: executeResponse
+
     }
   })
 
@@ -467,7 +501,8 @@ const getSlashCommandAction = (commandText) => {
       remove: 'remove',
       all: 'all',
       del: 'delete',
-      delete: 'delete'
+      delete: 'delete',
+      get: 'get'
     }[actionArg] || ''
 
   return {
@@ -483,3 +518,89 @@ const validParams = (requiredParams = [], object, commandText) => {
   Your command: /hrm ${commandText}`
   return true
 }
+
+const convertDataJson = (data, fields) => {
+  const content = Object.entries(fields).reduce((str, [key, value]) => {
+    return str.concat(`\t`, `*${value}*: ${data[key] !== undefined ? data[key] : ''}`, `\n`)
+  }, '')
+  return content
+}
+
+const renderDataJson = (data, title, fields) => {
+  const content = convertDataJson(data, fields)
+  return title.concat(content)
+}
+
+const renderDataArray = (data, title, fields) => {
+  let countUser = 0
+  const convertListData = data.reduce((strs, obj) => {
+    ++countUser
+    const content = convertDataJson(obj, fields)
+    return strs.concat(`${countUser},\n`, content, `\n`)
+  }, '')
+  return title.concat(convertListData)
+}
+
+const getMessageByAction = (status, action, resource = '', body = '') => {
+  const titleMessage = title[`${resource}:${action}`]
+  const fields = messageModel[`${resource}:${action}`]
+  if (status === 200) {
+    if (!listActions.includes(action) && !listActions.includes(resource)) {
+      if (Array.isArray(body)) {
+        return body.length ?
+          renderDataArray(body, titleMessage, fields) :
+          `${titleMessage} There are no records.`
+      } else {
+        return renderDataJson(body, titleMessage, fields)
+      }
+    }
+  } else {
+    return 'An error occurred, please check the hrm command.'
+  }
+  return titleMessage
+}
+
+const title = {
+  'users:profile': '*User infomation:*\n',
+  'users:list': '*List of all users:*\n',
+  'users:': '*Your infomation:*\n',
+  'users:create': '*Create user successfully.*',
+  'users:update': '*Update user information successfully*',
+  'users:deactive': '*Deactive an user successfully.*',
+  'users:permission': '*Change permission of an user successfully.*',
+  'projects:list': '*List projects:*\n',
+  'projects:create': '*Create project successfully.*',
+  'projects:get-member': '*List all of members in project:*\n',
+  'projects:add-member': '*Add an member to project successfully.*',
+  'projects:remove-member': '*Remove member from a project successfully.*',
+  'application-timesheets:create': '*Create timesheet application successfully.*',
+  'application-timesheets:approval': '*Approve or reject a timesheet application successfully.*',
+  'application-timesheets:delete': '*Delete timesheet application successfully*',
+  'application-timesheets:list': '*List timesheets application:*\n',
+  'application-leaves:list': '*List leaves application:*\n',
+  'application-leaves:create': '*Create leave application successfully.*',
+  'application-leaves:delete': '*Delete leave application successfully.*',
+  'application-payments:list': '*List payments application:*\n',
+  'application-payments:get': '*Detail of a payment application:*\n',
+  'application-payments:create': '*Create payment ppplication successfully.*',
+  'application-payments:delete': '*Delete payment application successfully.*',
+  'timesheets:': '*Infomation your timesheet:*\n',
+  'checkin:': '*Check in successfully.*',
+  'checkout:': '*Check out successfully.*'
+}
+
+const messageModel = {
+  'users:profile': userFields,
+  'users:list': userFields,
+  'users:': userFields,
+  'projects:list': projectFields,
+  'projects:get-member': memberFields,
+  'application-timesheets:list': timesheetApplicaitionFields,
+  'application-leaves:list': leaveApplicaitionFields,
+  'application-payments:list': paymentApplicaitionFields,
+  'application-payments:get': paymentApplicaitionFields,
+  'timesheets:': timesheetFields
+}
+
+const listActions = ['create', 'update', 'deactive', 'permission', 'add-member',
+  'remove-member', 'approval', 'delete', 'checkin', 'checkout']
