@@ -9,16 +9,16 @@ export default async (req, res) => {
   const user = await getUserdById(userId)
 
   if (!bcrypt.compareSync(oldPassword, user.password)) {
-    return res.send({ mess: 'The current password is incorrect, please enter it again.' })
+    return res.status(400).send({ message: 'The current password is incorrect, please enter it again.' })
   }
 
   if (bcrypt.compareSync(newPassword, user.password)) {
-    return res.send({ mess: 'The new password must be different from the current password.' })
+    return res.status(400).send({ message: 'The new password must be different from the current password.' })
   }
 
   user.password = bcrypt.hashSync(newPassword, 10)
   await execute(updatePasswordUser, { body: user })
-  return res.send({ mess: 'Password was successfully changed.' })
+  return res.send({ message: 'Password was successfully changed.' })
 }
 
 const getUserdById = async (userId) => {
