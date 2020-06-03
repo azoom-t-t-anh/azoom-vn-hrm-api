@@ -12,6 +12,22 @@ export default async (req, res) => {
   // TODO: remove 2 line parser below when openAPI is applied
   page = parseInt(page)
   limit = parseInt(limit)
+
+  const allUsersSnapshot = await userCollection()
+    .where('isActive', '==', 1)
+    .orderBy('created')
+    .get()
+  const total = allUsersSnapshot.empty ? 0 : allUsersSnapshot.docs.length
+
+  if (limit === -1) {
+    if (allUsersSnapshot.empty) return res.send([])
+    const users = allUsersSnapshot.docs.map((user) => _.omit(['password'], user.data()))
+    return res.send({
+      data: users,
+      total
+    })
+  }
+
   const totalIgnoreUser = (page - 1) * limit
 
   if (totalIgnoreUser === 0) {
@@ -22,7 +38,10 @@ export default async (req, res) => {
       .get()
     if (users.empty) return res.send([])
 
-    return res.send(users.docs.map((user) => _.omit(['password'], user.data())))
+    return res.send({
+      total,
+      data: users.docs.map((user) => _.omit(['password'], user.data()))
+    })
   } else {
     const ignoreUsers = await userCollection()
       .where('isActive', '==', 1)
@@ -39,6 +58,9 @@ export default async (req, res) => {
       .limit(limit)
       .get()
 
-    return res.send(users.docs.map((user) => _.omit(['password'], user.data())))
+    return res.send({
+      total,
+      data: users.docs.map((user) => _.omit(['password'], user.data()))
+    })
   }
 }

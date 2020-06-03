@@ -13,7 +13,7 @@ components:
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
-      in: query
-      name: apiKey
+      in: header
+      name: x-access-token
 security:
   - ApiKeyAuth: []

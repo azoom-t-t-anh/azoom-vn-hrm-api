@@ -23,14 +23,14 @@ responses:
         schema:
           type: object
           properties:
-            count:
+            total:
               type: integer
               description: Total account
             data:
               type: array
           example:
             {
-              "count": 10,
+              "total": 10,
               "data":
                 [
                   {
