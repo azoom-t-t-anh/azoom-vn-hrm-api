@@ -14,7 +14,8 @@
     "specs": "yarn specs:build && redoc-cli serve ./app/openapi.json",
     "specs:build": "cd specs && multi-file-swagger openapi.yaml > ../app/openapi.json",
     "deploy:delete-staging-tag": "git fetch --tags && git push origin --delete $(git tag -l 'staging-*') || true && git fetch origin --prune 'refs/tags/*:refs/tags/*'",
-    "deploy:staging": "yarn deploy:delete-staging-tag && TAG=`echo staging-$(date +%Y%m%d-%H%M%S)` && git tag $TAG && git push origin $TAG"
+    "deploy:staging": "yarn deploy:delete-staging-tag && TAG=`echo staging-$(date +%Y%m%d-%H%M%S)` && git tag $TAG && git push origin $TAG",
+    "deploy:firestore-indexes": "cd app && firebase deploy --only firestore:indexes"
   },
   "dependencies": {
     "multi-file-swagger": "^2.3.0",

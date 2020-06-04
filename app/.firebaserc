@@ -1,0 +1,5 @@
+{
+  "projects": {
+    "default": process.env.FIRE_BASE_PROJECT_ID
+  }
+}
