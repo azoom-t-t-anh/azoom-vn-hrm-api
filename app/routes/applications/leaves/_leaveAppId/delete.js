@@ -23,7 +23,7 @@ export default async (req, res) => {
     }
     return res.sendStatus(403)
   } catch {
-    res.sendStatus(500)
+    return res.sendStatus(500)
   }
 }
 

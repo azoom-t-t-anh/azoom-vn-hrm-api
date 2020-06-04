@@ -8,6 +8,6 @@ export default async (req, res) => {
     const { members } = project.body
     return res.send({ members })
   } catch (error) {
-    res.sendStatus(500)
+    return res.sendStatus(500)
   }
 }

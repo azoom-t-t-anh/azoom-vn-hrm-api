@@ -82,10 +82,10 @@ export default async (req, res) => {
         return [...docs, timesheet]
       }, [])
 
-    res.send(await Promise.all(timesheets))
+    return res.send(await Promise.all(timesheets))
   } catch (e) {
     console.error(e)
-    res
+    return res
       .status(500)
       .send({ message: 'Error when get timesheets from firebase.' })
   }

@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
     const user = userResponse.body
     user.positionPermissionId = positionPermissionId
     await execute(saveUser, { body: user })
-    res.send(user)
+    return res.send(user)
   }
-  res.sendStatus(400)
+  return res.sendStatus(400)
 }

@@ -9,8 +9,8 @@ export default async (req, res) => {
     if (members.length === 0) return res.sendStatus(404)
     const [ memberProfile ] = members.filter( x => x.id === memberId )
     if (!memberProfile) return res.sendStatus(404)
-    res.send(memberProfile)
+    return res.send(memberProfile)
   } catch (error) {
-    res.sendStatus(500)
+    return res.sendStatus(500)
   }
 }

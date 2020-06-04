@@ -19,7 +19,7 @@ export default async (req, res) => {
     });
     return res.send({ message: 'Resend notifications successful.' })
   } catch {
-    res.sendStatus(500)
+    return res.sendStatus(500)
   }
 }
 

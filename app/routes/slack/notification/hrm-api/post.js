@@ -65,7 +65,7 @@ export default async (req, res) => {
     }
     return res.send(responseSlackRequest(400))
   } catch (error) {
-    res.send(responseSlackRequest(500))
+    return res.send(responseSlackRequest(500))
   }
 }
 
@@ -108,7 +108,7 @@ const responseSlackRequest = (status) => {
     return 'Your requestId is not found'
   }
   if (status === 500) {
-    return `HRM  server error. Please try again`
+    return `HRM server error. Please try again`
   }
   return `Your approve/reject request isn't valid. Please re-check`
 }

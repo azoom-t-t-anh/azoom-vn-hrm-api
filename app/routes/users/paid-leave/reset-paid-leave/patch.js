@@ -28,8 +28,8 @@ export default async (req, res) => {
         }
       })
     })
-    res.send({ message: 'Reset paid leave successful' })
+    return res.send({ message: 'Reset paid leave successful' })
   } catch (error) {
-    res.sendStatus(500)
+    return res.sendStatus(500)
   }
 }

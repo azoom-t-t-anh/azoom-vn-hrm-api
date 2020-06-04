@@ -31,7 +31,7 @@ export default async function(req, res) {
   const newApprovalUser = await initNewApprovalUser(req.user, isApproved)
   const totalApprovalPoints = calculateApprovalPoints([...exitTimesheetApp.approvalUsers, newApprovalUser])
   const slackIds = exitTimesheetApp.approvalUsers
-  .map((leaveApplication) => leaveApplication.slackId)
+    .map((leaveApplication) => leaveApplication.slackId)
   const updateTimesheetApp = {
     updated: new Date(),
     approvalUsers: firebase.firestore.FieldValue.arrayUnion(newApprovalUser)

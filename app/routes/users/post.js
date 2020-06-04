@@ -42,7 +42,7 @@ export default async (req, res) => {
   await userCollection().doc(newUser.id).set(newUser)
   const savedUser = await userCollection().doc(newUser.id).get()
 
-  res.send(savedUser.exists ? _.omit(['password'], savedUser.data()) : {})
+  return res.send(savedUser.exists ? _.omit(['password'], savedUser.data()) : {})
 }
 
 const isValidUser = async (id, email) => {

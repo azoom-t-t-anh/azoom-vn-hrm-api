@@ -50,6 +50,6 @@ export default async (req, res) => {
     await projectCollection().doc(projectId).update(addMember)
     return res.send(memberProfile)
   } catch (error) {
-    res.sendStatus(500)
+    return res.sendStatus(500)
   }
 }

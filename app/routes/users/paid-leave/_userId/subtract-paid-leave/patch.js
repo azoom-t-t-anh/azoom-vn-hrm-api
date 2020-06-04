@@ -24,8 +24,8 @@ export default async (req, res) => {
         totalPaidLeaveDate: newTotalPaidLeaveDate,
         updated: format('yyyy/MM/dd HH:mm:ss', new Date()),
       })
-    res.send({ message: 'Subtract paid leave successful' })
+    return res.send({ message: 'Subtract paid leave successful' })
   } catch (error) {
-    res.sendStatus(500)
+    return res.sendStatus(500)
   }
 }

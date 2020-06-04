@@ -6,7 +6,7 @@ export default async (req, res) => {
     const data = await getNotificationByStatus()
     return res.send(data)
   } catch {
-    res.status(500).send({ message: 'Error when get notifications from firebase.' })
+    return res.status(500).send({ message: 'Error when get notifications from firebase.' })
   }
 }
 

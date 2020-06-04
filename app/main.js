@@ -41,7 +41,7 @@ app.use(
         message: error.message
       })
     }
-    next()
+    return next()
   }
 )
 

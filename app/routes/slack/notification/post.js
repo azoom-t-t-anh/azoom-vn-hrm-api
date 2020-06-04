@@ -14,7 +14,7 @@ export default async (req, res) => {
     const resultsSendNotification = await Promise.all(await sendNotificationSlackBot(req.body, senderInfo))
     return res.send(resultsSendNotification)
   } catch {
-    res.sendStatus(500)
+    return res.sendStatus(500)
   }
 }
 
@@ -90,10 +90,10 @@ const checkNotification = (notification) => {
     typeId, //1 || 0
   } = notification
   return (
-    receiverIds.length == 0 ||
+    receiverIds.length === 0 ||
     !senderId ||
-    title == '' ||
-    content == '' ||
+    title === '' ||
+    content === '' ||
     !typeId
   )
 }

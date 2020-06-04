@@ -32,6 +32,6 @@ export default async (req, res) => {
       .update({ members: updateListMember })
     return res.send(newMember)
   } catch (error) {
-    res.sendStatus(500)
+    return res.sendStatus(500)
   }
 }

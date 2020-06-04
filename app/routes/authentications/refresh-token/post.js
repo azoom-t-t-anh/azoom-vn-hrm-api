@@ -15,7 +15,7 @@ module.exports = async (req, res) =>  {
       const accessToken = await generateToken(userFakeData, accessTokenSecret, accessTokenLife)
       return res.status(200).json({accessToken})
     } catch (error) {
-      res.status(403).json({
+      return res.status(403).json({
         message: 'Invalid refresh token.',
       })
     }

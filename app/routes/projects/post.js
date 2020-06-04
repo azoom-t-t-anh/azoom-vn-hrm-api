@@ -44,6 +44,6 @@ export default async (req, res) => {
     await projectCollection().doc(newProject.id).set(newProject)
     return res.send(newProject)
   } catch (error) {
-    res.sendStatus(500)
+    return res.sendStatus(500)
   }
 }
