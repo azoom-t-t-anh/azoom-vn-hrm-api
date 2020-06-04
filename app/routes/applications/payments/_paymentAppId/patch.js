@@ -4,7 +4,6 @@ import { applicationStatus }  from '@root/constants.js'
 import initNewApprovalUser from '@helpers/users/initNewApprovalUser.js'
 
 export default async (req, res) => {
-  const userId = req.user.id
   const { paymentAppId } = req.params
   const { isApproved = 0 } = req.query
   const payment = await paymentCollection().doc(paymentAppId).get()

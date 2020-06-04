@@ -7,6 +7,7 @@ import getProjectId from '@routes/projects/_projectId/get.js'
 import getMemberId from '@routes/projects/_projectId/members/_memberId/get.js'
 import getUserId from '@routes/users/_userId/get.js'
 import { format } from 'date-fns/fp'
+import { updateProject } from '@routes/projects/_projectId/members/_memberId/put.js'
 
 const initMember = {
   isActive: 1,
@@ -47,7 +48,7 @@ export default async (req, res) => {
     const addMember = {
       members: firebase.firestore.FieldValue.arrayUnion(memberProfile),
     }
-    await projectCollection().doc(projectId).update(addMember)
+    await updateProject(projectId, addMember)
     return res.send(memberProfile)
   } catch (error) {
     return res.sendStatus(500)

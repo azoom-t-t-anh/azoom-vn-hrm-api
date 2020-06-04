@@ -27,11 +27,17 @@ export default async (req, res) => {
     const newMember = _.defaultsDeep(member.body, req.body)
     newMember.updatedDate = format('yyyy/MM/dd HH:mm:ss', new Date())
     const updateListMember = updateMember(members, newMember)
-    await projectCollection()
-      .doc(projectId)
-      .update({ members: updateListMember })
+    await updateProject(projectId, { members: updateListMember })
     return res.send(newMember)
   } catch (error) {
     return res.sendStatus(500)
   }
 }
+
+const updateProject = async (id, data) => {
+  return projectCollection()
+  .doc(id)
+  .update(data)
+}
+
+export { updateProject }

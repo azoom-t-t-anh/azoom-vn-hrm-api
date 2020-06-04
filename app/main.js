@@ -8,7 +8,6 @@ import expressOpenApiMiddleware from 'openapi-express-middleware'
 import Server from 'socket.io'
 import swaggerFile from './openapi.json'
 import { initIOListener } from './socket'
-import * as constants from '@root/constants'
 
 const options = {
   transports: ['polling', 'websocket'],
