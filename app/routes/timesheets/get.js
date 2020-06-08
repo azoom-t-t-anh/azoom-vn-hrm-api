@@ -1,6 +1,7 @@
 import { timesheetCollection } from '@root/database'
 import { addHours, format, startOfMonth, lastDayOfMonth } from 'date-fns/fp'
-import { execute } from '@root/util'
+import { getUserList } from '@routes/users/get'
+import { execute } from '@root/util.js'
 import getUserById from '@routes/users/_userId/get'
 
 export default async (req, res) => {
@@ -73,16 +74,37 @@ export default async (req, res) => {
       .get()
     if (timesheetSnapshot.empty) return res.send([])
 
-    const timesheets = await timesheetSnapshot.docs
-      .map((doc) => doc.data())
+    const userIdList = timesheetSnapshot.docs
+    .reduce((userIdList, timesheet) => {
+      return[ ...userIdList, timesheet.data().userId]
+    }, [])
+
+    const getUserListResponse =  (await getUserList({
+      limit: userIdList.length,
+      userIds: userIdList
+    }))
+    const additionalDataAndFormats = getUserListResponse
+      .data
+      .reduce((fullNameList,user) => {
+        return {
+          ...fullNameList,
+          [user.id]: user.fullName || ''
+        }
+      }, {})
+
+    const timesheets = timesheetSnapshot.docs
       .reduce((docs, doc) => {
-        const checkedDate = addHours(Number(timezone), doc.checkedDate.toDate())
-        doc.checkedDate = format('yyyy-MM-dd', checkedDate)
-        const timesheet = addAdditionalDataAndFormat(doc)
-        return [...docs, timesheet]
+        let timesheet = doc.data()
+        const checkedDate = addHours(Number(timezone), timesheet.checkedDate.toDate())
+        timesheet.checkedDate = format('yyyy-MM-dd', checkedDate)
+        timesheet = {
+          ...timesheet,
+          fullName: additionalDataAndFormats[timesheet.userId] || ''
+        }
+        return [...docs, ...[timesheet]]
       }, [])
 
-    return res.send(await Promise.all(timesheets))
+    res.send(timesheets)
   } catch (e) {
     console.error(e)
     return res
