@@ -1,13 +1,11 @@
 const paymentApplicaitionFields = {
   id: 'ID',
-  userId: 'UserId',
+  userId: 'User',
   approvalUsers: 'Approval Users',
   status: 'Status',
-  isActive: 'Active',
-  created: 'Created',
-  updated: 'Updated',
   reason: 'Reason',
-  amount: 'Amount'
+  amount: 'Amount',
+  created: 'Created'
 }
 
 export { paymentApplicaitionFields }

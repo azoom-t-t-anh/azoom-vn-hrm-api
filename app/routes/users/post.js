@@ -24,7 +24,9 @@ const defaultUser = {
   isActive: 1,
   created: new Date(),
   updated: '',
-  slackId: ''
+  slackId: '',
+  startDate: '',
+  endDate: ''
 }
 
 export default async (req, res) => {

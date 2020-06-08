@@ -7,7 +7,8 @@ export default async (req, res) => {
     const timesheetId = timesheet.userId + '_' + format('yyyyMMdd', new Date())
     const saveTimesheet = {
       ...timesheet,
-      id: timesheetId
+      id: timesheetId,
+      isActive: 1
     }
 
     await timesheetCollection().doc(saveTimesheet.id).set(saveTimesheet)

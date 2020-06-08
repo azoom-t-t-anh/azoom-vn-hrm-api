@@ -1,14 +1,12 @@
 const leaveApplicaitionFields = {
   id: 'ID',
-  userId: 'UserId',
+  userId: 'User',
   approvalUsers: 'Approval Users',
   reason: 'Reason',
   status: 'Status',
-  isActive: 'Active',
-  created: 'Created',
-  updated: 'Updated',
   requiredDates: 'Required Dates',
-  leaveTypeId: 'Leave Type ID'
+  leaveTypeId: 'Leave Type ID',
+  created: 'Created'
 }
 
 export { leaveApplicaitionFields }

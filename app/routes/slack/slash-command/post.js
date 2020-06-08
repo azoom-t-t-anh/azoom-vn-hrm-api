@@ -36,9 +36,11 @@ import { leaveApplicaitionFields } from '@helpers/slack/model/application-leave.
 import { paymentApplicaitionFields } from '@helpers/slack/model/application-payment.js'
 import { timesheetApplicaitionFields } from '@helpers/slack/model/application-timesheet.js'
 import { timesheetFields } from '@helpers/slack/model/timesheet.js'
-
+import { applicationStatus } from '@root/constants.js'
+import { format } from 'date-fns/fp'
 
 const notImplementMessage = 'Sorry. This command is being implemented.'
+const status = _.invert(applicationStatus)
 
 export default async (req, res) => {
   const request = req.body
@@ -420,7 +422,6 @@ export default async (req, res) => {
     body: {
       channel: user.slackId,
       text: executeResponse
-
     }
   })
 
@@ -519,39 +520,44 @@ const validParams = (requiredParams = [], object, commandText) => {
   return true
 }
 
-const convertDataJson = (data, fields) => {
-  const content = Object.entries(fields).reduce((str, [key, value]) => {
-    return str.concat(`\t`, `*${value}*: ${data[key] !== undefined ? data[key] : ''}`, `\n`)
-  }, '')
-  return content
+const convertDataJson = async (data, fields) => {
+  const text = await Promise.all(Object.entries(fields).
+    map(async ([key, value]) => {
+      const content = fieldsConvert.includes(key) ?
+        await getValueByKey[key](data[key]) :
+        data[key]
+      return (`\t*${value}*: ${content !== undefined ?
+        content : ''},\n`)
+    }));
+  return text.join('')
 }
 
-const renderDataJson = (data, title, fields) => {
-  const content = convertDataJson(data, fields)
+const renderDataJson = async (data, title, fields) => {
+  const content = await convertDataJson(data, fields)
   return title.concat(content)
 }
 
-const renderDataArray = (data, title, fields) => {
-  let countUser = 0
-  const convertListData = data.reduce((strs, obj) => {
-    ++countUser
-    const content = convertDataJson(obj, fields)
-    return strs.concat(`${countUser},\n`, content, `\n`)
-  }, '')
-  return title.concat(convertListData)
+const renderDataArray = async (data, title, fields) => {
+  data = data.filter(element => [true, 1, undefined].includes(element.isActive) &&
+    [undefined, -1].includes(element.status))
+  const convertListData = await Promise.all(data.map(async (obj, index) => {
+    const content = await convertDataJson(obj, fields)
+    return (`${index + 1},\n ${content}\n`)
+  }))
+  return title.concat(convertListData.join(''))
 }
 
-const getMessageByAction = (status, action, resource = '', body = '') => {
+const getMessageByAction = async (status, action, resource = '', body = '') => {
   const titleMessage = title[`${resource}:${action}`]
   const fields = messageModel[`${resource}:${action}`]
   if (status === 200) {
     if (!listActions.includes(action) && !listActions.includes(resource)) {
       if (Array.isArray(body)) {
         return body.length ?
-          renderDataArray(body, titleMessage, fields) :
+          await renderDataArray(body, titleMessage, fields) :
           `${titleMessage} There are no records.`
       } else {
-        return renderDataJson(body, titleMessage, fields)
+        return await renderDataJson(body, titleMessage, fields)
       }
     }
   } else {
@@ -560,12 +566,72 @@ const getMessageByAction = (status, action, resource = '', body = '') => {
   return titleMessage
 }
 
+const getValueByKey = {
+  'status': (value) => {
+    return status[value]
+  },
+  'members': async (memberIds) => {
+    memberIds = memberIds ? memberIds.map(elm => elm.memberId) : []
+    return getListEmailsByIds(memberIds)
+  },
+  'managerId': async (userId) => {
+    const manager = await getEmailById(userId)
+    return manager.length ? manager : 'Incorrect managerId'
+  },
+  'userId': async (userId) => {
+    const user = await getEmailById(userId)
+    return user.length ? user : 'Incorrect userId'
+  },
+  'requiredDates': (value) => {
+    return format('yyyy/MM/dd', value)
+  },
+  'checkedDate': (value) => {
+    return format('yyyy/MM/dd', value)
+  },
+  'dateOfBirth': (value) => {
+    return format('yyyy/MM/dd', value)
+  },
+  'created': (value) => {
+    return format('yyyy/MM/dd', new Date(value.toDate()))
+  },
+  'startTime': (value) => {
+    return format('HH:mm', new Date(value.toDate()))
+  },
+  'endTime': (value) => {
+    return format('HH:mm', new Date(value.toDate()))
+  },
+  'approvalUsers': async (approvalUsers) => {
+    approvalUsers = approvalUsers ? approvalUsers.map(elm => elm.id) : []
+    return approvalUsers.length ? await getListEmailsByIds(approvalUsers) : ''
+  },
+  'createdUserId': async (userId) => {
+    const creater = await getEmailById(userId)
+    return creater.length ? creater : 'Incorrect createUserId'
+  },
+  'memberId': async (userId) => {
+    const member = await getEmailById(userId, userId)
+    return member.length ? member : 'Incorrect memberId'
+  }
+}
+
+const getEmailById = async (userId) => {
+  const { status, body } = await execute(getUserDetail, { params: { userId } })
+  const dataReturn = status === 200 ? body.email : ''
+  return dataReturn
+}
+
+const getListEmailsByIds = async (userIds) => {
+  const emails = await Promise.all(
+    userIds.map(async (element) => await getEmailById(element)))
+  return emails.filter((elment) => elment !== '').toString()
+}
+
 const title = {
   'users:profile': '*User infomation:*\n',
   'users:list': '*List of all users:*\n',
   'users:': '*Your infomation:*\n',
   'users:create': '*Create user successfully.*',
-  'users:update': '*Update user information successfully*',
+  'users:update': '*Update user information successfully.*',
   'users:deactive': '*Deactive an user successfully.*',
   'users:permission': '*Change permission of an user successfully.*',
   'projects:list': '*List projects:*\n',
@@ -575,7 +641,7 @@ const title = {
   'projects:remove-member': '*Remove member from a project successfully.*',
   'application-timesheets:create': '*Create timesheet application successfully.*',
   'application-timesheets:approval': '*Approve or reject a timesheet application successfully.*',
-  'application-timesheets:delete': '*Delete timesheet application successfully*',
+  'application-timesheets:delete': '*Delete timesheet application successfully.*',
   'application-timesheets:list': '*List timesheets application:*\n',
   'application-leaves:list': '*List leaves application:*\n',
   'application-leaves:create': '*Create leave application successfully.*',
@@ -604,3 +670,6 @@ const messageModel = {
 
 const listActions = ['create', 'update', 'deactive', 'permission', 'add-member',
   'remove-member', 'approval', 'delete', 'checkin', 'checkout']
+
+const fieldsConvert = ['status', 'managerId', 'members', 'userId', 'approvalUsers',
+  'createdUserId', 'memberId', 'created', 'startTime', 'endTime']

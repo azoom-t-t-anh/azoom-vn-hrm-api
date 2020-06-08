@@ -17,6 +17,8 @@ const initProject = {
   updated: '',
   managerId: '',
   members: [],
+  startDate: '',
+  endDate: ''
 }
 
 export default async (req, res) => {
