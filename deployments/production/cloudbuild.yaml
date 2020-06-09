@@ -86,4 +86,4 @@ substitutions:
   _PUBSUB_TOPIC: hrm
   _PUBSUB_FUNCTION_PATH: pubsub/
   _DOCKER_FILE: deployments/Dockerfile
-  _ENV_FUNCTION_PATH: pubsub/.env.yaml
+  _ENV_FUNCTION_PATH: deployments/production/pubsub/.env.yaml
