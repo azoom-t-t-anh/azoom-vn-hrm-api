@@ -1,6 +1,6 @@
 {
   "name": "azoom-hr-management",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "An application to receive and process image (crop, compress, resize)",
   "author": "Azoom",
   "license": "The Unlicense",
@@ -23,7 +23,11 @@
     }
   },
   "lint-staged": {
-    "*.js": ["cd app","yarn lint --fix", "git add"]
+    "*.js": [
+      "cd app",
+      "yarn lint --fix",
+      "git add"
+    ]
   },
   "dependencies": {
     "multi-file-swagger": "^2.3.0",
