@@ -8,11 +8,15 @@ export default async (req, res) => {
     const role = await getRole(req.user.positionPermissionId)
     if (!['admin', 'editor'].includes(role)) return res.sendStatus(403)
 
-    const user = await userCollection().doc(userId).get()
-    if (!user.exists) return res.sendStatus(404)
-
-    return res.send(_.omit(['password'], user.data()))
+    const user = await getUserById(userId)
+    return user ? res.send(user) : res.sendStatus(404)
   } catch (error) {
     return res.sendStatus(500)
   }
+}
+export const getUserById = async (userId) => {
+  const user = await userCollection().doc(userId).get()
+
+  if (!user.exists) return null
+  return _.omit(['password'], user.data())
 }

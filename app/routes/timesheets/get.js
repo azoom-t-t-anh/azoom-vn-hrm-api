@@ -1,8 +1,7 @@
 import { timesheetCollection } from '@root/database'
 import { addHours, format, startOfMonth, lastDayOfMonth } from 'date-fns/fp'
 import { getUserList } from '@routes/users/get'
-import { execute } from '@root/util.js'
-import getUserById from '@routes/users/_userId/get'
+import { getUserById } from '@routes/users/_userId/get'
 
 export default async (req, res) => {
   try {
@@ -117,10 +116,7 @@ function isValidDate(date) {
 }
 
 export const addAdditionalDataAndFormat = async (timesheet) => {
-  const userNameResponse = await execute(getUserById, {
-    params: { userId: timesheet.userId }
-  })
-  timesheet.fullName =
-    userNameResponse.status === 200 ? userNameResponse.body.fullName : ''
+  const userNameResponse = await getUserById(timesheet.userId)
+  timesheet.fullName = userNameResponse ? userNameResponse.fullName : ''
   return timesheet
 }

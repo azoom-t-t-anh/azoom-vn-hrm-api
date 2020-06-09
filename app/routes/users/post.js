@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 import { userCollection } from '@root/database'
 import getRole from '@helpers/users/getRole.js'
 import getUserByEmail from '@routes/users/_email/get'
-import getUserById from '@routes/users/_userId/get'
+import { getUserById } from '@routes/users/_userId/get'
 import { execute } from '@root/util.js'
 import { format } from 'date-fns/fp'
 
@@ -34,7 +34,7 @@ export default async (req, res) => {
 
   const role = await getRole(req.user.positionPermissionId)
   if (!['admin', 'editor'].includes(role)) return res.sendStatus(403)
-  const validUser = await isValidUser(user.id, user.email)
+  const validUser = await isInexistentUser(user.id, user.email)
   if (!validUser) return res.sendStatus(400)
   const newUser = {
     ...defaultUser,
@@ -47,10 +47,9 @@ export default async (req, res) => {
   return res.send(savedUser.exists ? _.omit(['password'], savedUser.data()) : {})
 }
 
-const isValidUser = async (id, email) => {
-  const isValidId =
-    (await execute(getUserById, { params: { userId: id } })).status !== 200
-  const isValidEmail =
+const isInexistentUser = async (id, email) => {
+  const isInexistentId = !(await getUserById(id))
+  const isInexistentEmail =
     (await execute(getUserByEmail, { params: { email } })).status !== 200
-  return isValidId & isValidEmail
+  return isInexistentId & isInexistentEmail
 }
