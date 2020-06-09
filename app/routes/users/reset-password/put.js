@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt'
 import { execute } from '@root/util.js'
 import { userCollection } from '@root/database'
-import updatePasswordUser from '@routes/users/put.js'
+import { updateUser } from '@routes/users/put.js'
 
 export default async (req, res) => {
   const userId = req.user.id
@@ -17,7 +17,7 @@ export default async (req, res) => {
   }
 
   user.password = bcrypt.hashSync(newPassword, 10)
-  await execute(updatePasswordUser, { body: user })
+  await updateUser(user)
   return res.send({ message: 'Password was successfully changed.' })
 }
 

@@ -6,7 +6,10 @@ export default async (req, res) => {
 
   const role = await getRole(req.user.positionPermissionId)
   if (!['admin', 'editor'].includes(role)) return res.sendStatus(403)
-
-  await userCollection().doc(data.id).set(data)
+  await updateUser(data)
   res.send(data)
+}
+
+export const updateUser = async data => {
+  await userCollection().doc(data.id).set(data)
 }
